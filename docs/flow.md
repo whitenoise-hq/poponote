@@ -1,7 +1,7 @@
 # 포포노트 (PopoNote) — 개발 진행 순서 (flow.md)
 
 > Claude Code 개발 진행용 문서
-> v1.0 · 2026-06-15
+> v1.1 · 2026-06-15 (UI-first 전략으로 재정렬)
 
 이 문서는 포포노트를 **어떤 순서로, 무엇을 산출물로** 개발할지 단계별로 정의한다.
 기획은 `planning.md`, 기술 스택은 `tech-stack.md`, 화면은 `screens.md` 참고.
@@ -11,35 +11,74 @@
 
 - 각 Phase는 **목표 / 선행조건 / 작업 / 산출물 / 완료 기준(DoD)** 으로 구성한다.
 - `[MVP]`는 1차 출시 필수, `[2차]`는 범위 밖(planning.md 5.2). 2차는 자리만 고려하고 구현하지 않는다.
-- 의존성이 큰 순서대로 정렬했다. **데이터·인증 기반(P1~P4)을 먼저 깔고**, 그 위에 화면 기능(P5~P10)을 올린다.
+- **P 번호는 작업 단위 ID**일 뿐, 실행 순서는 아래 "개발 전략"의 트랙(A→B→C→D→E)을 따른다.
 
-## 전체 흐름 한눈에
+## 개발 전략 (2026-06-15 결정 · UI-first)
+
+**화면(UI)을 mock 데이터로 먼저 다 만들고, 그 뒤에 Supabase를 연결한다.**
+데이터 접근은 CLAUDE.md 규칙대로 항상 `hooks/`(React Query)를 거치므로, 처음엔 hook이
+mock을 반환하게 하고 나중에 **hook 내부만 Supabase로 교체**한다(화면 컴포넌트는 거의 불변).
 
 ```
-P0 기반 세팅 ─ P1 Supabase 연동 ─ P2 DB·RLS ─ P3 인증·온보딩 ─ P4 Storage·이미지 압축
-   (완료)                                                            │
-                                                                     ▼
-        P5 홈(케어) ─ P6 메인 기록·다이어리 ─ P7 댓글·반응
-                                  │
-                                  ▼
-        P8 이미지 변환(Edge Function) ─ P9 일러스트 앨범 ─ P10 설정 ─ P11 출시 준비
+[A] UI 구현 (mock, hooks 경유)         ← 지금부터
+      공용 타입(types/) → mock hooks → 홈/다이어리/앨범/설정 + 작성·댓글 UI
+          │
+          ▼
+[B] 백엔드 기반   = P1 Supabase ─ P2 DB·RLS ─ P3 인증·온보딩 ─ P4 Storage·압축
+          │
+          ▼
+[C] 연결   hooks 내부 mock → Supabase 교체, 인증 라우팅 가드, 서버 제약(하루 1개 등) 연결
+          │
+          ▼
+[D] P8 이미지 변환(Edge Function)  ─  [E] P11 출시 준비
 ```
+
+- 기존 **P5~P10의 화면 작업은 [A]에서 UI(mock), [C]에서 실데이터**로 2-pass 진행.
+- **앨범 일러스트**는 변환(P8/[D]) 이후 진짜 데이터로 완성(그 전엔 더미 이미지로 레이아웃만).
+- **스키마는 UI에서 확정된다**: [A]를 진행하며 화면에 필요한 컬럼이 드러나면 `types/`에 먼저
+  반영하고, [B]의 P2 마이그레이션은 그 결과를 토대로 작성한다. 즉 **P2 테이블 정의는 초안**이며,
+  발견되는 컬럼(예: 펫 체중·성별·중성화, 멤버 역할, 일기 제목 등)을 모아 확정한다. → 아래 "스키마 변경 메모" 참고.
 
 ---
 
-## P0 — 프로젝트 기반 세팅 `[MVP]` ✅ 대부분 완료
+## P0 — 프로젝트 기반 세팅 `[MVP]` ✅ 완료
 
-**목표**: Expo + TS + NativeWind + Expo Router 4탭 골격.
+**목표**: Expo + TS + NativeWind + Expo Router 4탭 골격 + 디자인 시스템.
 
 **작업**
 - ✅ Expo + TypeScript 프로젝트, Expo Router, NativeWind 세팅.
-- ✅ 하단 4탭(홈/다이어리/일러스트 앨범/설정) — `app/(tabs)/_layout.tsx`, 각 탭 placeholder.
-- ⬜ 디자인 토큰 정리: 색상·간격·타이포를 `tailwind.config.js`에 정의(현재 화면의 하드코딩 색상 `#111827` 등을 토큰으로 치환).
-- ⬜ 공통 UI 컴포넌트 뼈대: `components/` 에 Button, Screen(SafeArea 래퍼), Text 등 최소 셋.
+- ✅ 하단 4탭(홈/다이어리/일러스트 앨범/설정) — `app/(tabs)/_layout.tsx`.
+- ✅ 디자인 토큰: 색상(primary/cream/ink/케어)·폰트·라운드·그림자를 `tailwind.config.js`에 정의.
+- ✅ 공통 UI 컴포넌트: `components/ui/`에 Screen·Text·Button·Card + 배럴.
+- ✅ 폰트 로드(Gothic A1·Jua) + 스플래시 제어, 디자인 참고본 정리(`docs/design/references/`).
 
-**산출물**: `app/_layout.tsx`, `app/(tabs)/*`, `tailwind.config.js`, `components/ui/*`
+**산출물**: `app/_layout.tsx`, `app/(tabs)/*`, `tailwind.config.js`, `components/ui/*`, `lib/cn.ts`
 
-**DoD**: 4탭 전환 동작, 토큰 기반 스타일로 placeholder 렌더.
+**DoD**: ✅ 4탭 전환 동작, 토큰 기반 스타일 렌더.
+
+---
+
+## A — UI 구현 (mock 데이터) `[MVP]` ← 현재 단계
+
+**목표**: 모든 화면을 mock 데이터로 구현해 디자인·UX를 확정한다. 백엔드 없이 동작.
+
+**선행조건**: P0. 참고: `docs/design/references/`(캡처·화면 코드·`figma-tokens.md`).
+
+**작업**
+- **공용 타입 먼저**(`types/`): planning.md 7 + 화면에서 필요한 필드 기준으로 정의. UI에서
+  새 컬럼이 드러나면 여기 먼저 반영(아래 "스키마 변경 메모"에도 기록).
+- **mock 데이터 + mock hooks**(`hooks/`): React Query 형태로 감싸되 내부는 로컬 mock 반환
+  (예: `useCareLogs`, `useDiary`, `useAlbum`, `useFamily`). [C]에서 내부만 Supabase로 교체.
+- **화면 구현**(참고본 → RN+NativeWind 변환):
+  - 홈: 펫 헤더 + 오늘의 케어(밥/간식/산책, 횟수·닉네임·시간·추가) + 일기 미리보기.
+  - 다이어리: [캘린더|피드] 토글, 캘린더(오늘·기록일 점), 피드 카드, 날짜 상세(기록+케어+댓글·반응).
+  - 앨범: 월 폴더 → 3열 그리드 → 사진 상세(더미 이미지).
+  - 설정: 펫 프로필(통계·태그) + 초대 코드 + 가족 멤버 + 계정/기타 + 로그아웃.
+  - 작성/댓글 UI: 메인 기록 작성, 댓글 입력.
+
+**산출물**: `app/(tabs)/*`, `app/diary/*`·`app/album/*`·`app/entry/*` 등 sub-screen, `components/*`, `hooks/*`(mock), `types/*`
+
+**DoD**: 모든 탭·주요 sub-screen이 mock으로 동작(탐색·토글·추가가 화면상 반영), 디자인 확정.
 
 ---
 
@@ -80,9 +119,9 @@ supabase link --project-ref <ref>    # 원격 프로젝트와 연결
 
 **목표**: planning.md 7번 데이터 구조를 실제 테이블·정책으로 구현. **RLS 없는 테이블은 만들지 않는다.**
 
-**선행조건**: P1.
+**선행조건**: P1, **A(UI)** — 아래 테이블은 **초안**이며, UI에서 확정된 컬럼("스키마 변경 메모")을 반영해 마무리한다.
 
-**테이블** (planning.md 7 기준, 모든 기록은 `pet_id` FK 보유)
+**테이블** (planning.md 7 기준 초안, 모든 기록은 `pet_id` FK 보유)
 - `families` (id, invite_code unique, owner_id, created_at)
 - `members` (id, family_id, user_id, nickname, joined_at)
 - `pets` (id, family_id, name, species, birthday, adopted_at, profile_url)
@@ -216,6 +255,25 @@ supabase gen types typescript --linked > types/database.ts   # TS 타입 생성
 
 ---
 
+## C — 연결 (mock → Supabase) `[MVP]`
+
+**목표**: [A]에서 만든 화면을 실데이터로 전환. **hook 내부만 교체**, 화면 컴포넌트는 유지.
+
+**선행조건**: A(UI), P1~P4(백엔드 기반).
+
+**작업**
+- `hooks/*`의 mock 반환을 Supabase 쿼리/뮤테이션으로 교체(React Query 키·캐시 유지).
+- 인증 라우팅 가드 적용(미인증→로그인, 그룹 없음→온보딩) — P3 연동.
+- 서버 제약 연결: 하루 1개(UNIQUE), 본인만 수정·삭제(RLS), 0시 케어 리셋 등.
+- 이미지: 작성 시 압축·업로드(P4), 표시용 URL 사용. *일러스트 변환 연결은 [D].*
+- mock 데이터·임시 코드 제거, 로딩/빈 상태/에러 처리 점검.
+
+**산출물**: `hooks/*`(Supabase 구현), `app/_layout.tsx`(가드), mock 제거 diff
+
+**DoD**: 화면이 실제 DB 데이터로 동작, 권한·제약 강제 확인, mock 잔존 없음.
+
+---
+
 ## P8 — 이미지 변환 Edge Function `[MVP]`
 
 **목표**: 사진 → 일러스트 자동 변환 (tech-stack.md 4). **API 키는 Edge Function secrets에만.**
@@ -281,6 +339,24 @@ supabase gen types typescript --linked > types/database.ts   # TS 타입 생성
 - Expo 빌드 → App Store / Google Play 제출. Edge Functions는 Supabase CLI 배포.
 
 **DoD**: 타입·lint 클린, 핵심 플로우 E2E 통과, 빌드 산출.
+
+---
+
+## 스키마 변경 메모 (UI에서 발견되는 컬럼)
+
+UI-first 진행 중 화면에 필요해 드러난 컬럼을 여기 모은다. P2 마이그레이션 작성 시 반영해 확정한다.
+(`P2 초안`에 없던 것 위주. 출처: `docs/design/references/` 화면 코드)
+
+| 테이블 | 컬럼 | 비고 | 상태 |
+|--------|------|------|------|
+| `pets` | `weight` | 체중(예: 28.5kg). 설정에서 추가 등록·편집. 단위·이력 보관 여부 결정 필요 | 확정 |
+| `pets` | `sex` | 성별(수컷/암컷). 설정에서 추가 등록·편집 | 확정 |
+| `pets` | `neutered` | 중성화 여부(boolean). 설정에서 추가 등록·편집 | 확정 |
+| `members` | `role` | 역할(보호자/가족 등). 권한과 연결할지 결정 | 검토 |
+| `diary_entries` | `title` | 일기 제목(예: "산책 중에 발견한 민들레"). P2 초안은 `body`만 | 검토 |
+
+> "기록 156일", "총 N번" 등은 컬럼이 아니라 **집계(파생)** 값 — 쿼리/뷰로 처리.
+> 새 항목이 생기면 이 표에 추가하고, P2에서 일괄 확정한다.
 
 ---
 

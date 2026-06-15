@@ -143,7 +143,7 @@
 
 - **Family(그룹)**: id, 초대코드, 생성일, 방장
 - **Member**: id, family_id, 닉네임, 참여일
-- **Pet**: id, family_id, 이름, 종, 생일, 입양일, 프로필사진
+- **Pet**: id, family_id, 이름, 종, 생일, 입양일, 프로필사진, 성별, 중성화여부, 체중 (성별·중성화·체중은 설정에서 추가 등록)
 - **DiaryEntry(메인 기록)**: id, family_id, pet_id, 날짜, 작성자, 글, 압축사진(URL), 일러스트(URL), 생성/수정 시각
 - **CareLog(케어)**: id, family_id, pet_id, 날짜, 종류(밥/간식/산책), 작성자, 시간, 메모
 - **Comment**: id, entry_id, 작성자, 내용, 시각
