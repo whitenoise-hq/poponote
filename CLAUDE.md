@@ -4,13 +4,14 @@
 > 가족이 함께 쓰는 반려동물 다이어리
 
 이 파일은 Claude Code가 이 프로젝트에서 작업할 때 따르는 기준이다.
-작업 전 항상 아래 문서를 먼저 참고한다.
+
+**모든 작업 시작 전 이 파일을 가장 먼저 읽는다.** 그 다음 아래 참고 문서를 필요에 맞게 참조한다.
 
 ## 참고 문서 (Source of Truth)
 
-- **기획**: `planning.md` — 제품 정의, 핵심 규칙, 기능 명세, MVP 범위, 데이터 구조 초안.
-- **기술 스택**: `tech-stack.md` — 아키텍처, Supabase 구조, 이미지 변환, 이미지 최적화 정책.
-- **화면 구현**: `screens.md` — 화면별 구성·동작·이동, 와이어프레임, 데이터↔화면 매핑.
+- **기획**: `docs/planning.md` — 제품 정의, 핵심 규칙, 기능 명세, MVP 범위, 데이터 구조 초안.
+- **기술 스택**: `docs/tech-stack.md` — 아키텍처, Supabase 구조, 이미지 변환, 이미지 최적화 정책.
+- **화면 구현**: `docs/screens.md` — 화면별 구성·동작·이동, 와이어프레임, 데이터↔화면 매핑.
 
 세 문서와 충돌하는 코드를 작성하지 않는다. 문서를 벗어나는 결정이 필요하면 먼저 확인을 구한다.
 
@@ -49,14 +50,15 @@
 - **네이밍**: 컴포넌트 PascalCase, 변수·함수 camelCase, 상수 UPPER_SNAKE_CASE, 파일은 컴포넌트=PascalCase / 그 외=kebab-case 또는 camelCase로 일관 유지.
 - **스타일**: NativeWind `className` 우선. 인라인 스타일·StyleSheet는 NativeWind로 표현 어려운 경우에만.
 - **디자인 토큰**: 색상·간격·타이포는 `tailwind.config.js`에 정의해 일관성 유지. 하드코딩된 색상값 지양.
-- **폴더 구조(권장)**:
+- **폴더 구조**:
   ```
-  app/            # Expo Router 화면 (파일 기반 라우팅)
-  components/      # 재사용 UI 컴포넌트
+  app/            # Expo Router 화면 (파일 기반 라우팅, (tabs) 그룹 포함)
+  components/     # 재사용 UI 컴포넌트
   lib/            # supabase 클라이언트, 유틸
   hooks/          # 커스텀 훅 (React Query 등)
   types/          # 공용 타입
   supabase/       # 마이그레이션, Edge Functions
+  docs/           # 기획/스택/화면 문서 (planning.md, tech-stack.md, screens.md)
   ```
 - **데이터 접근**: 컴포넌트에서 Supabase 직접 호출보다, hooks(React Query)로 감싸 재사용.
 
