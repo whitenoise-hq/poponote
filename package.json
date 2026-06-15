@@ -5,6 +5,8 @@
   "private": true,
   "packageManager": "pnpm@10.30.0",
   "dependencies": {
+    "@expo-google-fonts/gothic-a1": "0.4.1",
+    "@expo-google-fonts/jua": "0.4.1",
     "@expo/ui": "~56.0.18",
     "@expo/vector-icons": "^15.1.1",
     "expo": "~56.0.12",

@@ -1,15 +1,39 @@
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
+
+import { Button, Card, Screen, Text } from '@/components/ui';
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <View className="flex-1 items-center justify-center px-6">
-        <Text className="text-2xl font-semibold text-gray-900">홈</Text>
-        <Text className="mt-2 text-sm text-gray-500">
-          오늘의 케어와 다이어리 미리보기가 여기에 표시됩니다.
-        </Text>
-      </View>
-    </SafeAreaView>
+    <Screen contentClassName="justify-center">
+      <Text variant="display" className="text-primary-600">
+        포포노트
+      </Text>
+      <Text variant="caption" className="mt-1">
+        오늘의 케어와 다이어리 미리보기가 여기에 표시됩니다.
+      </Text>
+
+      <Card className="mt-6">
+        <Text variant="subtitle">오늘 케어</Text>
+        <View className="mt-3 flex-row gap-2">
+          <View className="rounded-xl bg-meal/15 px-3 py-1.5">
+            <Text variant="label" className="text-meal">
+              밥
+            </Text>
+          </View>
+          <View className="rounded-xl bg-treat/15 px-3 py-1.5">
+            <Text variant="label" className="text-treat">
+              간식
+            </Text>
+          </View>
+          <View className="rounded-xl bg-walk/15 px-3 py-1.5">
+            <Text variant="label" className="text-walk">
+              산책
+            </Text>
+          </View>
+        </View>
+      </Card>
+
+      <Button label="오늘 일기 남기기" className="mt-6" />
+    </Screen>
   );
 }
