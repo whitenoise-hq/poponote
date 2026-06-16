@@ -25,7 +25,7 @@ export default function AlbumPhotoDetailScreen() {
       <View className="flex-row items-center justify-between px-5 py-3">
         <Pressable
           onPress={() => router.back()}
-          className="w-8 h-8 rounded-full bg-secondary items-center justify-center"
+          className="w-8 h-8 items-center justify-center"
         >
           <Ionicons name="chevron-back" size={20} color="#2B2520" />
         </Pressable>

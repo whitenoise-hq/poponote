@@ -46,8 +46,6 @@ export default function DiaryDetailScreen() {
           style={{
             width: 32,
             height: 32,
-            borderRadius: 16,
-            backgroundColor: '#fde8e0',
             alignItems: 'center',
             justifyContent: 'center',
           }}
