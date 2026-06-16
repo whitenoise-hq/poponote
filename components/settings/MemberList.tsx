@@ -1,6 +1,7 @@
 import { View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text, Card } from '@/components/ui'
+import { colors } from '@/theme/colors'
 import { CURRENT_USER_ID } from '@/lib/mock-data'
 import type { Member } from '@/types'
 
@@ -20,7 +21,7 @@ export function MemberList({ members }: MemberListProps) {
           return (
             <View key={member.id} className="flex-row items-center gap-3">
               <View className="w-9 h-9 rounded-full bg-accent items-center justify-center">
-                <Ionicons name="person" size={18} color="#F2724A" />
+                <Ionicons name="person" size={18} color={colors.primary.DEFAULT} />
               </View>
               <View className="flex-1">
                 <View className="flex-row items-center gap-1.5">

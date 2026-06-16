@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { View, TextInput, Pressable } from 'react-native'
 import { Text } from '@/components/ui'
+import { colors } from '@/theme/colors'
 
 interface CareAddSheetProps {
   accentColor: string
@@ -26,7 +27,7 @@ export function CareAddSheet({
         value={memo}
         onChangeText={setMemo}
         placeholder="메모 (선택)"
-        placeholderTextColor="#9e7e76"
+        placeholderTextColor={colors.muted.foreground}
         className="flex-1 text-xs px-3 py-2 rounded-xl bg-white font-sans text-ink"
         style={{ borderWidth: 1.5, borderColor: accentColor + '44' }}
         onSubmitEditing={handleSubmit}

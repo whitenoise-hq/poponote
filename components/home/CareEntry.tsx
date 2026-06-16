@@ -1,5 +1,6 @@
 import { View } from 'react-native'
 import { Text } from '@/components/ui'
+import { colors } from '@/theme/colors'
 import { getMemberNickname } from '@/lib/mock-data'
 import type { CareLog } from '@/types'
 
@@ -35,7 +36,7 @@ export function CareEntry({ log, accentColor }: CareEntryProps) {
             {initial}
           </Text>
         </View>
-        <Text variant="caption" style={{ color: '#2B2520' }}>
+        <Text variant="caption" style={{ color: colors.ink.DEFAULT }}>
           {nickname}
           {log.memo ? (
             <Text variant="caption" className="text-muted-foreground">

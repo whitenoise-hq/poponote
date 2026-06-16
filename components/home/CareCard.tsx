@@ -5,6 +5,7 @@ import { Text } from '@/components/ui'
 import { CareEntry } from './CareEntry'
 import { CareAddSheet } from './CareAddSheet'
 import { CARE_CONFIG } from '@/lib/care-config'
+import { colors } from '@/theme/colors'
 import type { CareLog, CareKind } from '@/types'
 
 // NativeWind 동적 클래스 불가 → lookup 사용
@@ -15,9 +16,9 @@ const BG_CLASSES: Record<CareKind, string> = {
 }
 
 const COLOR_VALUES: Record<CareKind, string> = {
-  meal: '#f4846a',
-  treat: '#a8c8a0',
-  walk: '#7eb8e8',
+  meal: colors.meal.DEFAULT,
+  treat: colors.treat.DEFAULT,
+  walk: colors.walk.DEFAULT,
 }
 
 interface CareCardProps {
@@ -71,7 +72,7 @@ export function CareCard({ kind, logs, onAdd }: CareCardProps) {
           className="w-7 h-7 rounded-full items-center justify-center"
           style={{ backgroundColor: color }}
         >
-          <Ionicons name="add" size={16} color="#fff" />
+          <Ionicons name="add" size={16} color={colors.white} />
         </Pressable>
       </View>
 

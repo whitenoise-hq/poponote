@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Text } from '@/components/ui'
 import { PhotoDetail } from '@/components/album/PhotoDetail'
 import { getDiaryEntries } from '@/lib/mock-data'
+import { colors } from '@/theme/colors'
 
 export default function AlbumPhotoDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
@@ -27,7 +28,7 @@ export default function AlbumPhotoDetailScreen() {
           onPress={() => router.back()}
           className="w-8 h-8 items-center justify-center"
         >
-          <Ionicons name="chevron-back" size={20} color="#2B2520" />
+          <Ionicons name="chevron-back" size={20} color={colors.ink.DEFAULT} />
         </Pressable>
       </View>
 

@@ -1,6 +1,7 @@
 import { View, Image } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text, Card } from '@/components/ui'
+import { colors } from '@/theme/colors'
 import type { Pet } from '@/types'
 import { getDiaryEntries } from '@/lib/mock-data'
 
@@ -35,7 +36,7 @@ export function PetProfileCard({ pet }: PetProfileCardProps) {
           />
         ) : (
           <View className="w-20 h-20 rounded-full bg-cream items-center justify-center">
-            <Ionicons name="paw" size={36} color="#F2724A" />
+            <Ionicons name="paw" size={36} color={colors.primary.DEFAULT} />
           </View>
         )}
         <View className="flex-1">

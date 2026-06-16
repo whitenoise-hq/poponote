@@ -1,6 +1,7 @@
 import { View, Image, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text, Card } from '@/components/ui'
+import { colors } from '@/theme/colors'
 import { getMemberNickname } from '@/lib/mock-data'
 import type { DiaryEntry } from '@/types'
 
@@ -28,7 +29,7 @@ export function DiaryPreview({
             <Text variant="caption" className="text-primary">
               더보기
             </Text>
-            <Ionicons name="chevron-forward" size={14} color="#F2724A" />
+            <Ionicons name="chevron-forward" size={14} color={colors.primary.DEFAULT} />
           </Pressable>
         )}
       </View>
@@ -80,7 +81,7 @@ export function DiaryPreview({
       ) : (
         <Pressable onPress={onPressWrite}>
           <Card className="py-8 items-center gap-2">
-            <Ionicons name="create-outline" size={28} color="#9e7e76" />
+            <Ionicons name="create-outline" size={28} color={colors.muted.foreground} />
             <Text variant="body" className="text-muted-foreground">
               오늘 일기를 남겨주세요
             </Text>

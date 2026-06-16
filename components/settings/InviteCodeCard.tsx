@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { View, Pressable } from 'react-native'
 import { Text, Card } from '@/components/ui'
+import { colors } from '@/theme/colors'
 import * as Clipboard from 'expo-clipboard'
 
 interface InviteCodeCardProps {
@@ -24,7 +25,7 @@ export function InviteCodeCard({ code }: InviteCodeCardProps) {
       <View className="flex-row items-center gap-3">
         <View
           className="flex-1 py-3 items-center rounded-xl"
-          style={{ borderWidth: 1.5, borderColor: '#f4846a44', borderStyle: 'dashed' }}
+          style={{ borderWidth: 1.5, borderColor: colors.meal.DEFAULT + '44', borderStyle: 'dashed' }}
         >
           <Text variant="subtitle" className="text-primary tracking-widest">
             {code}

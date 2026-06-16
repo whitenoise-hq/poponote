@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react'
 import { View, Pressable, Animated, useWindowDimensions } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text } from '@/components/ui'
+import { colors } from '@/theme/colors'
 
 export type DiaryViewMode = 'calendar' | 'list'
 
@@ -34,7 +35,7 @@ export function ViewToggle({ mode, onChangeMode }: ViewToggleProps) {
     <View
       style={{
         flexDirection: 'row',
-        backgroundColor: '#fde8e0',
+        backgroundColor: colors.secondary,
         borderRadius: 20,
         padding: 4,
         position: 'relative',
@@ -48,10 +49,10 @@ export function ViewToggle({ mode, onChangeMode }: ViewToggleProps) {
           left: 4,
           width: tabWidth,
           height: '100%',
-          backgroundColor: '#fff',
+          backgroundColor: colors.white,
           borderRadius: 16,
           transform: [{ translateX }],
-          shadowColor: '#f4846a',
+          shadowColor: colors.meal.DEFAULT,
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.18,
           shadowRadius: 8,
@@ -74,12 +75,12 @@ export function ViewToggle({ mode, onChangeMode }: ViewToggleProps) {
         <Ionicons
           name="calendar-outline"
           size={14}
-          color={mode === 'calendar' ? '#F2724A' : '#9e7e76'}
+          color={mode === 'calendar' ? colors.primary.DEFAULT : colors.muted.foreground}
         />
         <Text
           variant="label"
           style={{
-            color: mode === 'calendar' ? '#F2724A' : '#9e7e76',
+            color: mode === 'calendar' ? colors.primary.DEFAULT : colors.muted.foreground,
             fontWeight: mode === 'calendar' ? '700' : '400',
           }}
         >
@@ -102,12 +103,12 @@ export function ViewToggle({ mode, onChangeMode }: ViewToggleProps) {
         <Ionicons
           name="grid-outline"
           size={14}
-          color={mode === 'list' ? '#F2724A' : '#9e7e76'}
+          color={mode === 'list' ? colors.primary.DEFAULT : colors.muted.foreground}
         />
         <Text
           variant="label"
           style={{
-            color: mode === 'list' ? '#F2724A' : '#9e7e76',
+            color: mode === 'list' ? colors.primary.DEFAULT : colors.muted.foreground,
             fontWeight: mode === 'list' ? '700' : '400',
           }}
         >

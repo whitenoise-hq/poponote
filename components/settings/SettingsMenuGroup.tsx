@@ -1,6 +1,7 @@
 import { View, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text, Card } from '@/components/ui'
+import { colors } from '@/theme/colors'
 
 import type { ComponentProps } from 'react'
 
@@ -32,7 +33,7 @@ export function SettingsMenuGroup({ items }: SettingsMenuGroupProps) {
           <Ionicons
             name={item.icon}
             size={20}
-            color={item.danger ? '#D45D5D' : '#7A6F64'}
+            color={item.danger ? colors.danger : colors.ink[500]}
           />
           <View className="flex-1">
             <Text
@@ -48,7 +49,7 @@ export function SettingsMenuGroup({ items }: SettingsMenuGroupProps) {
             )}
           </View>
           {!item.danger && (
-            <Ionicons name="chevron-forward" size={18} color="#C4B9AC" />
+            <Ionicons name="chevron-forward" size={18} color={colors.ink[300]} />
           )}
         </Pressable>
       ))}

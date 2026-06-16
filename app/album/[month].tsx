@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Text } from '@/components/ui'
 import { PhotoGrid } from '@/components/album/PhotoGrid'
 import { useAlbumMonth, type AlbumPhoto } from '@/hooks/use-album'
+import { colors } from '@/theme/colors'
 
 export default function AlbumMonthScreen() {
   const { month } = useLocalSearchParams<{ month: string }>()
@@ -30,7 +31,7 @@ export default function AlbumMonthScreen() {
           onPress={() => router.back()}
           className="w-8 h-8 items-center justify-center"
         >
-          <Ionicons name="chevron-back" size={20} color="#2B2520" />
+          <Ionicons name="chevron-back" size={20} color={colors.ink.DEFAULT} />
         </Pressable>
         <Text variant="subtitle" className="text-ink">
           {formatMonth(month)}

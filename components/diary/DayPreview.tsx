@@ -1,6 +1,7 @@
 import { View, Image, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text, Card } from '@/components/ui'
+import { colors } from '@/theme/colors'
 import { getMemberNickname, getReactions, getComments } from '@/lib/mock-data'
 import { EntryStatsBar } from './EntryStatsBar'
 import type { DiaryEntry, CareLog } from '@/types'
@@ -32,13 +33,13 @@ export function DayPreview({ date, entry, careLogs, onPress }: DayPreviewProps) 
 
   return (
     <View style={{ marginTop: 16 }}>
-      <Text variant="label" style={{ color: '#2B2520', marginBottom: 8 }}>
+      <Text variant="label" style={{ color: colors.ink.DEFAULT, marginBottom: 8 }}>
         {formatDate(date)}
       </Text>
 
       {hasContent ? (
         <Pressable onPress={onPress}>
-          <Card style={{ borderWidth: 1, borderColor: '#F2724A', gap: 10 }}>
+          <Card style={{ borderWidth: 1, borderColor: colors.primary.DEFAULT, gap: 10 }}>
             {entry && (
               <View style={{ flexDirection: 'row', gap: 12 }}>
                 {entry.photo_url && (
@@ -50,19 +51,19 @@ export function DayPreview({ date, entry, careLogs, onPress }: DayPreviewProps) 
                 )}
                 <View style={{ flex: 1 }}>
                   {entry.title && (
-                    <Text variant="label" style={{ color: '#2B2520' }} numberOfLines={1}>
+                    <Text variant="label" style={{ color: colors.ink.DEFAULT }} numberOfLines={1}>
                       {entry.title}
                     </Text>
                   )}
                   <Text
                     variant="caption"
-                    style={{ color: '#9e7e76' }}
+                    style={{ color: colors.muted.foreground }}
                     numberOfLines={2}
                   >
                     {entry.body}
                   </Text>
                 </View>
-                <Ionicons name="chevron-forward" size={16} color="#C4B9AC" />
+                <Ionicons name="chevron-forward" size={16} color={colors.ink[300]} />
               </View>
             )}
 
@@ -74,8 +75,8 @@ export function DayPreview({ date, entry, careLogs, onPress }: DayPreviewProps) 
           </Card>
         </Pressable>
       ) : (
-        <Card style={{ borderWidth: 1, borderColor: '#F2724A', alignItems: 'center', paddingVertical: 32 }}>
-          <Text variant="caption" style={{ color: '#9e7e76' }}>
+        <Card style={{ borderWidth: 1, borderColor: colors.primary.DEFAULT, alignItems: 'center', paddingVertical: 32 }}>
+          <Text variant="caption" style={{ color: colors.muted.foreground }}>
             이 날의 기록이 없어요
           </Text>
         </Card>

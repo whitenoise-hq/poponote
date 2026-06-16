@@ -1,6 +1,7 @@
 import { Pressable, Alert } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text } from '@/components/ui'
+import { colors } from '@/theme/colors'
 
 interface PhotoPickerPlaceholderProps {
   onPick?: (uri: string) => void
@@ -25,7 +26,7 @@ export function PhotoPickerPlaceholder({ onPick }: PhotoPickerPlaceholderProps) 
       onPress={handlePress}
       className="w-full h-56 rounded-2xl bg-muted items-center justify-center border-2 border-dashed border-cream-200"
     >
-      <Ionicons name="camera-outline" size={36} color="#9e7e76" />
+      <Ionicons name="camera-outline" size={36} color={colors.muted.foreground} />
       <Text variant="body" className="text-muted-foreground mt-2">
         사진을 선택하세요
       </Text>

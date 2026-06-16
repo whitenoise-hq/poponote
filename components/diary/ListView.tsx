@@ -2,6 +2,7 @@ import { FlatList, View } from 'react-native'
 import { Text } from '@/components/ui'
 import { DiaryListCard } from './DiaryListCard'
 import { getReactions, getComments } from '@/lib/mock-data'
+import { colors } from '@/theme/colors'
 import type { DiaryEntry, CareLog } from '@/types'
 
 interface ListViewProps {
@@ -30,7 +31,7 @@ export function ListView({ entries, careLogs, onSelectDate }: ListViewProps) {
       showsVerticalScrollIndicator={false}
       ListEmptyComponent={
         <View style={{ alignItems: 'center', paddingVertical: 48 }}>
-          <Text variant="body" style={{ color: '#9e7e76' }}>
+          <Text variant="body" style={{ color: colors.muted.foreground }}>
             아직 기록이 없어요
           </Text>
         </View>

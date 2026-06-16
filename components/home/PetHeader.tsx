@@ -1,6 +1,7 @@
 import { View, Image } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text } from '@/components/ui'
+import { colors } from '@/theme/colors'
 import type { Pet } from '@/types'
 
 interface PetHeaderProps {
@@ -43,12 +44,12 @@ export function PetHeader({ pet }: PetHeaderProps) {
               className="w-20 h-20 rounded-full"
               style={{
                 borderWidth: 3,
-                borderColor: '#fff',
+                borderColor: colors.white,
               }}
             />
           ) : (
             <View className="w-16 h-16 rounded-full bg-cream items-center justify-center">
-              <Ionicons name="paw" size={28} color="#F2724A" />
+              <Ionicons name="paw" size={28} color={colors.primary.DEFAULT} />
             </View>
           )}
         </View>

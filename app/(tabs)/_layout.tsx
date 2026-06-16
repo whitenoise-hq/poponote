@@ -1,16 +1,18 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 
+import { colors } from '@/theme/colors';
+
 export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#F2724A', // primary
-        tabBarInactiveTintColor: '#9C9186', // ink-400
+        tabBarActiveTintColor: colors.primary.DEFAULT, // primary
+        tabBarInactiveTintColor: colors.ink[400], // ink-400
         tabBarStyle: {
-          backgroundColor: '#FBF7F1', // cream
-          borderTopColor: '#ECE1D1', // cream-200
+          backgroundColor: colors.cream.DEFAULT, // cream
+          borderTopColor: colors.cream[200], // cream-200
         },
         tabBarLabelStyle: { fontFamily: 'Pretendard-Medium' },
       }}

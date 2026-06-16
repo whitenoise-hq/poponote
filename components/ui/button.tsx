@@ -1,6 +1,7 @@
 import { ActivityIndicator, Pressable, type PressableProps } from 'react-native';
 
 import { cn } from '@/lib/cn';
+import { colors } from '@/theme/colors';
 import { Text } from './text';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
@@ -26,9 +27,9 @@ const SIZE_CONTAINER: Record<ButtonSize, string> = {
 };
 
 const SPINNER_COLOR: Record<ButtonVariant, string> = {
-  primary: '#FFFFFF',
-  secondary: '#2B2520',
-  ghost: '#D85A35',
+  primary: colors.white,
+  secondary: colors.ink.DEFAULT,
+  ghost: colors.primary[600],
 };
 
 interface ButtonProps extends Omit<PressableProps, 'children'> {

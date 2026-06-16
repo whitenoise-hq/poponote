@@ -2,6 +2,7 @@ import {useState} from 'react'
 import {View, Pressable, LayoutAnimation, Platform, UIManager} from 'react-native'
 import {Ionicons} from '@expo/vector-icons'
 import {Text} from '@/components/ui'
+import {colors} from '@/theme/colors'
 import {CARE_CONFIG, CARE_KINDS} from '@/lib/care-config'
 import {getMemberNickname} from '@/lib/mock-data'
 import type {CareLog, CareKind} from '@/types'
@@ -15,9 +16,9 @@ interface CareRecordSectionProps {
 }
 
 const COLOR_VALUES: Record<CareKind, string> = {
-    meal: '#f4846a',
-    treat: '#a8c8a0',
-    walk: '#7eb8e8',
+    meal: colors.meal.DEFAULT,
+    treat: colors.treat.DEFAULT,
+    walk: colors.walk.DEFAULT,
 }
 
 function formatTime(isoStr: string): string {
@@ -43,7 +44,7 @@ export function CareRecordSection({logs}: CareRecordSectionProps) {
         <View style={{
             marginTop: 16,
             borderBottomWidth: 1,
-            borderBottomColor: '#ECE1D1',
+            borderBottomColor: colors.cream[200],
             paddingBottom: 14
         }}>
             <Pressable
@@ -56,10 +57,10 @@ export function CareRecordSection({logs}: CareRecordSectionProps) {
                 }}
             >
                 <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
-                    <Text variant="subtitle" style={{color: '#2B2520'}}>
+                    <Text variant="subtitle" style={{color: colors.ink.DEFAULT}}>
                         케어 기록
                     </Text>
-                    <Text variant="caption" style={{color: '#9e7e76'}}>
+                    <Text variant="caption" style={{color: colors.muted.foreground}}>
                         {logs.length}건
                     </Text>
                 </View>
@@ -80,7 +81,7 @@ export function CareRecordSection({logs}: CareRecordSectionProps) {
                     <Ionicons
                         name={expanded ? 'chevron-up' : 'chevron-down'}
                         size={16}
-                        color="#2B2520"
+                        color={colors.ink.DEFAULT}
                     />
                 </View>
             </Pressable>
@@ -109,14 +110,14 @@ export function CareRecordSection({logs}: CareRecordSectionProps) {
                                         marginLeft: 20,
                                         marginBottom: 2
                                     }}>
-                                        <Text variant="caption" style={{color: '#2B2520'}}>
+                                        <Text variant="caption" style={{color: colors.ink.DEFAULT}}>
                                             {getMemberNickname(log.author_id)}
                                         </Text>
-                                        <Text variant="caption" style={{color: '#9e7e76'}}>
+                                        <Text variant="caption" style={{color: colors.muted.foreground}}>
                                             {formatTime(log.logged_at)}
                                         </Text>
                                         {log.memo && (
-                                            <Text variant="caption" style={{color: '#9e7e76'}}>
+                                            <Text variant="caption" style={{color: colors.muted.foreground}}>
                                                 "{log.memo}"
                                             </Text>
                                         )}

@@ -1,6 +1,7 @@
 import { Pressable, View, Image } from 'react-native'
 import { Text, Card } from '@/components/ui'
 import { EntryStatsBar } from './EntryStatsBar'
+import { colors } from '@/theme/colors'
 import type { DiaryEntry, CareLog } from '@/types'
 
 interface DiaryListCardProps {
@@ -32,12 +33,12 @@ export function DiaryListCard({ entry, careLogs, likeCount, commentCount, onPres
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
             <Text
               variant="label"
-              style={{ color: '#2B2520', flex: 1 }}
+              style={{ color: colors.ink.DEFAULT, flex: 1 }}
               numberOfLines={1}
             >
               {entry.title ?? entry.body}
             </Text>
-            <Text variant="caption" style={{ color: '#9e7e76', flexShrink: 0 }}>
+            <Text variant="caption" style={{ color: colors.muted.foreground, flexShrink: 0 }}>
               {formatDateShort(entry.date)}
             </Text>
           </View>
@@ -45,7 +46,7 @@ export function DiaryListCard({ entry, careLogs, likeCount, commentCount, onPres
           {entry.title && (
             <Text
               variant="caption"
-              style={{ color: '#9e7e76' }}
+              style={{ color: colors.muted.foreground }}
               numberOfLines={2}
             >
               {entry.body}

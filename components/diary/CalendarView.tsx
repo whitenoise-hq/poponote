@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { View, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text } from '@/components/ui'
+import { colors } from '@/theme/colors'
 import { CalendarDayCell } from './CalendarDayCell'
 import type { DiaryEntry, CareLog } from '@/types'
 
@@ -77,13 +78,13 @@ export function CalendarView({
       {/* Month header */}
       <View className="flex-row items-center justify-between mb-4">
         <Pressable onPress={prevMonth} className="px-3 py-1">
-          <Ionicons name="chevron-back" size={20} color="#9C9186" />
+          <Ionicons name="chevron-back" size={20} color={colors.ink[400]} />
         </Pressable>
         <Text variant="subtitle" className="text-ink">
           {year}년 {month}월
         </Text>
         <Pressable onPress={nextMonth} className="px-3 py-1">
-          <Ionicons name="chevron-forward" size={20} color="#9C9186" />
+          <Ionicons name="chevron-forward" size={20} color={colors.ink[400]} />
         </Pressable>
       </View>
 

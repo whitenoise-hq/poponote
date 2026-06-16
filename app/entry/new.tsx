@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Text, Button } from '@/components/ui'
 import { PhotoPickerPlaceholder } from '@/components/entry/PhotoPickerPlaceholder'
 import { useAddDiaryEntry } from '@/hooks/use-diary'
+import { colors } from '@/theme/colors'
 
 export default function NewEntryScreen() {
   const router = useRouter()
@@ -42,7 +43,7 @@ export default function NewEntryScreen() {
           onPress={() => router.back()}
           className="w-8 h-8 items-center justify-center"
         >
-          <Ionicons name="chevron-back" size={20} color="#2B2520" />
+          <Ionicons name="chevron-back" size={20} color={colors.ink.DEFAULT} />
         </Pressable>
         <Text variant="subtitle" className="text-ink">
           새 기록
@@ -77,7 +78,7 @@ export default function NewEntryScreen() {
           value={title}
           onChangeText={setTitle}
           placeholder="제목 (선택)"
-          placeholderTextColor="#9e7e76"
+          placeholderTextColor={colors.muted.foreground}
           className="mt-4 px-4 py-3 bg-white rounded-xl text-base font-medium text-ink"
           style={{ fontFamily: 'GothicA1_500Medium' }}
         />
@@ -87,7 +88,7 @@ export default function NewEntryScreen() {
           value={body}
           onChangeText={setBody}
           placeholder="오늘 하루를 기록해보세요..."
-          placeholderTextColor="#9e7e76"
+          placeholderTextColor={colors.muted.foreground}
           multiline
           textAlignVertical="top"
           className="mt-3 px-4 py-3 bg-white rounded-xl text-sm font-sans text-ink min-h-[160px]"

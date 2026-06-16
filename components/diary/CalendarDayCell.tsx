@@ -1,5 +1,6 @@
 import { Pressable, View } from 'react-native'
 import { Text } from '@/components/ui'
+import { colors } from '@/theme/colors'
 
 interface CalendarDayCellProps {
   day: number | null
@@ -35,7 +36,7 @@ export function CalendarDayCell({
         style={[
           { width: 30, height: 30, borderRadius: 15 },
           isSelected
-            ? { backgroundColor: '#F2724A' }
+            ? { backgroundColor: colors.primary.DEFAULT }
             : isToday
               ? { backgroundColor: 'rgba(242,114,74,0.1)' }
               : undefined,
@@ -44,7 +45,7 @@ export function CalendarDayCell({
         <Text
           variant="caption"
           style={{
-            color: isSelected ? '#fff' : isToday ? '#F2724A' : '#2B2520',
+            color: isSelected ? colors.white : isToday ? colors.primary.DEFAULT : colors.ink.DEFAULT,
             fontWeight: isSelected || isToday ? '700' : '400',
           }}
         >
@@ -59,7 +60,7 @@ export function CalendarDayCell({
               width: 5,
               height: 5,
               borderRadius: 3,
-              backgroundColor: isSelected ? '#F2724A' : '#F2724A',
+              backgroundColor: isSelected ? colors.primary.DEFAULT : colors.primary.DEFAULT,
             }}
           />
         ) : hasCare ? (
@@ -68,7 +69,7 @@ export function CalendarDayCell({
               width: 5,
               height: 5,
               borderRadius: 3,
-              backgroundColor: '#C4B9AC',
+              backgroundColor: colors.ink[300],
             }}
           />
         ) : null}

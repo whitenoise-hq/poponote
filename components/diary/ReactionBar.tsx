@@ -1,6 +1,7 @@
 import { View, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text } from '@/components/ui'
+import { colors } from '@/theme/colors'
 import { CURRENT_USER_ID } from '@/lib/mock-data'
 import type { Reaction } from '@/types'
 
@@ -26,7 +27,7 @@ export function ReactionBar({ reactions, onToggle }: ReactionBarProps) {
         <Ionicons
           name={hasReacted ? 'heart' : 'heart-outline'}
           size={18}
-          color={hasReacted ? '#F2724A' : '#9e7e76'}
+          color={hasReacted ? colors.primary.DEFAULT : colors.muted.foreground}
         />
         <Text
           variant="label"

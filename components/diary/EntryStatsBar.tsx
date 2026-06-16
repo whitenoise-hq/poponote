@@ -1,13 +1,14 @@
 import { View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text } from '@/components/ui'
+import { colors } from '@/theme/colors'
 import { CARE_CONFIG } from '@/lib/care-config'
 import type { CareLog, CareKind } from '@/types'
 
 const COLOR_VALUES: Record<CareKind, string> = {
-  meal: '#f4846a',
-  treat: '#a8c8a0',
-  walk: '#7eb8e8',
+  meal: colors.meal.DEFAULT,
+  treat: colors.treat.DEFAULT,
+  walk: colors.walk.DEFAULT,
 }
 
 interface EntryStatsBarProps {
@@ -22,14 +23,14 @@ export function EntryStatsBar({ likeCount, commentCount, careLogs }: EntryStatsB
       {/* Likes & Comments — 왼쪽 */}
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-          <Ionicons name="heart" size={13} color="#F2724A" />
-          <Text variant="caption" style={{ color: '#9e7e76' }}>
+          <Ionicons name="heart" size={13} color={colors.primary.DEFAULT} />
+          <Text variant="caption" style={{ color: colors.muted.foreground }}>
             {likeCount}
           </Text>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-          <Ionicons name="chatbubble-outline" size={12} color="#9e7e76" />
-          <Text variant="caption" style={{ color: '#9e7e76' }}>
+          <Ionicons name="chatbubble-outline" size={12} color={colors.muted.foreground} />
+          <Text variant="caption" style={{ color: colors.muted.foreground }}>
             {commentCount}
           </Text>
         </View>

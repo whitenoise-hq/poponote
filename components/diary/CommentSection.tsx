@@ -2,6 +2,7 @@ import { View, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text } from '@/components/ui'
 import { getMemberNickname, CURRENT_USER_ID } from '@/lib/mock-data'
+import { colors } from '@/theme/colors'
 import type { Comment } from '@/types'
 
 interface CommentSectionProps {
@@ -22,14 +23,14 @@ export function CommentSection({ comments, onDelete }: CommentSectionProps) {
   return (
     <View style={{ marginTop: 16 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 12 }}>
-        <Ionicons name="chatbubbles-outline" size={18} color="#2B2520" />
-        <Text variant="subtitle" style={{ color: '#2B2520' }}>
+        <Ionicons name="chatbubbles-outline" size={18} color={colors.ink.DEFAULT} />
+        <Text variant="subtitle" style={{ color: colors.ink.DEFAULT }}>
           댓글
         </Text>
       </View>
 
       {comments.length === 0 && (
-        <Text variant="caption" style={{ color: '#9e7e76' }}>
+        <Text variant="caption" style={{ color: colors.muted.foreground }}>
           아직 댓글이 없어요
         </Text>
       )}
@@ -43,30 +44,30 @@ export function CommentSection({ comments, onDelete }: CommentSectionProps) {
                 width: 28,
                 height: 28,
                 borderRadius: 14,
-                backgroundColor: '#ffd6cc',
+                backgroundColor: colors.accent,
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
-              <Ionicons name="person" size={14} color="#F2724A" />
+              <Ionicons name="person" size={14} color={colors.primary.DEFAULT} />
             </View>
             <View style={{ flex: 1 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                <Text variant="label" style={{ color: '#2B2520' }}>
+                <Text variant="label" style={{ color: colors.ink.DEFAULT }}>
                   {getMemberNickname(comment.author_id)}
                 </Text>
-                <Text variant="caption" style={{ color: '#9e7e76' }}>
+                <Text variant="caption" style={{ color: colors.muted.foreground }}>
                   {formatTime(comment.created_at)}
                 </Text>
                 {isOwn && (
                   <Pressable onPress={() => onDelete(comment.id)}>
-                    <Text variant="caption" style={{ color: '#D45D5D' }}>
+                    <Text variant="caption" style={{ color: colors.danger }}>
                       삭제
                     </Text>
                   </Pressable>
                 )}
               </View>
-              <Text variant="body" style={{ color: '#2B2520', marginTop: 2 }}>
+              <Text variant="body" style={{ color: colors.ink.DEFAULT, marginTop: 2 }}>
                 {comment.body}
               </Text>
             </View>

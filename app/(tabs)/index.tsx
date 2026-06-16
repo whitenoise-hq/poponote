@@ -10,6 +10,7 @@ import { usePet } from '@/hooks/use-pet'
 import { useCareLogs, useAddCareLog } from '@/hooks/use-care-logs'
 import { useTodayEntry } from '@/hooks/use-diary'
 import { TODAY } from '@/lib/mock-data'
+import { colors } from '@/theme/colors'
 import type { CareKind } from '@/types'
 
 export default function HomeScreen() {
@@ -37,7 +38,7 @@ export default function HomeScreen() {
 
   return (
     <LinearGradient
-      colors={['#fff0ec', '#fdf8f5', '#FBF7F1']}
+      colors={[colors.meal.bg, colors.cream[75], colors.cream.DEFAULT]}
       locations={[0, 0.3, 1]}
       style={{ flex: 1 }}
     >
