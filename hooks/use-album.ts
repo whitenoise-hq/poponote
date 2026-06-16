@@ -4,7 +4,7 @@ import { getDiaryEntries } from '@/lib/mock-data'
 export interface AlbumMonth {
   month: string // YYYY-MM
   count: number
-  coverUrl: string
+  coverUrls: string[] // 최신순 최대 3장 (겹친 표지용)
 }
 
 export interface AlbumPhoto {
@@ -17,30 +17,24 @@ export function useAlbumMonths() {
   return useQuery<AlbumMonth[]>({
     queryKey: ['albumMonths'],
     queryFn: () => {
-      const entries = getDiaryEntries().filter((e) => e.illustration_url)
-      const monthMap = new Map<
-        string,
-        { count: number; coverUrl: string }
-      >()
+      const entries = getDiaryEntries()
+        .filter((e) => e.illustration_url)
+        .sort((a, b) => b.date.localeCompare(a.date)) // 최신순
 
+      const monthMap = new Map<string, string[]>()
       for (const entry of entries) {
         const month = entry.date.slice(0, 7)
-        const existing = monthMap.get(month)
-        if (existing) {
-          monthMap.set(month, {
-            count: existing.count + 1,
-            coverUrl: existing.coverUrl,
-          })
-        } else {
-          monthMap.set(month, {
-            count: 1,
-            coverUrl: entry.illustration_url!,
-          })
-        }
+        const urls = monthMap.get(month) ?? []
+        urls.push(entry.illustration_url!)
+        monthMap.set(month, urls)
       }
 
       return Array.from(monthMap.entries())
-        .map(([month, data]) => ({ month, ...data }))
+        .map(([month, urls]) => ({
+          month,
+          count: urls.length,
+          coverUrls: urls.slice(0, 3),
+        }))
         .sort((a, b) => b.month.localeCompare(a.month))
     },
   })

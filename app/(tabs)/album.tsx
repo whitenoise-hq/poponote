@@ -20,16 +20,18 @@ export default function AlbumScreen() {
 
       <ScrollView
         className="flex-1 px-5"
-        contentContainerClassName="gap-3 pb-8"
+        contentContainerClassName="pb-8 pt-2"
         showsVerticalScrollIndicator={false}
       >
-        {(months ?? []).map((folder) => (
-          <MonthFolderCard
-            key={folder.month}
-            folder={folder}
-            onPress={() => router.push(`/album/${folder.month}` as never)}
-          />
-        ))}
+        <View className="flex-row flex-wrap justify-between">
+          {(months ?? []).map((folder) => (
+            <MonthFolderCard
+              key={folder.month}
+              folder={folder}
+              onPress={() => router.push(`/album/${folder.month}` as never)}
+            />
+          ))}
+        </View>
         {(months ?? []).length === 0 && (
           <View className="items-center py-12">
             <Text variant="body" className="text-muted-foreground">
