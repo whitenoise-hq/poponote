@@ -49,8 +49,10 @@
 - **언어**: TypeScript. `any` 지양, 타입 명시.
 - **컴포넌트**: 함수형 컴포넌트 + Hooks.
 - **네이밍**: 컴포넌트 PascalCase, 변수·함수 camelCase, 상수 UPPER_SNAKE_CASE, 파일은 컴포넌트=PascalCase / 그 외=kebab-case 또는 camelCase로 일관 유지.
-- **스타일**: NativeWind `className` 우선. 인라인 스타일·StyleSheet는 NativeWind로 표현 어려운 경우에만.
+- **스타일**: NativeWind `className` 우선. 단 `Pressable`에 동적 조건부 className 사용 시 NativeWind CssInterop 오류 발생 가능 → 이 경우 `style` prop 사용. 인라인 스타일·StyleSheet는 NativeWind로 표현 어려운 경우에만.
 - **디자인 토큰**: 색상·간격·타이포는 `tailwind.config.js`에 정의해 일관성 유지. 하드코딩된 색상값 지양.
+- **폰트**: Pretendard(Regular/Medium/SemiBold/Bold, .otf) + Jua(디스플레이). `assets/fonts/`에 저장.
+- **아이콘**: Ionicons(`@expo/vector-icons`) 사용. 이모지 사용 금지(기기별 렌더링 불일치).
 - **폴더 구조**:
   ```
   app/            # Expo Router 화면 (파일 기반 라우팅, (tabs) 그룹 포함)
