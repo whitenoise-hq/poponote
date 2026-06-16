@@ -1,39 +1,60 @@
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native'
+import { useRouter } from 'expo-router'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { LinearGradient } from 'expo-linear-gradient'
 
-import { Button, Card, Screen, Text } from '@/components/ui';
+import { PetHeader } from '@/components/home/PetHeader'
+import { CareSection } from '@/components/home/CareSection'
+import { DiaryPreview } from '@/components/home/DiaryPreview'
+import { usePet } from '@/hooks/use-pet'
+import { useCareLogs, useAddCareLog } from '@/hooks/use-care-logs'
+import { useTodayEntry } from '@/hooks/use-diary'
+import { TODAY } from '@/lib/mock-data'
+import type { CareKind } from '@/types'
 
 export default function HomeScreen() {
+  const router = useRouter()
+  const { data: pet } = usePet()
+  const { data: careLogs } = useCareLogs(TODAY)
+  const addCareLog = useAddCareLog(TODAY)
+  const { data: todayEntry } = useTodayEntry()
+
+  function handleAddCare(kind: CareKind, memo: string | null) {
+    addCareLog.mutate({ kind, memo })
+  }
+
+  function handlePressEntry() {
+    router.push(`/diary/${TODAY}` as never)
+  }
+
+  function handlePressWrite() {
+    router.push('/entry/new' as never)
+  }
+
   return (
-    <Screen contentClassName="justify-center">
-      <Text variant="display" className="text-primary-600">
-        포포노트
-      </Text>
-      <Text variant="caption" className="mt-1">
-        오늘의 케어와 다이어리 미리보기가 여기에 표시됩니다.
-      </Text>
+    <LinearGradient
+      colors={['#fff0ec', '#fdf8f5', '#FBF7F1']}
+      locations={[0, 0.3, 1]}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView className="flex-1" edges={['top']}>
+        <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+          {pet && <PetHeader pet={pet} />}
 
-      <Card className="mt-6">
-        <Text variant="subtitle">오늘 케어</Text>
-        <View className="mt-3 flex-row gap-2">
-          <View className="rounded-xl bg-meal/15 px-3 py-1.5">
-            <Text variant="label" className="text-meal">
-              밥
-            </Text>
-          </View>
-          <View className="rounded-xl bg-treat/15 px-3 py-1.5">
-            <Text variant="label" className="text-treat">
-              간식
-            </Text>
-          </View>
-          <View className="rounded-xl bg-walk/15 px-3 py-1.5">
-            <Text variant="label" className="text-walk">
-              산책
-            </Text>
-          </View>
-        </View>
-      </Card>
+          <View className="px-4 pb-8 gap-6">
+            <CareSection
+              logs={careLogs ?? []}
+              onAdd={handleAddCare}
+            />
 
-      <Button label="오늘 일기 남기기" className="mt-6" />
-    </Screen>
-  );
+            <DiaryPreview
+              entry={todayEntry}
+              onPressEntry={handlePressEntry}
+              onPressWrite={handlePressWrite}
+            />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </LinearGradient>
+  )
 }

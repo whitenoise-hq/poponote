@@ -35,19 +35,22 @@ module.exports = {
           700: '#4A423B',
           DEFAULT: '#2B2520',
         },
-        // 시맨틱 (케어 종류 구분)
-        meal: '#F2A65A', // 밥
-        treat: '#E0709A', // 간식
-        walk: '#6FA98C', // 산책
+        // 시맨틱 (케어 종류 구분 — Figma 참고본 기준)
+        meal: { DEFAULT: '#f4846a', bg: '#fff0ec' }, // 밥 (코랄)
+        treat: { DEFAULT: '#a8c8a0', bg: '#edf7ec' }, // 간식 (세이지 그린)
+        walk: { DEFAULT: '#7eb8e8', bg: '#eaf4fd' }, // 산책 (소프트 블루)
+        // Figma 시맨틱 토큰
+        secondary: '#fde8e0', // 배지·태그·뒤로가기 배경
+        muted: { DEFAULT: '#f5ede8', foreground: '#9e7e76' }, // 옅은 표면, 보조 텍스트
+        accent: '#ffd6cc', // 댓글 아바타 배경
         success: '#5FA877',
         danger: '#D45D5D',
       },
       fontFamily: {
-        // expo-google-fonts 로드 키와 일치 (app/_layout.tsx 참고)
-        sans: ['GothicA1_400Regular'],
-        medium: ['GothicA1_500Medium'],
-        semibold: ['GothicA1_600SemiBold'],
-        bold: ['GothicA1_700Bold'],
+        sans: ['Pretendard-Regular'],
+        medium: ['Pretendard-Medium'],
+        semibold: ['Pretendard-SemiBold'],
+        bold: ['Pretendard-Bold'],
         display: ['Jua_400Regular'], // 로고/큰 제목용 둥근 폰트
       },
       borderRadius: {

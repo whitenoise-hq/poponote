@@ -50,7 +50,7 @@ export function CareCard({ kind, logs, onAdd }: CareCardProps) {
         <View className="flex-row items-center gap-2">
           <Ionicons name={config.icon} size={18} color={color} />
           <Text
-            variant="label"
+            variant="body"
             style={{ color, fontWeight: '700' }}
           >
             {config.label}

@@ -12,7 +12,7 @@ export default function TabsLayout() {
           backgroundColor: '#FBF7F1', // cream
           borderTopColor: '#ECE1D1', // cream-200
         },
-        tabBarLabelStyle: { fontFamily: 'GothicA1_500Medium' },
+        tabBarLabelStyle: { fontFamily: 'Pretendard-Medium' },
       }}
     >
       <Tabs.Screen
