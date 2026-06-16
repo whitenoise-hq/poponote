@@ -5,9 +5,10 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { Text, Card } from '@/components/ui'
 import { EntrySection } from '@/components/diary/EntrySection'
-import { CareRecordSection } from '@/components/diary/CareRecordSection'
 import { ReactionBar } from '@/components/diary/ReactionBar'
+import { CareRecordSection } from '@/components/diary/CareRecordSection'
 import { CommentSection } from '@/components/diary/CommentSection'
+import { CommentInput } from '@/components/diary/CommentInput'
 import { useDiaryEntry } from '@/hooks/use-diary'
 import { useCareLogs } from '@/hooks/use-care-logs'
 import { useComments, useAddComment, useDeleteComment } from '@/hooks/use-comments'
@@ -37,32 +38,42 @@ export default function DiaryDetailScreen() {
   if (!date) return null
 
   return (
-    <SafeAreaView className="flex-1 bg-cream" edges={['top']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FBF7F1' }} edges={['top']}>
       {/* Header */}
-      <View className="flex-row items-center px-5 py-3 gap-3">
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 12, gap: 12 }}>
         <Pressable
           onPress={() => router.back()}
-          className="w-8 h-8 rounded-full bg-secondary items-center justify-center"
+          style={{
+            width: 32,
+            height: 32,
+            borderRadius: 16,
+            backgroundColor: '#fde8e0',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
         >
           <Ionicons name="chevron-back" size={20} color="#2B2520" />
         </Pressable>
-        <Text variant="subtitle" className="text-ink flex-1">
+        <Text variant="subtitle" style={{ color: '#2B2520', flex: 1 }}>
           {formatDateHeader(date)}
         </Text>
       </View>
 
-      <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false}>
+      {/* Content */}
+      <ScrollView
+        style={{ flex: 1, paddingHorizontal: 20 }}
+        showsVerticalScrollIndicator={false}
+      >
         {entry ? (
           <>
             <EntrySection entry={entry} />
-            <CareRecordSection logs={careLogs ?? []} />
             <ReactionBar
               reactions={reactions ?? []}
               onToggle={() => toggleReaction.mutate()}
             />
+            <CareRecordSection logs={careLogs ?? []} />
             <CommentSection
               comments={comments ?? []}
-              onAdd={(body) => addComment.mutate(body)}
               onDelete={(id) => deleteComment.mutate(id)}
             />
           </>
@@ -70,16 +81,23 @@ export default function DiaryDetailScreen() {
           <View>
             <CareRecordSection logs={careLogs ?? []} />
             {(careLogs ?? []).length === 0 && (
-              <Card className="py-8 items-center mt-4">
-                <Text variant="body" className="text-muted-foreground">
+              <Card style={{ paddingVertical: 32, alignItems: 'center', marginTop: 16 }}>
+                <Text variant="body" style={{ color: '#9e7e76' }}>
                   이 날의 기록이 없어요
                 </Text>
               </Card>
             )}
           </View>
         )}
-        <View className="h-8" />
+        <View style={{ height: 24 }} />
       </ScrollView>
+
+      {/* 하단 고정 댓글 입력 */}
+      {entry && (
+        <SafeAreaView edges={['bottom']} style={{ backgroundColor: '#FBF7F1' }}>
+          <CommentInput onSend={(body) => addComment.mutate(body)} />
+        </SafeAreaView>
+      )}
     </SafeAreaView>
   )
 }
