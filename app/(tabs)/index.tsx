@@ -27,6 +27,10 @@ export default function HomeScreen() {
     router.push(`/diary/${TODAY}` as never)
   }
 
+  function handlePressMore() {
+    router.navigate('/(tabs)/diary' as never)
+  }
+
   function handlePressWrite() {
     router.push('/entry/new' as never)
   }
@@ -50,6 +54,7 @@ export default function HomeScreen() {
             <DiaryPreview
               entry={todayEntry}
               onPressEntry={handlePressEntry}
+              onPressMore={handlePressMore}
               onPressWrite={handlePressWrite}
             />
           </View>

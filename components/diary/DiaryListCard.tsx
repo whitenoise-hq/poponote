@@ -1,60 +1,62 @@
 import { Pressable, View, Image } from 'react-native'
 import { Text, Card } from '@/components/ui'
-import { getMemberNickname } from '@/lib/mock-data'
-import type { DiaryEntry } from '@/types'
+import { EntryStatsBar } from './EntryStatsBar'
+import type { DiaryEntry, CareLog } from '@/types'
 
 interface DiaryListCardProps {
   entry: DiaryEntry
+  careLogs: CareLog[]
+  likeCount: number
+  commentCount: number
   onPress: () => void
 }
 
-function formatDate(dateStr: string): string {
-  const d = new Date(dateStr + 'T00:00:00')
-  return d.toLocaleDateString('ko-KR', {
-    month: 'long',
-    day: 'numeric',
-    weekday: 'short',
-  })
+function formatDateShort(dateStr: string): string {
+  const [y, m, d] = dateStr.split('-')
+  return `${y}.${m}.${d}`
 }
 
-export function DiaryListCard({ entry, onPress }: DiaryListCardProps) {
+export function DiaryListCard({ entry, careLogs, likeCount, commentCount, onPress }: DiaryListCardProps) {
   return (
     <Pressable onPress={onPress}>
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden" style={{ padding: 0 }}>
         {entry.photo_url && (
-          <View className="relative">
-            <Image
-              source={{ uri: entry.photo_url }}
-              className="w-full h-40"
-              resizeMode="cover"
-            />
-            <View className="absolute top-3 left-3 bg-white/90 rounded-lg px-2 py-1">
-              <Text variant="caption" className="text-ink font-medium">
-                {formatDate(entry.date)}
-              </Text>
-            </View>
-            <View
-              className="absolute bottom-0 left-0 right-0 h-16"
-              style={{ backgroundColor: 'rgba(61,47,42,0.4)' }}
-            />
-          </View>
+          <Image
+            source={{ uri: entry.photo_url }}
+            style={{ width: '100%', height: 220 }}
+            resizeMode="cover"
+          />
         )}
-        <View className="px-4 py-3">
+        <View style={{ paddingHorizontal: 16, paddingVertical: 12, gap: 8 }}>
+          {/* 제목 + 날짜 */}
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+            <Text
+              variant="label"
+              style={{ color: '#2B2520', flex: 1 }}
+              numberOfLines={1}
+            >
+              {entry.title ?? entry.body}
+            </Text>
+            <Text variant="caption" style={{ color: '#9e7e76', flexShrink: 0 }}>
+              {formatDateShort(entry.date)}
+            </Text>
+          </View>
+
           {entry.title && (
-            <Text variant="label" className="text-ink mb-1">
-              {entry.title}
+            <Text
+              variant="caption"
+              style={{ color: '#9e7e76' }}
+              numberOfLines={2}
+            >
+              {entry.body}
             </Text>
           )}
-          <Text
-            variant="caption"
-            className="text-muted-foreground"
-            numberOfLines={2}
-          >
-            {entry.body}
-          </Text>
-          <Text variant="caption" className="text-muted-foreground mt-1">
-            {getMemberNickname(entry.author_id)}
-          </Text>
+
+          <EntryStatsBar
+            likeCount={likeCount}
+            commentCount={commentCount}
+            careLogs={careLogs}
+          />
         </View>
       </Card>
     </Pressable>

@@ -7,12 +7,14 @@ import type { DiaryEntry } from '@/types'
 interface DiaryPreviewProps {
   entry: DiaryEntry | null | undefined
   onPressEntry: () => void
+  onPressMore: () => void
   onPressWrite: () => void
 }
 
 export function DiaryPreview({
   entry,
   onPressEntry,
+  onPressMore,
   onPressWrite,
 }: DiaryPreviewProps) {
   return (
@@ -22,7 +24,7 @@ export function DiaryPreview({
           오늘의 일기
         </Text>
         {entry && (
-          <Pressable onPress={onPressEntry} className="flex-row items-center gap-0.5">
+          <Pressable onPress={onPressMore} className="flex-row items-center gap-0.5">
             <Text variant="caption" className="text-primary">
               더보기
             </Text>

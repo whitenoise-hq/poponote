@@ -26,17 +26,10 @@ export default function RootLayout() {
     }
   }, [fontsLoaded, fontError]);
 
-  // 폰트 로드 전(에러 아님)에는 스플래시 유지 → 시스템 폰트 깜빡임 방지
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
-
   return (
     <QueryClientProvider client={queryClient}>
       <StatusBar style="dark" />
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(tabs)" />
-      </Stack>
+      <Stack screenOptions={{ headerShown: false }} />
     </QueryClientProvider>
   );
 }

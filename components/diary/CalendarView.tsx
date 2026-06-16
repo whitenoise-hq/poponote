@@ -8,6 +8,7 @@ import type { DiaryEntry, CareLog } from '@/types'
 interface CalendarViewProps {
   entries: DiaryEntry[]
   careLogs: CareLog[]
+  selectedDate: string | null
   onSelectDate: (dateStr: string) => void
 }
 
@@ -40,6 +41,7 @@ function getCalendarWeeks(year: number, month: number): (number | null)[][] {
 export function CalendarView({
   entries,
   careLogs,
+  selectedDate,
   onSelectDate,
 }: CalendarViewProps) {
   const now = new Date()
@@ -109,6 +111,7 @@ export function CalendarView({
                 day={day}
                 dateStr={dateStr}
                 isToday={dateStr === todayStr}
+                isSelected={dateStr === selectedDate}
                 hasEntry={dateStr ? entryDates.has(dateStr) : false}
                 hasCare={dateStr ? careDates.has(dateStr) : false}
                 onPress={onSelectDate}

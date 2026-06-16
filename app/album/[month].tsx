@@ -18,7 +18,7 @@ export default function AlbumMonthScreen() {
   }
 
   function handlePhotoPress(photo: AlbumPhoto) {
-    router.push(`/album/photo/${photo.id}` as never)
+    router.push(`/photo-detail/${photo.id}` as never)
   }
 
   if (!month) return null

@@ -1,13 +1,16 @@
 import { FlatList, View } from 'react-native'
+import { Text } from '@/components/ui'
 import { DiaryListCard } from './DiaryListCard'
-import type { DiaryEntry } from '@/types'
+import { getReactions, getComments } from '@/lib/mock-data'
+import type { DiaryEntry, CareLog } from '@/types'
 
 interface ListViewProps {
   entries: DiaryEntry[]
+  careLogs: CareLog[]
   onSelectDate: (dateStr: string) => void
 }
 
-export function ListView({ entries, onSelectDate }: ListViewProps) {
+export function ListView({ entries, careLogs, onSelectDate }: ListViewProps) {
   const sorted = [...entries].sort((a, b) => b.date.localeCompare(a.date))
 
   return (
@@ -17,14 +20,19 @@ export function ListView({ entries, onSelectDate }: ListViewProps) {
       renderItem={({ item }) => (
         <DiaryListCard
           entry={item}
+          careLogs={careLogs.filter((c) => c.date === item.date)}
+          likeCount={getReactions().filter((r) => r.entry_id === item.id).length}
+          commentCount={getComments().filter((c) => c.entry_id === item.id).length}
           onPress={() => onSelectDate(item.date)}
         />
       )}
-      contentContainerClassName="gap-4"
+      contentContainerStyle={{ gap: 16, paddingBottom: 32 }}
       showsVerticalScrollIndicator={false}
       ListEmptyComponent={
-        <View className="items-center py-12">
-          {/* Text imported indirectly via DiaryListCard, keep simple here */}
+        <View style={{ alignItems: 'center', paddingVertical: 48 }}>
+          <Text variant="body" style={{ color: '#9e7e76' }}>
+            아직 기록이 없어요
+          </Text>
         </View>
       }
     />
