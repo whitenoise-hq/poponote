@@ -40,7 +40,7 @@ export function PetHeader({ pet }: PetHeaderProps) {
           {pet.profile_url ? (
             <Image
               source={{ uri: pet.profile_url }}
-              className="w-16 h-16 rounded-full"
+              className="w-20 h-20 rounded-full"
               style={{
                 borderWidth: 3,
                 borderColor: '#fff',

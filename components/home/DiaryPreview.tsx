@@ -33,12 +33,12 @@ export function DiaryPreview({
 
       {entry ? (
         <Pressable onPress={onPressEntry}>
-          <Card className="overflow-hidden">
+          <Card className="overflow-hidden" style={{ padding: 0 }}>
             {entry.photo_url && (
               <View className="relative">
                 <Image
                   source={{ uri: entry.photo_url }}
-                  className="w-full h-36"
+                  style={{ width: '100%', height: 192 }}
                   resizeMode="cover"
                 />
                 <View
@@ -69,8 +69,8 @@ export function DiaryPreview({
               >
                 {entry.body}
               </Text>
-              <Text variant="caption" className="text-muted-foreground mt-1">
-                - {getMemberNickname(entry.author_id)}
+              <Text variant="caption" className="text-muted-foreground mt-2">
+                {getMemberNickname(entry.author_id)}
               </Text>
             </View>
           </Card>

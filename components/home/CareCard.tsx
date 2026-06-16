@@ -48,10 +48,11 @@ export function CareCard({ kind, logs, onAdd }: CareCardProps) {
       {/* Header: emoji + label + count + add button */}
       <View className="flex-row items-center justify-between mb-2">
         <View className="flex-row items-center gap-2">
-          <Ionicons name={config.icon} size={18} color={color} />
+          <Ionicons name={config.icon} size={16} color={color} />
           <Text
-            variant="body"
-            style={{ color, fontWeight: '700' }}
+            variant="label"
+            className="font-bold"
+            style={{ color }}
           >
             {config.label}
           </Text>

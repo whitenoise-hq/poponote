@@ -35,7 +35,7 @@ export function CareEntry({ log, accentColor }: CareEntryProps) {
             {initial}
           </Text>
         </View>
-        <Text variant="caption" className="text-ink">
+        <Text variant="caption" style={{ color: '#2B2520' }}>
           {nickname}
           {log.memo ? (
             <Text variant="caption" className="text-muted-foreground">
