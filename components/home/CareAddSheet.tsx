@@ -22,12 +22,13 @@ export function CareAddSheet({
   }
 
   return (
-    <View style={{ flexDirection: 'row', gap: 8, marginTop: 8 }}>
+    <View style={{ flexDirection: 'row', gap: 6, marginTop: 8, alignItems: 'center' }}>
       <TextInput
         value={memo}
         onChangeText={setMemo}
         placeholder="메모 (선택)"
         placeholderTextColor={colors.muted.foreground}
+        autoFocus
         style={{
           flex: 1,
           fontSize: 12,

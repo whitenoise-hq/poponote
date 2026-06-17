@@ -97,3 +97,21 @@ export function useAddDiaryEntry() {
     },
   })
 }
+
+export function useDeleteDiaryEntry() {
+  const qc = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (entryId: string) => {
+      // cascade: comments, reactions는 FK ON DELETE CASCADE로 자동 삭제
+      const { error } = await supabase.from('diary_entries').delete().eq('id', entryId)
+      if (error) throw error
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['diaryEntries'] })
+      qc.invalidateQueries({ queryKey: ['diaryEntry'] })
+      qc.invalidateQueries({ queryKey: ['comments'] })
+      qc.invalidateQueries({ queryKey: ['reactions'] })
+    },
+  })
+}

@@ -18,8 +18,10 @@ export default function NewEntryScreen() {
   const [body, setBody] = useState('')
   const [alertVisible, setAlertVisible] = useState(false)
 
+  const canSave = !!photoUrl && title.trim().length > 0 && body.trim().length > 0
+
   function handleSave() {
-    if (!body.trim()) {
+    if (!canSave) {
       setAlertVisible(true)
       return
     }
@@ -78,7 +80,7 @@ export default function NewEntryScreen() {
         <TextInput
           value={title}
           onChangeText={setTitle}
-          placeholder="제목 (선택)"
+          placeholder="제목"
           placeholderTextColor={colors.muted.foreground}
           style={{
             marginTop: 16,
@@ -116,7 +118,8 @@ export default function NewEntryScreen() {
         {/* Save button */}
         <Button
           label="저장"
-          style={{ marginTop: 24 }}
+          style={{ marginTop: 24, opacity: canSave ? 1 : 0.4 }}
+          disabled={!canSave}
           onPress={handleSave}
           loading={addEntry.isPending}
         />
@@ -125,7 +128,7 @@ export default function NewEntryScreen() {
       <AlertModal
         visible={alertVisible}
         title="알림"
-        message="내용을 입력해주세요."
+        message="사진, 제목, 내용을 모두 입력해주세요."
         onConfirm={() => setAlertVisible(false)}
       />
     </SafeAreaView>

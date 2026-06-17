@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { View, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import { Text } from '@/components/ui'
+import { Text, AlertModal } from '@/components/ui'
 import { CareEntry } from './CareEntry'
 import { CareAddSheet } from './CareAddSheet'
 import { CARE_CONFIG } from '@/lib/care-config'
 import { useMemberMap } from '@/hooks/use-member-map'
+import { useDeleteCareLog } from '@/hooks/use-care-logs'
 import { colors } from '@/theme/colors'
 import type { CareLog, CareKind } from '@/types'
 
@@ -29,7 +30,9 @@ interface CareCardProps {
 
 export function CareCard({ kind, logs, onAdd }: CareCardProps) {
   const { getNickname } = useMemberMap()
+  const deleteCareLog = useDeleteCareLog()
   const [isAdding, setIsAdding] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const config = CARE_CONFIG[kind]
   const color = COLOR_VALUES[kind]
 
@@ -70,7 +73,7 @@ export function CareCard({ kind, logs, onAdd }: CareCardProps) {
           onPress={handleAdd}
           style={{ width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: color }}
         >
-          <Ionicons name="add" size={16} color={colors.white} />
+          <Ionicons name={isAdding ? 'close' : 'add'} size={16} color={colors.white} />
         </Pressable>
       </View>
 
@@ -78,7 +81,7 @@ export function CareCard({ kind, logs, onAdd }: CareCardProps) {
       {logs.length > 0 && (
         <View style={{ gap: 6, marginBottom: 4 }}>
           {logs.map((log) => (
-            <CareEntry key={log.id} log={log} accentColor={color} getNickname={getNickname} />
+            <CareEntry key={log.id} log={log} accentColor={color} getNickname={getNickname} onDelete={(id) => setDeleteTarget(id)} />
           ))}
         </View>
       )}
@@ -98,6 +101,18 @@ export function CareCard({ kind, logs, onAdd }: CareCardProps) {
           아직 기록이 없어요
         </Text>
       )}
+      <AlertModal
+        visible={!!deleteTarget}
+        title="케어 삭제"
+        message="이 케어 기록을 삭제하시겠어요?"
+        confirmLabel="삭제"
+        destructive
+        onConfirm={() => {
+          if (deleteTarget) deleteCareLog.mutate(deleteTarget)
+          setDeleteTarget(null)
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </View>
   )
 }
