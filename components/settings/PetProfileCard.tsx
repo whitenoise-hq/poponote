@@ -61,7 +61,7 @@ export function PetProfileCard({ pet, onEdit }: PetProfileCardProps) {
           </View>
         )}
         <View style={{ flex: 1 }}>
-          <Text variant="title" style={{ color: colors.ink.DEFAULT }}>
+          <Text variant="title" style={{ color: colors.ink.DEFAULT, fontFamily: 'Jua_400Regular' }}>
             {pet.name}
           </Text>
           <Text variant="caption" style={{ color: colors.muted.foreground, marginTop: 2 }}>

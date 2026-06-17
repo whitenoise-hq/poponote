@@ -24,7 +24,5 @@ const cardStyles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: colors.white,
     padding: 16,
-    borderWidth: 1,
-    borderColor: colors.cream[200],
   },
 });

@@ -52,7 +52,7 @@ export function PetHeader({ pet }: PetHeaderProps) {
 
         <View style={{ flex: 1 }}>
           <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 4 }}>
-            <Text variant="title" style={{ color: colors.ink.DEFAULT }}>
+            <Text variant="title" style={{ color: colors.ink.DEFAULT, fontFamily: 'Jua_400Regular' }}>
               {pet.name}
             </Text>
             <Text variant="body" style={{ color: colors.muted.foreground }}>

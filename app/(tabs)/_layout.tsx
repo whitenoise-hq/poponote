@@ -14,7 +14,7 @@ export default function TabsLayout() {
           backgroundColor: colors.cream.DEFAULT, // cream
           borderTopColor: colors.cream[200], // cream-200
         },
-        tabBarLabelStyle: { fontFamily: 'Pretendard-Medium' },
+        tabBarLabelStyle: { fontFamily: 'Pretendard-Medium', fontSize: 11, lineHeight: 16, paddingBottom: 2},
       }}
     >
       <Tabs.Screen
