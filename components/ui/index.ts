@@ -5,3 +5,4 @@ export { Card } from './card';
 export { Modal } from './Modal';
 export { AlertModal } from './AlertModal';
 export { DatePickerModal } from './DatePickerModal';
+export { FlipImage } from './FlipImage';

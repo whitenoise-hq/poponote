@@ -53,9 +53,9 @@ export function DayPreview({ date, entry, careLogs, onPress, onPressWrite }: Day
         <Pressable onPress={onPress}>
           <Card style={{ ...borderWithEntry, gap: 10 }}>
             <View style={{ flexDirection: 'row', gap: 12 }}>
-              {entry.photo_url && (
+              {(entry.illustration_url || entry.photo_url) && (
                 <Image
-                  source={{ uri: entry.photo_url }}
+                  source={{ uri: entry.illustration_url ?? entry.photo_url! }}
                   style={{ width: 56, height: 56, borderRadius: 12 }}
                   resizeMode="cover"
                 />

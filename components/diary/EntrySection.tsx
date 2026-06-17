@@ -1,5 +1,5 @@
 import { View, Image } from 'react-native'
-import { Text } from '@/components/ui'
+import { Text, FlipImage } from '@/components/ui'
 import { colors } from '@/theme/colors'
 import { useMemberMap } from '@/hooks/use-member-map'
 import type { DiaryEntry } from '@/types'
@@ -19,15 +19,26 @@ function formatTime(isoStr: string): string {
 
 export function EntrySection({ entry }: EntrySectionProps) {
   const { getNickname } = useMemberMap()
+
+  const hasIllustration = !!entry.illustration_url
+  const hasPhoto = !!entry.photo_url
+  const displayUrl = entry.illustration_url ?? entry.photo_url
+
   return (
     <View>
-      {entry.photo_url && (
+      {hasPhoto && hasIllustration ? (
+        <FlipImage
+          frontUri={entry.illustration_url!}
+          backUri={entry.photo_url!}
+          style={{ width: '100%', height: 256 }}
+        />
+      ) : displayUrl ? (
         <Image
-          source={{ uri: entry.illustration_url ?? entry.photo_url }}
+          source={{ uri: displayUrl }}
           style={{ width: '100%', height: 256, borderRadius: 16 }}
           resizeMode="cover"
         />
-      )}
+      ) : null}
       <View style={{ marginTop: 12 }}>
         {entry.title && (
           <Text variant="subtitle" style={{ color: colors.ink.DEFAULT, marginBottom: 4 }}>

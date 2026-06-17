@@ -21,9 +21,9 @@ export function DiaryListCard({ entry, careLogs, likeCount, commentCount, onPres
   return (
     <Pressable onPress={onPress}>
       <Card style={{ padding: 0, overflow: 'hidden' }}>
-        {entry.photo_url && (
+        {(entry.illustration_url || entry.photo_url) && (
           <Image
-            source={{ uri: entry.photo_url }}
+            source={{ uri: entry.illustration_url ?? entry.photo_url! }}
             style={{ width: '100%', height: 220 }}
             resizeMode="cover"
           />
