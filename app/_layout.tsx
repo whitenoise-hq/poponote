@@ -26,19 +26,26 @@ function AuthGate({ fontsReady, onReady }: { fontsReady: boolean; onReady: () =>
       return
     }
 
-    getUserFamily().then((familyId) => {
-      setHasFamily(!!familyId)
-      setFamilyChecked(true)
-    })
+    getUserFamily()
+      .then((familyId) => {
+        setHasFamily(!!familyId)
+        setFamilyChecked(true)
+      })
+      .catch(() => {
+        // 에러 시에도 체크 완료 처리 (가족 없음으로 간주)
+        setHasFamily(false)
+        setFamilyChecked(true)
+      })
   }, [isLoggedIn, loading, segments])
 
   // 라우팅 가드
   useEffect(() => {
     if (!fontsReady || loading) return
 
-    const inAuthGroup = segments[0] === '(auth)'
-    const inOnboardingGroup = segments[0] === '(onboarding)'
-    const inInviteResult = inOnboardingGroup && segments[1] === 'invite-result'
+    const seg = segments[0] ?? ''
+    const inAuthGroup = seg === '(auth)'
+    const inOnboardingGroup = seg === '(onboarding)'
+    const inInviteResult = inOnboardingGroup && (segments[1] ?? '') === 'invite-result'
 
     if (!isLoggedIn) {
       if (!inAuthGroup && !inOnboardingGroup) {
@@ -76,9 +83,17 @@ export default function RootLayout() {
 
   const fontsReady = fontsLoaded || !!fontError
 
+  // 폰트 + auth 로딩 완료 시 스플래시 숨김
   const handleReady = useCallback(() => {
     SplashScreen.hideAsync()
   }, [])
+
+  // 폰트 로드 후 3초 안에 스플래시가 안 풀리면 강제 해제 (안전장치)
+  useEffect(() => {
+    if (!fontsReady) return
+    const timer = setTimeout(() => SplashScreen.hideAsync(), 3000)
+    return () => clearTimeout(timer)
+  }, [fontsReady])
 
   return (
     <QueryClientProvider client={queryClient}>

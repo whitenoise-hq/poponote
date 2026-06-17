@@ -1,5 +1,6 @@
 import { supabase } from './supabase'
 import { generateInviteCode } from './invite-code'
+import { uploadProfileImage } from './storage'
 
 /**
  * 최초 사용자: 반려동물 등록 + 가족 그룹 생성 + 본인 멤버 등록
@@ -11,12 +12,14 @@ export async function createFamilyWithPet({
   birthday,
   nickname,
   role = '보호자',
+  profileImageUri,
 }: {
   petName: string
   species?: string
   birthday?: string
   nickname: string
   role?: string
+  profileImageUri?: string
 }): Promise<string> {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('로그인이 필요합니다')
@@ -44,7 +47,13 @@ export async function createFamilyWithPet({
 
   if (memberError) throw memberError
 
-  // 3. Pet 생성
+  // 3. 프로필 이미지 업로드 (있으면)
+  let profileUrl: string | null = null
+  if (profileImageUri) {
+    profileUrl = await uploadProfileImage(profileImageUri, user.id)
+  }
+
+  // 4. Pet 생성
   const { error: petError } = await supabase
     .from('pets')
     .insert({
@@ -52,6 +61,7 @@ export async function createFamilyWithPet({
       name: petName,
       species: species || null,
       birthday: birthday || null,
+      profile_url: profileUrl,
     })
 
   if (petError) throw petError

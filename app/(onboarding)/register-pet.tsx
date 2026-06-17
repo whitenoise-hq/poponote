@@ -55,6 +55,7 @@ export default function RegisterPetScreen() {
         petName: name.trim(),
         species: species.trim(),
         birthday: birthday.trim(),
+        profileImageUri: profileImage ?? '',
       },
     } as never)
   }

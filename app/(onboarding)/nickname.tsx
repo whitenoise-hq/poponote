@@ -24,6 +24,7 @@ export default function NicknameScreen() {
     petName?: string
     species?: string
     birthday?: string
+    profileImageUri?: string
   }>()
 
   const isCreate = params.flow === 'create'
@@ -50,6 +51,7 @@ export default function NicknameScreen() {
           birthday: params.birthday || undefined,
           nickname: finalNickname,
           role: '보호자',
+          profileImageUri: params.profileImageUri || undefined,
         })
         router.replace({ pathname: '/(onboarding)/invite-result', params: { code: inviteCode } } as never)
       } else {
