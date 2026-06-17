@@ -15,7 +15,9 @@ import { colors } from '@/theme/colors'
 export default function DiaryScreen() {
   const router = useRouter()
   const [mode, setMode] = useState<DiaryViewMode>('calendar')
-  const [selectedDate, setSelectedDate] = useState<string | null>(null)
+  const now = new Date()
+  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+  const [selectedDate, setSelectedDate] = useState<string>(todayStr)
   const { data: entries } = useDiaryEntries()
 
   const allCareLogs = getCareLogs()
@@ -59,14 +61,14 @@ export default function DiaryScreen() {
             selectedDate={selectedDate}
             onSelectDate={setSelectedDate}
           />
-          {selectedDate && (
+          {selectedDate ? (
             <DayPreview
               date={selectedDate}
               entry={selectedEntry}
               careLogs={selectedCareLogs}
               onPress={handleGoToDetail}
             />
-          )}
+          ) : null}
           <View style={{ height: 32 }} />
         </ScrollView>
       ) : (

@@ -1,9 +1,11 @@
-import { ScrollView, View, Pressable, Alert } from 'react-native'
+import { useState } from 'react'
+import { ScrollView, View, Pressable } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 
-import { Text } from '@/components/ui'
+import { Text, AlertModal } from '@/components/ui'
+import { useAuth } from '@/lib/auth-store'
 import { PetProfileCard } from '@/components/settings/PetProfileCard'
 import { InviteCodeCard } from '@/components/settings/InviteCodeCard'
 import { MemberList } from '@/components/settings/MemberList'
@@ -21,20 +23,11 @@ const sectionBorder = {
 
 export default function SettingsScreen() {
   const router = useRouter()
+  const auth = useAuth()
   const { data: pet } = usePet()
   const { data: family } = useFamily()
   const { data: members } = useMembers()
-
-  function showMock(msg: string) {
-    Alert.alert('알림', `${msg} (mock)`)
-  }
-
-  function handleLogout() {
-    Alert.alert('로그아웃', '정말 로그아웃하시겠어요?', [
-      { text: '취소', style: 'cancel' },
-      { text: '로그아웃', style: 'destructive' },
-    ])
-  }
+  const [logoutVisible, setLogoutVisible] = useState(false)
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.cream.DEFAULT }} edges={['top']}>
@@ -84,29 +77,31 @@ export default function SettingsScreen() {
                 icon: 'person-outline',
                 label: '내 계정',
                 subtitle: 'mom@example.com',
-                onPress: () => showMock('계정 정보'),
+                onPress: () => router.push('/settings/account' as never),
               },
-              {
-                icon: 'notifications-outline',
-                label: '알림 설정',
-                subtitle: '케어 알림 켜짐',
-                onPress: () => showMock('알림 설정'),
-              },
-              {
-                icon: 'paw-outline',
-                label: '반려동물 추가',
-                subtitle: '최대 3마리',
-                onPress: () => showMock('반려동물 추가는 2차 기능입니다'),
-              },
+              // [2차] 알림 설정 — MVP 이후 구현
+              // {
+              //   icon: 'notifications-outline',
+              //   label: '알림 설정',
+              //   subtitle: '케어 알림 켜짐',
+              //   onPress: () => router.push('/settings/notifications' as never),
+              // },
+              // [2차] 반려동물 추가 — MVP 이후 구현
+              // {
+              //   icon: 'paw-outline',
+              //   label: '반려동물 추가',
+              //   subtitle: '최대 3마리',
+              //   onPress: () => {},
+              // },
               {
                 icon: 'lock-closed-outline',
                 label: '개인정보처리방침',
-                onPress: () => showMock('개인정보처리방침'),
+                onPress: () => router.push('/settings/privacy' as never),
               },
               {
                 icon: 'help-circle-outline',
                 label: '도움말 & 피드백',
-                onPress: () => showMock('도움말 & 피드백'),
+                onPress: () => router.push('/settings/help' as never),
               },
             ]}
           />
@@ -114,7 +109,7 @@ export default function SettingsScreen() {
 
         {/* 로그아웃 */}
         <Pressable
-          onPress={handleLogout}
+          onPress={() => setLogoutVisible(true)}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -142,6 +137,17 @@ export default function SettingsScreen() {
           </View>
         </View>
       </ScrollView>
+
+      {/* 로그아웃 확인 모달 */}
+      <AlertModal
+        visible={logoutVisible}
+        title="로그아웃"
+        message="정말 로그아웃하시겠어요?"
+        confirmLabel="로그아웃"
+        destructive
+        onConfirm={() => { setLogoutVisible(false); auth.logout() }}
+        onCancel={() => setLogoutVisible(false)}
+      />
     </SafeAreaView>
   )
 }

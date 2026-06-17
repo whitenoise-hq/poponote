@@ -1,6 +1,7 @@
-import { View, Image, Pressable, useWindowDimensions, Alert } from 'react-native'
+import { useState } from 'react'
+import { View, Image, Pressable, useWindowDimensions } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import { Text } from '@/components/ui'
+import { Text, AlertModal } from '@/components/ui'
 import { colors } from '@/theme/colors'
 import type { AlbumPhoto } from '@/hooks/use-album'
 
@@ -12,9 +13,10 @@ interface PhotoDetailProps {
 export function PhotoDetail({ photo, onGoToDiary }: PhotoDetailProps) {
   const { width } = useWindowDimensions()
   const imageSize = width - 40
+  const [savedVisible, setSavedVisible] = useState(false)
 
   function handleSave() {
-    Alert.alert('저장', '갤러리에 저장되었습니다. (mock)')
+    setSavedVisible(true)
   }
 
   return (
@@ -62,6 +64,13 @@ export function PhotoDetail({ photo, onGoToDiary }: PhotoDetailProps) {
           <Text variant="label" style={{ color: colors.white }}>다이어리 보기</Text>
         </Pressable>
       </View>
+
+      <AlertModal
+        visible={savedVisible}
+        title="저장 완료"
+        message="갤러리에 저장되었습니다."
+        onConfirm={() => setSavedVisible(false)}
+      />
     </View>
   )
 }

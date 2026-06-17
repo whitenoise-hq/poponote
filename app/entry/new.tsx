@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { View, ScrollView, TextInput, Image, Pressable, Alert } from 'react-native'
+import { View, ScrollView, TextInput, Image, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-import { Text, Button } from '@/components/ui'
+import { Text, Button, AlertModal } from '@/components/ui'
 import { PhotoPickerPlaceholder } from '@/components/entry/PhotoPickerPlaceholder'
 import { useAddDiaryEntry } from '@/hooks/use-diary'
 import { colors } from '@/theme/colors'
@@ -16,10 +16,11 @@ export default function NewEntryScreen() {
   const [photoUrl, setPhotoUrl] = useState<string | null>(null)
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
+  const [alertVisible, setAlertVisible] = useState(false)
 
   function handleSave() {
     if (!body.trim()) {
-      Alert.alert('알림', '내용을 입력해주세요.')
+      setAlertVisible(true)
       return
     }
 
@@ -120,6 +121,13 @@ export default function NewEntryScreen() {
           loading={addEntry.isPending}
         />
       </ScrollView>
+
+      <AlertModal
+        visible={alertVisible}
+        title="알림"
+        message="내용을 입력해주세요."
+        onConfirm={() => setAlertVisible(false)}
+      />
     </SafeAreaView>
   )
 }

@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { View, ScrollView, Pressable, Image, TextInput, Alert } from 'react-native'
+import { View, ScrollView, Pressable, Image, TextInput } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 
-import { Text } from '@/components/ui'
+import { Text, AlertModal } from '@/components/ui'
 import { usePet } from '@/hooks/use-pet'
 import { colors } from '@/theme/colors'
 
@@ -13,13 +13,15 @@ const SEX_OPTIONS = [
   { value: 'female' as const, label: '암컷', icon: 'female' as const, color: '#D94A6B', bgColor: '#FCEBF0' },
 ]
 
+const INPUT_HEIGHT = 48
+
 const inputStyle = {
+  height: INPUT_HEIGHT,
   backgroundColor: colors.white,
   borderWidth: 1,
   borderColor: colors.cream[200],
   borderRadius: 12,
   paddingHorizontal: 14,
-  paddingVertical: 12,
   fontSize: 15,
   color: colors.ink.DEFAULT,
 }
@@ -34,10 +36,13 @@ export default function EditPetScreen() {
   const [weight, setWeight] = useState(pet?.weight?.toString() ?? '')
   const [sex, setSex] = useState<'male' | 'female' | null>(pet?.sex ?? null)
   const [neutered, setNeutered] = useState(pet?.neutered ?? false)
+  const [savedVisible, setSavedVisible] = useState(false)
+
+  const canSave = name.trim().length > 0 && species.trim().length > 0 && birthday.trim().length > 0
 
   function handleSave() {
-    Alert.alert('저장', '반려동물 프로필이 수정되었습니다. (mock)')
-    router.back()
+    if (!canSave) return
+    setSavedVisible(true)
   }
 
   return (
@@ -53,7 +58,7 @@ export default function EditPetScreen() {
         <Text variant="subtitle" style={{ flex: 1, textAlign: 'center', color: colors.ink.DEFAULT }}>
           반려동물 프로필 수정
         </Text>
-        <Pressable onPress={handleSave} style={{ paddingHorizontal: 4 }}>
+        <Pressable onPress={handleSave} disabled={!canSave} style={{ paddingHorizontal: 4, opacity: canSave ? 1 : 0.35 }}>
           <Text variant="label" style={{ color: colors.primary.DEFAULT }}>저장</Text>
         </Pressable>
       </View>
@@ -162,6 +167,13 @@ export default function EditPetScreen() {
           </View>
         </View>
       </ScrollView>
+
+      <AlertModal
+        visible={savedVisible}
+        title="저장 완료"
+        message="반려동물 프로필이 수정되었습니다."
+        onConfirm={() => { setSavedVisible(false); router.back() }}
+      />
     </SafeAreaView>
   )
 }

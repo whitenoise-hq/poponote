@@ -1,11 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@/lib/query-client';
 import { Jua_400Regular } from '@expo-google-fonts/jua';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
+import { AuthContext } from '@/lib/auth-store';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -18,16 +19,42 @@ export default function RootLayout() {
     Jua_400Regular,
   });
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false) // mock: 임시 false — 온보딩 플로우 확인용
+  const router = useRouter()
+  const segments = useSegments()
+
+  const auth = useMemo(() => ({
+    isLoggedIn,
+    login: () => setIsLoggedIn(true),
+    logout: () => setIsLoggedIn(false),
+  }), [isLoggedIn])
+
   useEffect(() => {
     if (fontsLoaded || fontError) {
       SplashScreen.hideAsync();
     }
   }, [fontsLoaded, fontError]);
 
+  // 인증 라우팅 가드
+  useEffect(() => {
+    if (!fontsLoaded && !fontError) return
+
+    const inAuthGroup = segments[0] === '(auth)'
+    const inOnboardingGroup = segments[0] === '(onboarding)'
+
+    if (!isLoggedIn && !inAuthGroup && !inOnboardingGroup) {
+      router.replace('/(auth)/login' as never)
+    } else if (isLoggedIn && (inAuthGroup || inOnboardingGroup)) {
+      router.replace('/(tabs)' as never)
+    }
+  }, [isLoggedIn, segments, fontsLoaded, fontError])
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <StatusBar style="dark" />
-      <Stack screenOptions={{ headerShown: false }} />
-    </QueryClientProvider>
+    <AuthContext.Provider value={auth}>
+      <QueryClientProvider client={queryClient}>
+        <StatusBar style="dark" />
+        <Stack screenOptions={{ headerShown: false }} />
+      </QueryClientProvider>
+    </AuthContext.Provider>
   );
 }

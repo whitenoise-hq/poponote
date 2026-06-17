@@ -24,7 +24,7 @@
 
 - **프론트엔드**: React Native + Expo, TypeScript
 - **라우팅**: Expo Router (파일 기반), 하단 4탭(홈/다이어리/일러스트 앨범/설정)
-- **스타일**: NativeWind (Tailwind CSS for React Native). `className` 문법 사용.
+- **스타일**: React Native `style` prop + `StyleSheet.create`. 색상 토큰은 `theme/colors.js` 단일 출처.
 - **서버 상태**: TanStack Query (React Query)
 - **백엔드**: Supabase (Auth / Postgres / Storage / Edge Functions)
 - **인증**: 카카오 / 구글 OAuth (Supabase Auth)
@@ -49,18 +49,18 @@
 - **언어**: TypeScript. `any` 지양, 타입 명시.
 - **컴포넌트**: 함수형 컴포넌트 + Hooks.
 - **네이밍**: 컴포넌트 PascalCase, 변수·함수 camelCase, 상수 UPPER_SNAKE_CASE, 파일은 컴포넌트=PascalCase / 그 외=kebab-case 또는 camelCase로 일관 유지.
-- **스타일**: NativeWind `className` 우선. 단 `Pressable`에 동적 조건부 className 사용 시 NativeWind CssInterop 오류 발생 가능 → 이 경우 `style` prop 사용. 인라인 스타일·StyleSheet는 NativeWind로 표현 어려운 경우에만.
-- **className 합성**: `lib/cn.ts`의 `cn()`은 `clsx + tailwind-merge` 기반. 충돌 유틸리티는 뒤에 온 클래스가 이기므로(예: `Card`의 기본 `p-4`를 `className="p-2"`로 덮기 가능), 오버라이드 위해 인라인 `style`을 쓰지 말 것.
-- **디자인 토큰 — 색상**: 색상은 `theme/colors.js`가 **단일 출처**. `tailwind.config.js`가 이를 `require`해 NativeWind 토큰으로 등록하고, 인라인 style에서도 `import {colors} from '@/theme/colors'`로 **동일 값**을 참조한다. 컴포넌트에 hex를 직접 박지 않는다(`#...` 금지). 간격·타이포 토큰은 `tailwind.config.js`.
+- **스타일**: `style` prop + `StyleSheet.create` 사용. `className`은 사용하지 않는다(NativeWind 제거됨).
+- **디자인 토큰 — 색상**: 색상은 `theme/colors.js`가 **단일 출처**. `import {colors} from '@/theme/colors'`로 참조한다. 컴포넌트에 hex를 직접 박지 않는다(`#...` 금지).
+- **UI 컴포넌트**: `components/ui/`의 Text·Card·Button·Screen은 `style` prop으로 오버라이드. Text는 `variant` prop으로 타이포 토큰 적용.
 - **폰트**: Pretendard(Regular/Medium/SemiBold/Bold, .otf) + Jua(디스플레이). `assets/fonts/`에 저장.
 - **아이콘**: Ionicons(`@expo/vector-icons`) 사용. 이모지 사용 금지(기기별 렌더링 불일치).
 - **폴더 구조**:
   ```
   app/            # Expo Router 화면 (파일 기반 라우팅, (tabs) 그룹 포함)
   components/     # 재사용 UI 컴포넌트
-  lib/            # supabase 클라이언트, 유틸 (cn 등)
+  lib/            # supabase 클라이언트, 유틸
   hooks/          # 커스텀 훅 (React Query 등)
-  theme/          # 디자인 토큰 단일 출처 (colors.js — tailwind.config·인라인 style 공유)
+  theme/          # 디자인 토큰 단일 출처 (colors.js — 모든 style에서 import)
   types/          # 공용 타입
   supabase/       # 마이그레이션, Edge Functions
   docs/           # 기획/스택/화면 문서 (planning.md, tech-stack.md, screens.md)
@@ -74,7 +74,7 @@
 
 ## 권장 개발 순서
 
-1. Expo + TypeScript + NativeWind 초기 세팅, Expo Router로 4탭 골격.
+1. Expo + TypeScript 초기 세팅, Expo Router로 4탭 골격.
 2. Supabase 연동(`@supabase/supabase-js`), `.env` 구성.
 3. DB 스키마 + RLS 정책 작성 (planning.md 데이터 구조 기준). → 마이그레이션.
 4. 카카오/구글 OAuth 로그인 + 온보딩(그룹 생성 / 코드 참여 + 닉네임).
