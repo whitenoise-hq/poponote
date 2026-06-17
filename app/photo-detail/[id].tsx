@@ -4,14 +4,15 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { PhotoDetail } from '@/components/album/PhotoDetail'
-import { getDiaryEntries } from '@/lib/mock-data'
+import { useDiaryEntries } from '@/hooks/use-diary'
 import { colors } from '@/theme/colors'
 
 export default function AlbumPhotoDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const router = useRouter()
+  const { data: entries } = useDiaryEntries()
 
-  const entry = getDiaryEntries().find((e) => e.id === id)
+  const entry = (entries ?? []).find((e) => e.id === id)
   if (!entry || !entry.illustration_url) return null
 
   const photo = {

@@ -2,7 +2,7 @@ import { View, Image, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text, Card } from '@/components/ui'
 import { colors } from '@/theme/colors'
-import { getMemberNickname } from '@/lib/mock-data'
+import { useMemberMap } from '@/hooks/use-member-map'
 import type { DiaryEntry } from '@/types'
 
 interface DiaryPreviewProps {
@@ -18,6 +18,8 @@ export function DiaryPreview({
   onPressMore,
   onPressWrite,
 }: DiaryPreviewProps) {
+  const { getNickname } = useMemberMap()
+
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
@@ -76,7 +78,7 @@ export function DiaryPreview({
                 {entry.body}
               </Text>
               <Text variant="caption" style={{ color: colors.muted.foreground, marginTop: 8 }}>
-                {getMemberNickname(entry.author_id)}
+                {getNickname(entry.author_id)}
               </Text>
             </View>
           </Card>

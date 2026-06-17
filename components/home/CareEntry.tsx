@@ -1,12 +1,12 @@
 import { View } from 'react-native'
 import { Text } from '@/components/ui'
 import { colors } from '@/theme/colors'
-import { getMemberNickname } from '@/lib/mock-data'
 import type { CareLog } from '@/types'
 
 interface CareEntryProps {
   log: CareLog
   accentColor: string
+  getNickname: (userId: string) => string
 }
 
 function formatTime(isoStr: string): string {
@@ -18,8 +18,8 @@ function formatTime(isoStr: string): string {
   })
 }
 
-export function CareEntry({ log, accentColor }: CareEntryProps) {
-  const nickname = getMemberNickname(log.author_id)
+export function CareEntry({ log, accentColor, getNickname }: CareEntryProps) {
+  const nickname = getNickname(log.author_id)
   const initial = nickname[0]
 
   return (

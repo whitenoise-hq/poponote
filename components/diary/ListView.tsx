@@ -1,7 +1,6 @@
 import { FlatList, View } from 'react-native'
 import { Text } from '@/components/ui'
 import { DiaryListCard } from './DiaryListCard'
-import { getReactions, getComments } from '@/lib/mock-data'
 import { colors } from '@/theme/colors'
 import type { DiaryEntry, CareLog } from '@/types'
 
@@ -22,8 +21,8 @@ export function ListView({ entries, careLogs, onSelectDate }: ListViewProps) {
         <DiaryListCard
           entry={item}
           careLogs={careLogs.filter((c) => c.date === item.date)}
-          likeCount={getReactions().filter((r) => r.entry_id === item.id).length}
-          commentCount={getComments().filter((c) => c.entry_id === item.id).length}
+          likeCount={0}
+          commentCount={0}
           onPress={() => onSelectDate(item.date)}
         />
       )}

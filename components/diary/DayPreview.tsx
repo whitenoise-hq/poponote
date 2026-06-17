@@ -2,7 +2,8 @@ import { View, Image, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text, Card } from '@/components/ui'
 import { colors } from '@/theme/colors'
-import { getReactions, getComments, TODAY } from '@/lib/mock-data'
+import { useReactions } from '@/hooks/use-reactions'
+import { useComments } from '@/hooks/use-comments'
 import { EntryStatsBar } from './EntryStatsBar'
 import type { DiaryEntry, CareLog } from '@/types'
 
@@ -26,14 +27,19 @@ function formatDate(dateStr: string): string {
   })
 }
 
+function todayStr(): string {
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
 export function DayPreview({ date, entry, careLogs, onPress, onPressWrite }: DayPreviewProps) {
-  const isToday = date === TODAY
+  const isToday = date === todayStr()
   const hasCare = careLogs.length > 0
-  const likeCount = entry
-    ? getReactions().filter((r) => r.entry_id === entry.id).length
-    : 0
+  const { data: reactions } = useReactions(entry?.id ?? null)
+  const { data: comments } = useComments(entry?.id ?? null)
+  const likeCount = (reactions ?? []).length
   const commentCount = entry
-    ? getComments().filter((c) => c.entry_id === entry.id).length
+    ? (comments ?? []).length
     : 0
 
   return (

@@ -2,7 +2,7 @@ import { View, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text } from '@/components/ui'
 import { colors } from '@/theme/colors'
-import { CURRENT_USER_ID } from '@/lib/mock-data'
+import { useAuth } from '@/hooks/use-auth'
 import type { Reaction } from '@/types'
 
 interface ReactionBarProps {
@@ -11,7 +11,8 @@ interface ReactionBarProps {
 }
 
 export function ReactionBar({ reactions, onToggle }: ReactionBarProps) {
-  const hasReacted = reactions.some((r) => r.author_id === CURRENT_USER_ID)
+  const { user } = useAuth()
+  const hasReacted = reactions.some((r) => r.author_id === user?.id)
   const count = reactions.length
 
   return (

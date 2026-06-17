@@ -2,8 +2,8 @@ import { View, Image, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text, Card } from '@/components/ui'
 import { colors } from '@/theme/colors'
+import { useDiaryEntries } from '@/hooks/use-diary'
 import type { Pet } from '@/types'
-import { getDiaryEntries } from '@/lib/mock-data'
 
 interface PetProfileCardProps {
   pet: Pet
@@ -24,12 +24,9 @@ function formatBirthday(birthday: string | null): string {
   return `${y}.${m}.${d} 생`
 }
 
-function getDaysRecorded(): number {
-  const dates = new Set(getDiaryEntries().map((e) => e.date))
-  return dates.size
-}
-
 export function PetProfileCard({ pet, onEdit }: PetProfileCardProps) {
+  const { data: entries } = useDiaryEntries()
+  const daysRecorded = new Set((entries ?? []).map((e) => e.date)).size
   const sexLabel = pet.sex === 'male' ? '수컷' : pet.sex === 'female' ? '암컷' : null
   const neuteredLabel = pet.neutered ? '중성화 완료' : null
 
@@ -101,7 +98,7 @@ export function PetProfileCard({ pet, onEdit }: PetProfileCardProps) {
         </View>
         <View style={{ alignItems: 'center' }}>
           <Text variant="caption" style={{ color: colors.muted.foreground }}>기록</Text>
-          <Text variant="label" style={{ color: colors.ink.DEFAULT, marginTop: 2 }}>{getDaysRecorded()}일</Text>
+          <Text variant="label" style={{ color: colors.ink.DEFAULT, marginTop: 2 }}>{daysRecorded}일</Text>
         </View>
       </View>
     </Card>

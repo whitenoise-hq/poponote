@@ -2,7 +2,7 @@ import { View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text, Card } from '@/components/ui'
 import { colors } from '@/theme/colors'
-import { CURRENT_USER_ID } from '@/lib/mock-data'
+import { useAuth } from '@/hooks/use-auth'
 import type { Member } from '@/types'
 
 interface MemberListProps {
@@ -10,10 +10,12 @@ interface MemberListProps {
 }
 
 export function MemberList({ members }: MemberListProps) {
+  const { user } = useAuth()
+
   return (
     <Card style={{ padding: 0, overflow: 'hidden' }}>
       {members.map((member, i) => {
-        const isMe = member.user_id === CURRENT_USER_ID
+        const isMe = member.user_id === user?.id
         const isLast = i === members.length - 1
         return (
           <View

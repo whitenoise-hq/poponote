@@ -1,7 +1,7 @@
 import { View, Image } from 'react-native'
 import { Text } from '@/components/ui'
 import { colors } from '@/theme/colors'
-import { getMemberNickname } from '@/lib/mock-data'
+import { useMemberMap } from '@/hooks/use-member-map'
 import type { DiaryEntry } from '@/types'
 
 interface EntrySectionProps {
@@ -18,6 +18,7 @@ function formatTime(isoStr: string): string {
 }
 
 export function EntrySection({ entry }: EntrySectionProps) {
+  const { getNickname } = useMemberMap()
   return (
     <View>
       {entry.photo_url && (
@@ -37,7 +38,7 @@ export function EntrySection({ entry }: EntrySectionProps) {
           {entry.body}
         </Text>
         <Text variant="caption" style={{ color: colors.muted.foreground, marginTop: 8 }}>
-          {getMemberNickname(entry.author_id)} · {formatTime(entry.created_at)}
+          {getNickname(entry.author_id)} · {formatTime(entry.created_at)}
         </Text>
       </View>
     </View>

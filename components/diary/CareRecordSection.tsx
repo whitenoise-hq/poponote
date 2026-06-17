@@ -4,7 +4,7 @@ import {Ionicons} from '@expo/vector-icons'
 import {Text} from '@/components/ui'
 import {colors} from '@/theme/colors'
 import {CARE_CONFIG, CARE_KINDS} from '@/lib/care-config'
-import {getMemberNickname} from '@/lib/mock-data'
+import {useMemberMap} from '@/hooks/use-member-map'
 import type {CareLog, CareKind} from '@/types'
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -31,6 +31,7 @@ function formatTime(isoStr: string): string {
 }
 
 export function CareRecordSection({logs}: CareRecordSectionProps) {
+    const {getNickname} = useMemberMap()
     const [expanded, setExpanded] = useState(false)
 
     if (logs.length === 0) return null
@@ -111,7 +112,7 @@ export function CareRecordSection({logs}: CareRecordSectionProps) {
                                         marginBottom: 2
                                     }}>
                                         <Text variant="caption" style={{color: colors.ink.DEFAULT}}>
-                                            {getMemberNickname(log.author_id)}
+                                            {getNickname(log.author_id)}
                                         </Text>
                                         <Text variant="caption" style={{color: colors.muted.foreground}}>
                                             {formatTime(log.logged_at)}

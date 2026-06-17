@@ -1,8 +1,9 @@
 import { View, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text } from '@/components/ui'
-import { getMemberNickname, CURRENT_USER_ID } from '@/lib/mock-data'
 import { colors } from '@/theme/colors'
+import { useAuth } from '@/hooks/use-auth'
+import { useMemberMap } from '@/hooks/use-member-map'
 import type { Comment } from '@/types'
 
 interface CommentSectionProps {
@@ -20,6 +21,9 @@ function formatTime(isoStr: string): string {
 }
 
 export function CommentSection({ comments, onDelete }: CommentSectionProps) {
+  const { user } = useAuth()
+  const { getNickname } = useMemberMap()
+
   return (
     <View style={{ marginTop: 16 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 12 }}>
@@ -36,7 +40,7 @@ export function CommentSection({ comments, onDelete }: CommentSectionProps) {
       )}
 
       {comments.map((comment) => {
-        const isOwn = comment.author_id === CURRENT_USER_ID
+        const isOwn = comment.author_id === user?.id
         return (
           <View key={comment.id} style={{ flexDirection: 'row', gap: 8, marginBottom: 12 }}>
             <View
@@ -54,7 +58,7 @@ export function CommentSection({ comments, onDelete }: CommentSectionProps) {
             <View style={{ flex: 1 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                 <Text variant="label" style={{ color: colors.ink.DEFAULT }}>
-                  {getMemberNickname(comment.author_id)}
+                  {getNickname(comment.author_id)}
                 </Text>
                 <Text variant="caption" style={{ color: colors.muted.foreground }}>
                   {formatTime(comment.created_at)}

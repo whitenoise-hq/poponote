@@ -5,6 +5,7 @@ import { Text } from '@/components/ui'
 import { CareEntry } from './CareEntry'
 import { CareAddSheet } from './CareAddSheet'
 import { CARE_CONFIG } from '@/lib/care-config'
+import { useMemberMap } from '@/hooks/use-member-map'
 import { colors } from '@/theme/colors'
 import type { CareLog, CareKind } from '@/types'
 
@@ -27,6 +28,7 @@ interface CareCardProps {
 }
 
 export function CareCard({ kind, logs, onAdd }: CareCardProps) {
+  const { getNickname } = useMemberMap()
   const [isAdding, setIsAdding] = useState(false)
   const config = CARE_CONFIG[kind]
   const color = COLOR_VALUES[kind]
@@ -76,7 +78,7 @@ export function CareCard({ kind, logs, onAdd }: CareCardProps) {
       {logs.length > 0 && (
         <View style={{ gap: 6, marginBottom: 4 }}>
           {logs.map((log) => (
-            <CareEntry key={log.id} log={log} accentColor={color} />
+            <CareEntry key={log.id} log={log} accentColor={color} getNickname={getNickname} />
           ))}
         </View>
       )}
