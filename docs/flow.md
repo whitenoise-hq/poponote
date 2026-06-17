@@ -218,85 +218,33 @@ supabase gen types typescript --linked > types/database.ts   # TS 타입 생성
 
 ---
 
-## P5 — 홈 탭: 케어 기록 `[MVP]` ← 다음 단계
+## P5~P7 + C — hooks Supabase 교체 + mock 제거 `[MVP]` ✅ 완료
 
-**목표**: screens.md 3 — 오늘 케어 보기·입력 + 오늘 일기 미리보기.
+**목표**: 전체 hooks를 mock → Supabase로 교체하고, 컴포넌트의 mock-data 직접 참조를 제거.
 
-**선행조건**: P3, P4.
+**완료 작업**
+- ✅ 전체 hooks(8개) mock → Supabase 쿼리/뮤테이션 교체:
+  use-current-user, use-pet, use-family, use-care-logs, use-diary, use-comments, use-reactions, use-album.
+- ✅ use-diary: 사진 업로드 연동(uploadDiaryPhoto).
+- ✅ 컴포넌트 mock-data 참조 전부 제거 (getMemberNickname → useMemberMap, CURRENT_USER_ID → useAuth, getReactions/getComments → hooks, TODAY → 로컬 함수).
+- ✅ mock-data.ts, auth-store.ts 삭제. mock import 0개.
+- ✅ 미사용 파일 정리 (tailwind.config.js, figma-code 등).
 
-**작업**
-- 홈 레이아웃: ① 반려동물 정보(대표 Pet) ② 오늘 케어 ③ 오늘 일기 미리보기.
-- 케어 hooks: `hooks/use-care-logs.ts` (오늘 날짜 필터 = 0시 리셋, 종류별 그룹).
-  - 밥: [+추가] 즉시 기록(메모 없음).
-  - 간식·산책: [+추가] → 메모 입력 시트(선택) → 저장.
-  - 각 줄: 닉네임 + 시간, **본인 줄만** 길게눌러 수정/삭제(RLS로도 강제).
-- 오늘 일기 미리보기 분기: 있으면 썸네일+글 → 상세로, 없으면 "오늘 일기를 남겨주세요" → 작성으로(P6 연결).
-
-**산출물**: `app/(tabs)/index.tsx`, `components/care/*`, `hooks/use-care-logs.ts`, 케어 추가 시트
-
-**DoD**: 케어 추가/수정/삭제 동작, 0시 기준 오늘 분만 표시, 본인 권한 검증.
-
----
-
-## P6 — 메인 기록 & 다이어리 `[MVP]`
-
-**목표**: 메인 기록 작성/수정 + 다이어리 탭(캘린더/리스트/날짜 상세). screens.md 4·5.
-
-**선행조건**: P4(이미지 업로드), P5(홈 미리보기 연결). *일러스트 변환은 P8에서 연결 — 그 전엔 압축본/썸네일로 표시.*
-
-**작업**
-- 메인 기록 작성(5.1): 사진 선택→압축→업로드, 글 입력, 저장.
-  - **하루 1개 가드**: 저장 시점 중복이면(동시성) 안내 후 댓글·반응 유도. DB `UNIQUE` + 앱 가드 이중.
-- 메인 기록 수정(5.2): 본인만, 글 수정 중심(사진 교체 시 재변환은 P8 정책 따름).
-- 다이어리 탭(4):
-  - [캘린더 | 리스트] 토글, **마지막 선택 보기 사용자별 저장**.
-  - 캘린더: 날짜별 기록·케어 유무 점 표시 → 날짜 상세.
-  - 리스트: 최신순 카드(날짜+썸네일+글 일부) → 날짜 상세.
-  - 날짜 상세(4.5/4.6): 메인 기록 + 그날 케어 전체 + (댓글·반응은 P7).
-
-**산출물**: `app/entry/new.tsx`, `app/entry/[id]/edit.tsx`, `app/(tabs)/diary.tsx`, `app/diary/[date].tsx`, `hooks/use-diary.ts`, `components/diary/*`
-
-**DoD**: 작성→상세 확인, 하루 1개 강제, 캘린더/리스트 전환·보기 저장, 본인 수정/삭제·재작성.
+**추후 보완 필요 (TODO)**
+- 🔲 다이어리 캘린더: 전체 날짜의 케어/기록 유무 점 표시 — 현재 선택 날짜만 조회. 전체 월 데이터를 한번에 가져오는 쿼리 최적화 필요.
+- 🔲 리스트뷰 좋아요/댓글 카운트 — 현재 0으로 표시. 리스트 아이템별 hook 호출은 비효율적이므로 서버에서 집계(count) 조인하거나 별도 쿼리 필요.
+- 🔲 케어 기록 본인 줄 길게눌러 삭제 UI (useDeleteCareLog hook은 준비됨, UI 연결 필요).
+- 🔲 일기 수정 화면 (app/entry/[id]/edit.tsx) — 현재 작성만 가능, 수정 미구현.
+- 🔲 낙관적 업데이트(optimistic update) — 케어 추가/댓글/반응에 적용하면 UX 개선.
+- 🔲 로딩/에러/빈 상태 처리 점검 — 실데이터 환경에서 각 화면 검증.
 
 ---
 
-## P7 — 댓글 / 반응 `[MVP]`
-
-**목표**: 날짜 상세 내 댓글·반응 (screens.md 4.5 ③④).
-
-**선행조건**: P6(날짜 상세).
-
-**작업**
-- 댓글: 목록 + 입력창 + 전송, **본인 댓글만** 수정·삭제.
-- 반응: 좋아요/이모지 토글, 카운트.
-- hooks: `hooks/use-comments.ts`, `hooks/use-reactions.ts`(낙관적 업데이트 권장).
-
-**산출물**: `components/diary/comments.tsx`, `components/diary/reactions.tsx`, 위 hooks
-
-**DoD**: 댓글 CRUD(본인 한정), 반응 토글·집계, RLS 검증.
+## P8 이전 남은 TODO (위 P5~P7+C에서 미완)
 
 ---
 
-## C — 연결 (mock → Supabase) `[MVP]`
-
-**목표**: [A]에서 만든 화면을 실데이터로 전환. **hook 내부만 교체**, 화면 컴포넌트는 유지.
-
-**선행조건**: A(UI), P1~P4(백엔드 기반).
-
-**작업**
-- `hooks/*`의 mock 반환을 Supabase 쿼리/뮤테이션으로 교체(React Query 키·캐시 유지).
-- 인증 라우팅 가드 적용(미인증→로그인, 그룹 없음→온보딩) — P3 연동.
-- 서버 제약 연결: 하루 1개(UNIQUE), 본인만 수정·삭제(RLS), 0시 케어 리셋 등.
-- 이미지: 작성 시 압축·업로드(P4), 표시용 URL 사용. *일러스트 변환 연결은 [D].*
-- mock 데이터·임시 코드 제거, 로딩/빈 상태/에러 처리 점검.
-
-**산출물**: `hooks/*`(Supabase 구현), `app/_layout.tsx`(가드), mock 제거 diff
-
-**DoD**: 화면이 실제 DB 데이터로 동작, 권한·제약 강제 확인, mock 잔존 없음.
-
----
-
-## P8 — 이미지 변환 Edge Function `[MVP]`
+## P8 — 이미지 변환 Edge Function `[MVP]` ← 다음 단계
 
 **목표**: 사진 → 일러스트 자동 변환 (tech-stack.md 4). **API 키는 Edge Function secrets에만.**
 
