@@ -27,7 +27,7 @@
 - **스타일**: React Native `style` prop + `StyleSheet.create`. 색상 토큰은 `theme/colors.js` 단일 출처.
 - **서버 상태**: TanStack Query (React Query)
 - **백엔드**: Supabase (Auth / Postgres / Storage / Edge Functions)
-- **인증**: 카카오 / 구글 OAuth (Supabase Auth)
+- **인증**: 카카오 OAuth (Supabase Auth). 구글은 MVP 범위 밖.
 - **이미지 변환**: 외부 이미지 생성 API를 Edge Function 경유 호출 (모델 추후 결정)
 
 ## 핵심 규칙 (반드시 준수)
@@ -36,7 +36,7 @@
 - **본인 것만 수정·삭제**: 메인 기록·케어 기록·댓글 모두. Supabase **RLS로 강제**한다.
 - **케어 순차 누적**: 밥·간식·산책은 시간대 고정 없이 누를 때마다 누적. 각 줄에 닉네임+시간. 0시 기준 일일 리셋.
 - **반려동물 1마리 기준 UI(MVP)**: 화면은 대표 Pet 1마리 기준. 단 모든 기록은 `pet_id`(FK) 보유 → 여러 마리는 2차 확장. 한 기록 = 한 마리.
-- **이미지 정책**: 업로드 시 클라이언트 압축(WebP, ~1080–1440px). 일러스트 변환은 업로드 직후 수행, **변환 완료 즉시 원본 삭제**, 압축본+일러스트만 보관. 이미지는 Storage에 저장하고 DB에는 URL만.
+- **이미지 정책**: 업로드 시 클라이언트 압축(JPEG 80%, ~1440px + 썸네일 300px). 일러스트 변환은 업로드 직후 수행, **변환 완료 즉시 원본 삭제**, 압축본+일러스트만 보관. 이미지는 Storage에 저장하고 DB에는 URL만.
 
 ## 보안 (반드시 준수)
 
@@ -52,7 +52,7 @@
 - **스타일**: `style` prop + `StyleSheet.create` 사용. `className`은 사용하지 않는다(NativeWind 제거됨).
 - **디자인 토큰 — 색상**: 색상은 `theme/colors.js`가 **단일 출처**. `import {colors} from '@/theme/colors'`로 참조한다. 컴포넌트에 hex를 직접 박지 않는다(`#...` 금지).
 - **UI 컴포넌트**: `components/ui/`의 Text·Card·Button·Screen은 `style` prop으로 오버라이드. Text는 `variant` prop으로 타이포 토큰 적용.
-- **폰트**: Pretendard(Regular/Medium/SemiBold/Bold, .otf) + Jua(디스플레이). `assets/fonts/`에 저장.
+- **폰트**: Pretendard(Regular/Medium/SemiBold/Bold, .otf) + Jua(디스플레이/펫 이름). `assets/fonts/`에 저장.
 - **아이콘**: Ionicons(`@expo/vector-icons`) 사용. 이모지 사용 금지(기기별 렌더링 불일치).
 - **폴더 구조**:
   ```
@@ -77,7 +77,7 @@
 1. Expo + TypeScript 초기 세팅, Expo Router로 4탭 골격.
 2. Supabase 연동(`@supabase/supabase-js`), `.env` 구성.
 3. DB 스키마 + RLS 정책 작성 (planning.md 데이터 구조 기준). → 마이그레이션.
-4. 카카오/구글 OAuth 로그인 + 온보딩(그룹 생성 / 코드 참여 + 닉네임).
+4. 카카오 OAuth 로그인 + 온보딩(그룹 생성 / 코드 참여 + 닉네임).
 5. Storage 버킷 + 접근 정책.
 6. 핵심 기능: 가족 그룹/초대 코드 → 홈(케어) → 메인 기록 → 다이어리(캘린더/리스트/상세) → 댓글·반응.
 7. 이미지 변환 Edge Function (모델은 무료 크레딧으로 시작, 모듈로 추상화).

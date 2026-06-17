@@ -130,7 +130,7 @@
 ## 6. 확정 사항 (기술)
 
 - **플랫폼**: iOS + Android (React Native / Expo)
-- **로그인**: 카카오 / 구글 간편로그인 (Supabase Auth)
+- **로그인**: 카카오 간편로그인 (Supabase Auth). 구글은 MVP 범위 밖.
 - **사진 저장**: 변환 후 원본 삭제, 압축본 + 일러스트만 보관
 - 상세는 `tech-stack.md` 참고.
 
