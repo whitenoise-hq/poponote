@@ -1,4 +1,4 @@
-import { View, Image } from 'react-native'
+import { View, Image, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Text, Card } from '@/components/ui'
 import { colors } from '@/theme/colors'
@@ -7,6 +7,7 @@ import { getDiaryEntries } from '@/lib/mock-data'
 
 interface PetProfileCardProps {
   pet: Pet
+  onEdit?: () => void
 }
 
 function getAge(birthday: string | null): string {
@@ -17,17 +18,40 @@ function getAge(birthday: string | null): string {
   return `${years}살`
 }
 
+function formatBirthday(birthday: string | null): string {
+  if (!birthday) return ''
+  const [y, m, d] = birthday.split('-')
+  return `${y}.${m}.${d} 생`
+}
+
 function getDaysRecorded(): number {
   const dates = new Set(getDiaryEntries().map((e) => e.date))
   return dates.size
 }
 
-export function PetProfileCard({ pet }: PetProfileCardProps) {
+export function PetProfileCard({ pet, onEdit }: PetProfileCardProps) {
   const sexLabel = pet.sex === 'male' ? '수컷' : pet.sex === 'female' ? '암컷' : null
-  const neuteredLabel = pet.neutered ? '중성화' : null
+  const neuteredLabel = pet.neutered ? '중성화 완료' : null
 
   return (
     <Card className="p-4">
+      {onEdit && (
+        <View style={{ position: 'absolute', top: 12, right: 12, zIndex: 1 }}>
+          <Pressable
+            onPress={onEdit}
+            style={{
+              paddingHorizontal: 12,
+              paddingVertical: 6,
+              borderRadius: 99,
+              backgroundColor: colors.cream[100],
+              borderWidth: 1,
+              borderColor: colors.cream[200],
+            }}
+          >
+            <Text variant="caption" className="text-ink">수정</Text>
+          </Pressable>
+        </View>
+      )}
       <View className="flex-row items-center gap-4">
         {pet.profile_url ? (
           <Image
@@ -43,11 +67,9 @@ export function PetProfileCard({ pet }: PetProfileCardProps) {
           <Text variant="title" className="text-ink">
             {pet.name}
           </Text>
-          {pet.species && (
-            <Text variant="caption" className="text-muted-foreground mt-0.5">
-              {pet.species}
-            </Text>
-          )}
+          <Text variant="caption" className="text-muted-foreground mt-0.5">
+            {[pet.species, formatBirthday(pet.birthday)].filter(Boolean).join(' · ')}
+          </Text>
           <View className="flex-row gap-1.5 mt-2 flex-wrap">
             {sexLabel && (
               <View className="bg-secondary rounded-full px-2 py-0.5">
@@ -68,7 +90,10 @@ export function PetProfileCard({ pet }: PetProfileCardProps) {
       </View>
 
       {/* Stats row */}
-      <View className="flex-row mt-4 justify-around">
+      <View
+        className="flex-row mt-4 justify-around"
+        style={{ borderTopWidth: 1, borderTopColor: colors.cream[200], paddingTop: 12 }}
+      >
         <View className="items-center">
           <Text variant="caption" className="text-muted-foreground">
             나이

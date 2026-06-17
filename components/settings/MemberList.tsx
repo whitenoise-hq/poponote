@@ -11,43 +11,43 @@ interface MemberListProps {
 
 export function MemberList({ members }: MemberListProps) {
   return (
-    <Card className="p-4">
-      <Text variant="label" className="text-ink mb-3">
-        가족 멤버
-      </Text>
-      <View className="gap-3">
-        {members.map((member) => {
-          const isMe = member.user_id === CURRENT_USER_ID
-          return (
-            <View key={member.id} className="flex-row items-center gap-3">
-              <View className="w-9 h-9 rounded-full bg-accent items-center justify-center">
-                <Ionicons name="person" size={18} color={colors.primary.DEFAULT} />
-              </View>
-              <View className="flex-1">
-                <View className="flex-row items-center gap-1.5">
-                  <Text variant="body" className="text-ink">
-                    {member.nickname}
-                  </Text>
-                  {isMe && (
-                    <View className="bg-primary/10 rounded-full px-1.5 py-0.5">
-                      <Text
-                        variant="caption"
-                        className="text-primary"
-                        style={{ fontSize: 10 }}
-                      >
-                        나
-                      </Text>
-                    </View>
-                  )}
-                </View>
-                <Text variant="caption" className="text-muted-foreground">
-                  {member.role}
+    <Card className="p-0 overflow-hidden">
+      {members.map((member, i) => {
+        const isMe = member.user_id === CURRENT_USER_ID
+        const isLast = i === members.length - 1
+        return (
+          <View
+            key={member.id}
+            className="flex-row items-center gap-3 px-4 py-3.5"
+            style={!isLast ? { borderBottomWidth: 1, borderBottomColor: colors.cream[200] } : undefined}
+          >
+            <View style={{ width: 28, height: 28, borderRadius: 22, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' }}>
+              <Ionicons name="person" size={20} color={colors.primary.DEFAULT} />
+            </View>
+            <View className="flex-1">
+              <Text variant="body" className="text-ink">
+                {member.nickname}
+              </Text>
+              <Text variant="caption" className="text-muted-foreground">
+                {member.role}
+              </Text>
+            </View>
+            {isMe ? (
+              <View style={{ backgroundColor: colors.primary.DEFAULT + '18', borderRadius: 99, paddingHorizontal: 10, paddingVertical: 4 }}>
+                <Text variant="caption" className="text-primary" style={{ fontSize: 11 }}>
+                  나
                 </Text>
               </View>
-            </View>
-          )
-        })}
-      </View>
+            ) : (
+              <View style={{ backgroundColor: colors.cream[100], borderRadius: 99, paddingHorizontal: 10, paddingVertical: 4 }}>
+                <Text variant="caption" className="text-muted-foreground" style={{ fontSize: 11 }}>
+                  멤버
+                </Text>
+              </View>
+            )}
+          </View>
+        )
+      })}
     </Card>
   )
 }
