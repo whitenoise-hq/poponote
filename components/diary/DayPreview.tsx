@@ -57,7 +57,7 @@ export function DayPreview({ date, entry, careLogs, onPress }: DayPreviewProps) 
                   )}
                   <Text
                     variant="caption"
-                    style={{ color: colors.muted.foreground }}
+                    style={{ color: colors.muted.foreground, marginTop: 5 }}
                     numberOfLines={2}
                   >
                     {entry.body}

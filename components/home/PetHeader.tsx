@@ -31,42 +31,38 @@ export function PetHeader({ pet }: PetHeaderProps) {
   const speciesLabel = [pet.species, age].filter(Boolean).join(' · ')
 
   return (
-    <View className="px-5 pt-4 pb-5">
-      <Text variant="caption" className="text-muted-foreground mb-3">
+    <View style={{ paddingHorizontal: 20, paddingTop: 16, paddingBottom: 20 }}>
+      <Text variant="caption" style={{ color: colors.muted.foreground, marginBottom: 12 }}>
         {formatToday()}
       </Text>
 
-      <View className="flex-row items-center gap-4">
-        <View className="relative">
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+        <View>
           {pet.profile_url ? (
             <Image
               source={{ uri: pet.profile_url }}
-              className="w-20 h-20 rounded-full"
-              style={{
-                borderWidth: 3,
-                borderColor: colors.white,
-              }}
+              style={{ width: 80, height: 80, borderRadius: 40, borderWidth: 3, borderColor: colors.white }}
             />
           ) : (
-            <View className="w-16 h-16 rounded-full bg-cream items-center justify-center">
+            <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: colors.cream.DEFAULT, alignItems: 'center', justifyContent: 'center' }}>
               <Ionicons name="paw" size={28} color={colors.primary.DEFAULT} />
             </View>
           )}
         </View>
 
-        <View className="flex-1">
-          <View className="flex-row items-baseline gap-1">
-            <Text variant="title" className="text-ink">
+        <View style={{ flex: 1 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 4 }}>
+            <Text variant="title" style={{ color: colors.ink.DEFAULT }}>
               {pet.name}
             </Text>
-            <Text variant="body" className="text-muted-foreground">
+            <Text variant="body" style={{ color: colors.muted.foreground }}>
               의 하루
             </Text>
           </View>
           {speciesLabel ? (
-            <View className="flex-row mt-1">
-              <View className="bg-secondary rounded-full px-2 py-0.5">
-                <Text variant="caption" className="text-primary">
+            <View style={{ flexDirection: 'row', marginTop: 4 }}>
+              <View style={{ backgroundColor: colors.secondary, borderRadius: 9999, paddingHorizontal: 8, paddingVertical: 2 }}>
+                <Text variant="caption" style={{ color: colors.primary.DEFAULT }}>
                   {speciesLabel}
                 </Text>
               </View>

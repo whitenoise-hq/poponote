@@ -1,6 +1,6 @@
-import { Text as RNText, type TextProps as RNTextProps } from 'react-native';
+import { Text as RNText, StyleSheet, type TextProps as RNTextProps, type TextStyle } from 'react-native';
 
-import { cn } from '@/lib/cn';
+import { colors } from '@/theme/colors';
 
 export type TextVariant =
   | 'display'
@@ -10,24 +10,23 @@ export type TextVariant =
   | 'caption'
   | 'label';
 
-const VARIANT_CLASSES: Record<TextVariant, string> = {
-  // 로고/대형 제목 (둥근 디스플레이 폰트)
-  display: 'font-display text-3xl text-ink',
-  title: 'font-bold text-2xl text-ink',
-  subtitle: 'font-semibold text-lg text-ink',
-  body: 'font-sans text-base text-ink-700',
-  caption: 'font-sans text-sm text-ink-500',
-  label: 'font-medium text-sm text-ink',
-};
+const variantStyles = StyleSheet.create<Record<TextVariant, TextStyle>>({
+  display: { fontFamily: 'Jua_400Regular', fontSize: 30, color: colors.ink.DEFAULT },
+  title: { fontFamily: 'Pretendard-Bold', fontSize: 22, color: colors.ink.DEFAULT },
+  subtitle: { fontFamily: 'Pretendard-SemiBold', fontSize: 16, color: colors.ink.DEFAULT },
+  body: { fontFamily: 'Pretendard-Regular', fontSize: 14, color: colors.ink[700] },
+  caption: { fontFamily: 'Pretendard-Regular', fontSize: 12, color: colors.ink[500] },
+  label: { fontFamily: 'Pretendard-Medium', fontSize: 13, color: colors.ink.DEFAULT },
+});
 
 interface TextProps extends RNTextProps {
   variant?: TextVariant;
-  className?: string;
+  style?: TextStyle | TextStyle[];
 }
 
 /**
  * 타이포 토큰을 적용한 텍스트. variant로 폰트·크기·색을 일괄 지정한다.
  */
-export function Text({ variant = 'body', className, ...props }: TextProps) {
-  return <RNText className={cn(VARIANT_CLASSES[variant], className)} {...props} />;
+export function Text({ variant = 'body', style, ...props }: TextProps) {
+  return <RNText style={[variantStyles[variant], style]} {...props} />;
 }

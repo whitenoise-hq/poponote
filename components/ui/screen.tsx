@@ -1,16 +1,13 @@
 import { type ReactNode } from 'react';
-import { View } from 'react-native';
+import { View, StyleSheet, type ViewStyle } from 'react-native';
 import { SafeAreaView, type Edge } from 'react-native-safe-area-context';
 
-import { cn } from '@/lib/cn';
+import { colors } from '@/theme/colors';
 
 interface ScreenProps {
   children: ReactNode;
-  /** 추가 className (루트 SafeAreaView에 병합) */
-  className?: string;
-  /** 내부 컨텐츠 래퍼 className (기본 좌우 패딩 적용) */
-  contentClassName?: string;
-  /** SafeArea를 적용할 가장자리. 기본 상하좌우 */
+  style?: ViewStyle;
+  contentStyle?: ViewStyle;
   edges?: readonly Edge[];
 }
 
@@ -19,13 +16,24 @@ interface ScreenProps {
  */
 export function Screen({
   children,
-  className,
-  contentClassName,
+  style,
+  contentStyle,
   edges = ['top', 'bottom', 'left', 'right'],
 }: ScreenProps) {
   return (
-    <SafeAreaView edges={edges} className={cn('flex-1 bg-cream', className)}>
-      <View className={cn('flex-1 px-5', contentClassName)}>{children}</View>
+    <SafeAreaView edges={edges} style={[styles.root, style]}>
+      <View style={[styles.content, contentStyle]}>{children}</View>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: colors.cream.DEFAULT,
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+});

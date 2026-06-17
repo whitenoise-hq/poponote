@@ -34,7 +34,7 @@ export function PetProfileCard({ pet, onEdit }: PetProfileCardProps) {
   const neuteredLabel = pet.neutered ? '중성화 완료' : null
 
   return (
-    <Card className="p-4">
+    <Card style={{ padding: 16 }}>
       {onEdit && (
         <View style={{ position: 'absolute', top: 12, right: 12, zIndex: 1 }}>
           <Pressable
@@ -48,39 +48,39 @@ export function PetProfileCard({ pet, onEdit }: PetProfileCardProps) {
               borderColor: colors.cream[200],
             }}
           >
-            <Text variant="caption" className="text-ink">수정</Text>
+            <Text variant="caption" style={{ color: colors.ink.DEFAULT }}>수정</Text>
           </Pressable>
         </View>
       )}
-      <View className="flex-row items-center gap-4">
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
         {pet.profile_url ? (
           <Image
             source={{ uri: pet.profile_url }}
-            className="w-20 h-20 rounded-full"
+            style={{ width: 80, height: 80, borderRadius: 40 }}
           />
         ) : (
-          <View className="w-20 h-20 rounded-full bg-cream items-center justify-center">
+          <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: colors.cream.DEFAULT, alignItems: 'center', justifyContent: 'center' }}>
             <Ionicons name="paw" size={36} color={colors.primary.DEFAULT} />
           </View>
         )}
-        <View className="flex-1">
-          <Text variant="title" className="text-ink">
+        <View style={{ flex: 1 }}>
+          <Text variant="title" style={{ color: colors.ink.DEFAULT }}>
             {pet.name}
           </Text>
-          <Text variant="caption" className="text-muted-foreground mt-0.5">
+          <Text variant="caption" style={{ color: colors.muted.foreground, marginTop: 2 }}>
             {[pet.species, formatBirthday(pet.birthday)].filter(Boolean).join(' · ')}
           </Text>
-          <View className="flex-row gap-1.5 mt-2 flex-wrap">
+          <View style={{ flexDirection: 'row', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
             {sexLabel && (
-              <View className="bg-secondary rounded-full px-2 py-0.5">
-                <Text variant="caption" className="text-primary">
+              <View style={{ backgroundColor: colors.secondary, borderRadius: 9999, paddingHorizontal: 8, paddingVertical: 2 }}>
+                <Text variant="caption" style={{ color: colors.primary.DEFAULT }}>
                   {sexLabel}
                 </Text>
               </View>
             )}
             {neuteredLabel && (
-              <View className="bg-treat-bg rounded-full px-2 py-0.5">
-                <Text variant="caption" className="text-treat">
+              <View style={{ backgroundColor: colors.treat.bg, borderRadius: 9999, paddingHorizontal: 8, paddingVertical: 2 }}>
+                <Text variant="caption" style={{ color: colors.treat.DEFAULT }}>
                   {neuteredLabel}
                 </Text>
               </View>
@@ -90,33 +90,18 @@ export function PetProfileCard({ pet, onEdit }: PetProfileCardProps) {
       </View>
 
       {/* Stats row */}
-      <View
-        className="flex-row mt-4 justify-around"
-        style={{ borderTopWidth: 1, borderTopColor: colors.cream[200], paddingTop: 12 }}
-      >
-        <View className="items-center">
-          <Text variant="caption" className="text-muted-foreground">
-            나이
-          </Text>
-          <Text variant="label" className="text-ink mt-0.5">
-            {getAge(pet.birthday)}
-          </Text>
+      <View style={{ flexDirection: 'row', marginTop: 16, justifyContent: 'space-around', borderTopWidth: 1, borderTopColor: colors.cream[200], paddingTop: 12 }}>
+        <View style={{ alignItems: 'center' }}>
+          <Text variant="caption" style={{ color: colors.muted.foreground }}>나이</Text>
+          <Text variant="label" style={{ color: colors.ink.DEFAULT, marginTop: 2 }}>{getAge(pet.birthday)}</Text>
         </View>
-        <View className="items-center">
-          <Text variant="caption" className="text-muted-foreground">
-            체중
-          </Text>
-          <Text variant="label" className="text-ink mt-0.5">
-            {pet.weight ? `${pet.weight}kg` : '-'}
-          </Text>
+        <View style={{ alignItems: 'center' }}>
+          <Text variant="caption" style={{ color: colors.muted.foreground }}>체중</Text>
+          <Text variant="label" style={{ color: colors.ink.DEFAULT, marginTop: 2 }}>{pet.weight ? `${pet.weight}kg` : '-'}</Text>
         </View>
-        <View className="items-center">
-          <Text variant="caption" className="text-muted-foreground">
-            기록
-          </Text>
-          <Text variant="label" className="text-ink mt-0.5">
-            {getDaysRecorded()}일
-          </Text>
+        <View style={{ alignItems: 'center' }}>
+          <Text variant="caption" style={{ color: colors.muted.foreground }}>기록</Text>
+          <Text variant="label" style={{ color: colors.ink.DEFAULT, marginTop: 2 }}>{getDaysRecorded()}일</Text>
         </View>
       </View>
     </Card>

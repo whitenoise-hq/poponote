@@ -22,23 +22,32 @@ export function CareAddSheet({
   }
 
   return (
-    <View className="flex-row gap-2 mt-2">
+    <View style={{ flexDirection: 'row', gap: 8, marginTop: 8 }}>
       <TextInput
         value={memo}
         onChangeText={setMemo}
         placeholder="메모 (선택)"
         placeholderTextColor={colors.muted.foreground}
-        className="flex-1 text-xs px-3 py-2 rounded-xl bg-white font-sans text-ink"
-        style={{ borderWidth: 1.5, borderColor: accentColor + '44' }}
+        style={{
+          flex: 1,
+          fontSize: 12,
+          paddingHorizontal: 12,
+          paddingVertical: 8,
+          borderRadius: 12,
+          backgroundColor: colors.white,
+          fontFamily: 'Pretendard-Regular',
+          color: colors.ink.DEFAULT,
+          borderWidth: 1.5,
+          borderColor: accentColor + '44',
+        }}
         onSubmitEditing={handleSubmit}
         returnKeyType="done"
       />
       <Pressable
         onPress={handleSubmit}
-        className="px-3 py-2 rounded-xl"
-        style={{ backgroundColor: accentColor }}
+        style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 12, backgroundColor: accentColor }}
       >
-        <Text variant="caption" className="text-white font-semibold">
+        <Text variant="caption" style={{ color: colors.white, fontWeight: '600' }}>
           추가
         </Text>
       </Pressable>

@@ -19,25 +19,33 @@ export function InviteCodeCard({ code }: InviteCodeCardProps) {
   }
 
   return (
-    <Card className="p-4">
-      <View className="flex-row items-center justify-between mb-3">
+    <Card style={{ padding: 16 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
         <View>
-          <Text variant="label" className="text-ink">
+          <Text variant="label" style={{ color: colors.ink.DEFAULT }}>
             초대 코드
           </Text>
-          <Text variant="caption" className="text-muted-foreground mt-0.5">
+          <Text variant="caption" style={{ color: colors.muted.foreground, marginTop: 2 }}>
             가족에게 코드를 공유하세요
           </Text>
         </View>
         <Ionicons name="people-outline" size={22} color={colors.primary.DEFAULT} />
       </View>
 
-      <View className="flex-row items-center gap-3">
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
         <View
-          className="flex-1 py-3 items-center rounded-xl"
-          style={{ backgroundColor: colors.meal.bg, borderWidth: 1.5, borderColor: colors.primary.DEFAULT + '44', borderStyle: 'dashed' }}
+          style={{
+            flex: 1,
+            paddingVertical: 12,
+            alignItems: 'center',
+            borderRadius: 12,
+            backgroundColor: colors.meal.bg,
+            borderWidth: 1.5,
+            borderColor: colors.primary.DEFAULT + '44',
+            borderStyle: 'dashed',
+          }}
         >
-          <Text variant="subtitle" className="text-primary tracking-widest">
+          <Text variant="subtitle" style={{ color: colors.primary.DEFAULT, letterSpacing: 4 }}>
             {code}
           </Text>
         </View>

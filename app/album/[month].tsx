@@ -25,23 +25,23 @@ export default function AlbumMonthScreen() {
   if (!month) return null
 
   return (
-    <SafeAreaView className="flex-1 bg-cream" edges={['top']}>
-      <View className="flex-row items-center px-5 py-3 gap-3">
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.cream.DEFAULT }} edges={['top']}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 12, gap: 12 }}>
         <Pressable
           onPress={() => router.back()}
-          className="w-8 h-8 items-center justify-center"
+          style={{ width: 32, height: 32, alignItems: 'center', justifyContent: 'center' }}
         >
           <Ionicons name="chevron-back" size={20} color={colors.ink.DEFAULT} />
         </Pressable>
-        <Text variant="subtitle" className="flex-1 text-ink">
+        <Text variant="subtitle" style={{ flex: 1, color: colors.ink.DEFAULT }}>
           {formatMonth(month)}
         </Text>
-        <Text variant="caption" className="text-muted-foreground mr-1">
+        <Text variant="caption" style={{ color: colors.muted.foreground, marginRight: 4 }}>
           {(photos ?? []).length}장
         </Text>
       </View>
 
-      <View className="flex-1 px-5">
+      <View style={{ flex: 1, paddingHorizontal: 20 }}>
         <PhotoGrid photos={photos ?? []} onPress={handlePhotoPress} />
       </View>
     </SafeAreaView>

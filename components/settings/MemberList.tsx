@@ -11,36 +11,43 @@ interface MemberListProps {
 
 export function MemberList({ members }: MemberListProps) {
   return (
-    <Card className="p-0 overflow-hidden">
+    <Card style={{ padding: 0, overflow: 'hidden' }}>
       {members.map((member, i) => {
         const isMe = member.user_id === CURRENT_USER_ID
         const isLast = i === members.length - 1
         return (
           <View
             key={member.id}
-            className="flex-row items-center gap-3 px-4 py-3.5"
-            style={!isLast ? { borderBottomWidth: 1, borderBottomColor: colors.cream[200] } : undefined}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 12,
+              paddingHorizontal: 16,
+              paddingVertical: 14,
+              borderBottomWidth: isLast ? 0 : 1,
+              borderBottomColor: colors.cream[200],
+            }}
           >
-            <View style={{ width: 28, height: 28, borderRadius: 22, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ width: 28, height: 28, borderRadius: 14, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' }}>
               <Ionicons name="person" size={20} color={colors.primary.DEFAULT} />
             </View>
-            <View className="flex-1">
-              <Text variant="body" className="text-ink">
+            <View style={{ flex: 1 }}>
+              <Text variant="body" style={{ color: colors.ink.DEFAULT }}>
                 {member.nickname}
               </Text>
-              <Text variant="caption" className="text-muted-foreground">
+              <Text variant="caption" style={{ color: colors.muted.foreground }}>
                 {member.role}
               </Text>
             </View>
             {isMe ? (
               <View style={{ backgroundColor: colors.primary.DEFAULT + '18', borderRadius: 99, paddingHorizontal: 10, paddingVertical: 4 }}>
-                <Text variant="caption" className="text-primary" style={{ fontSize: 11 }}>
+                <Text variant="caption" style={{ color: colors.primary.DEFAULT, fontSize: 11 }}>
                   나
                 </Text>
               </View>
             ) : (
               <View style={{ backgroundColor: colors.cream[100], borderRadius: 99, paddingHorizontal: 10, paddingVertical: 4 }}>
-                <Text variant="caption" className="text-muted-foreground" style={{ fontSize: 11 }}>
+                <Text variant="caption" style={{ color: colors.muted.foreground, fontSize: 11 }}>
                   멤버
                 </Text>
               </View>

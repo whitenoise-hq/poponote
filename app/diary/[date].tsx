@@ -59,9 +59,10 @@ export default function DiaryDetailScreen() {
                 >
                     <Ionicons name="chevron-back" size={20} color={colors.ink.DEFAULT}/>
                 </Pressable>
-                <Text variant="subtitle" style={{color: colors.ink.DEFAULT, flex: 1}}>
+                <Text variant="subtitle" style={{color: colors.ink.DEFAULT, flex: 1, textAlign: 'center'}}>
                     {formatDateHeader(date)}
                 </Text>
+                <View style={{width: 32}} />
             </View>
 
             {/* Content */}

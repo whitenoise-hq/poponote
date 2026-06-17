@@ -15,14 +15,20 @@ export function ReactionBar({ reactions, onToggle }: ReactionBarProps) {
   const count = reactions.length
 
   return (
-    <View className="mt-4 flex-row items-center gap-3">
+    <View style={{ marginTop: 16, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
       <Pressable
         onPress={onToggle}
-        className={`flex-row items-center gap-1.5 px-4 py-2 rounded-full border ${
-          hasReacted
-            ? 'bg-primary/10 border-primary/30'
-            : 'bg-white border-cream-200'
-        }`}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 6,
+          paddingHorizontal: 16,
+          paddingVertical: 8,
+          borderRadius: 9999,
+          borderWidth: 1,
+          backgroundColor: hasReacted ? colors.primary.DEFAULT + '1A' : colors.white,
+          borderColor: hasReacted ? colors.primary.DEFAULT + '4D' : colors.cream[200],
+        }}
       >
         <Ionicons
           name={hasReacted ? 'heart' : 'heart-outline'}
@@ -31,7 +37,7 @@ export function ReactionBar({ reactions, onToggle }: ReactionBarProps) {
         />
         <Text
           variant="label"
-          className={hasReacted ? 'text-primary' : 'text-muted-foreground'}
+          style={{ color: hasReacted ? colors.primary.DEFAULT : colors.muted.foreground }}
         >
           {count > 0 ? count : '좋아요'}
         </Text>

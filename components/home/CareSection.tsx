@@ -2,6 +2,7 @@ import { View } from 'react-native'
 import { Text } from '@/components/ui'
 import { CareCard } from './CareCard'
 import { CARE_KINDS } from '@/lib/care-config'
+import { colors } from '@/theme/colors'
 import type { CareLog, CareKind } from '@/types'
 
 interface CareSectionProps {
@@ -18,16 +19,16 @@ export function CareSection({ logs, onAdd }: CareSectionProps) {
 
   return (
     <View>
-      <View className="flex-row items-center justify-between mb-3">
-        <Text variant="subtitle" className="text-ink">
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+        <Text variant="subtitle" style={{ color: colors.ink.DEFAULT }}>
           오늘의 케어
         </Text>
-        <Text variant="caption" className="text-muted-foreground">
+        <Text variant="caption" style={{ color: colors.muted.foreground }}>
           총 {totalCount}번
         </Text>
       </View>
 
-      <View className="gap-3">
+      <View style={{ gap: 12 }}>
         {CARE_KINDS.map((kind) => (
           <CareCard
             key={kind}

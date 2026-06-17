@@ -18,21 +18,14 @@ export function PhotoDetail({ photo, onGoToDiary }: PhotoDetailProps) {
   }
 
   return (
-    <View className="flex-1 items-center">
+    <View style={{ flex: 1, alignItems: 'center' }}>
       <Image
         source={{ uri: photo.illustrationUrl }}
         style={{ width: imageSize, height: imageSize, borderRadius: 16 }}
         resizeMode="cover"
       />
 
-      <View
-        style={{
-          flexDirection: 'row',
-          gap: 12,
-          marginTop: 20,
-          width: imageSize,
-        }}
-      >
+      <View style={{ flexDirection: 'row', gap: 12, marginTop: 20, width: imageSize }}>
         <Pressable
           onPress={handleSave}
           style={{
@@ -49,7 +42,7 @@ export function PhotoDetail({ photo, onGoToDiary }: PhotoDetailProps) {
           }}
         >
           <Ionicons name="download-outline" size={18} color={colors.ink.DEFAULT} />
-          <Text variant="label" className="text-ink">저장하기</Text>
+          <Text variant="label" style={{ color: colors.ink.DEFAULT }}>저장하기</Text>
         </Pressable>
 
         <Pressable
@@ -66,7 +59,7 @@ export function PhotoDetail({ photo, onGoToDiary }: PhotoDetailProps) {
           }}
         >
           <Ionicons name="book-outline" size={18} color={colors.white} />
-          <Text variant="label" className="text-white">다이어리 보기</Text>
+          <Text variant="label" style={{ color: colors.white }}>다이어리 보기</Text>
         </Pressable>
       </View>
     </View>

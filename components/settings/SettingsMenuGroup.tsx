@@ -23,7 +23,7 @@ const ROW_HEIGHT = 56
 
 export function SettingsMenuGroup({ items }: SettingsMenuGroupProps) {
   return (
-    <Card className="p-0 overflow-hidden">
+    <Card style={{ padding: 0, overflow: 'hidden' }}>
       {items.map((item, i) => {
         const isLast = i === items.length - 1
         return (
@@ -45,15 +45,15 @@ export function SettingsMenuGroup({ items }: SettingsMenuGroupProps) {
               size={20}
               color={item.danger ? colors.danger : colors.ink[500]}
             />
-            <View className="flex-1 py-3">
+            <View style={{ flex: 1, paddingVertical: 12 }}>
               <Text
                 variant="body"
-                className={item.danger ? 'text-danger' : 'text-ink'}
+                style={{ color: item.danger ? colors.danger : colors.ink.DEFAULT }}
               >
                 {item.label}
               </Text>
               {item.subtitle && (
-                <Text variant="caption" className="text-muted-foreground">
+                <Text variant="caption" style={{ color: colors.muted.foreground }}>
                   {item.subtitle}
                 </Text>
               )}

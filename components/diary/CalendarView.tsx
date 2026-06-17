@@ -76,23 +76,23 @@ export function CalendarView({
   return (
     <View>
       {/* Month header */}
-      <View className="flex-row items-center justify-between mb-4">
-        <Pressable onPress={prevMonth} className="px-3 py-1">
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+        <Pressable onPress={prevMonth} style={{ paddingHorizontal: 12, paddingVertical: 4 }}>
           <Ionicons name="chevron-back" size={20} color={colors.ink[400]} />
         </Pressable>
-        <Text variant="subtitle" className="text-ink">
+        <Text variant="subtitle" style={{ color: colors.ink.DEFAULT }}>
           {year}년 {month}월
         </Text>
-        <Pressable onPress={nextMonth} className="px-3 py-1">
+        <Pressable onPress={nextMonth} style={{ paddingHorizontal: 12, paddingVertical: 4 }}>
           <Ionicons name="chevron-forward" size={20} color={colors.ink[400]} />
         </Pressable>
       </View>
 
       {/* Weekday headers */}
-      <View className="flex-row mb-2">
+      <View style={{ flexDirection: 'row', marginBottom: 8 }}>
         {WEEKDAYS.map((wd) => (
-          <View key={wd} className="flex-1 items-center">
-            <Text variant="caption" className="text-muted-foreground">
+          <View key={wd} style={{ flex: 1, alignItems: 'center' }}>
+            <Text variant="caption" style={{ color: colors.muted.foreground }}>
               {wd}
             </Text>
           </View>
@@ -101,7 +101,7 @@ export function CalendarView({
 
       {/* Calendar grid */}
       {weeks.map((week, wi) => (
-        <View key={wi} className="flex-row">
+        <View key={wi} style={{ flexDirection: 'row' }}>
           {week.map((day, di) => {
             const dateStr = day
               ? `${year}-${pad(month)}-${pad(day)}`

@@ -20,13 +20,13 @@ export function DiaryPreview({
 }: DiaryPreviewProps) {
   return (
     <View>
-      <View className="flex-row items-center justify-between mb-3">
-        <Text variant="subtitle" className="text-ink">
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+        <Text variant="subtitle" style={{ color: colors.ink.DEFAULT }}>
           오늘의 일기
         </Text>
         {entry && (
-          <Pressable onPress={onPressMore} className="flex-row items-center gap-0.5">
-            <Text variant="caption" className="text-primary">
+          <Pressable onPress={onPressMore} style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+            <Text variant="caption" style={{ color: colors.primary.DEFAULT }}>
               더보기
             </Text>
             <Ionicons name="chevron-forward" size={14} color={colors.primary.DEFAULT} />
@@ -36,17 +36,21 @@ export function DiaryPreview({
 
       {entry ? (
         <Pressable onPress={onPressEntry}>
-          <Card className="overflow-hidden" style={{ padding: 0 }}>
+          <Card style={{ padding: 0, overflow: 'hidden' }}>
             {entry.photo_url && (
-              <View className="relative">
+              <View>
                 <Image
                   source={{ uri: entry.photo_url }}
                   style={{ width: '100%', height: 192 }}
                   resizeMode="cover"
                 />
                 <View
-                  className="absolute inset-0"
                   style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
                     backgroundColor: 'rgba(61,47,42,0.45)',
                     justifyContent: 'flex-end',
                     padding: 12,
@@ -55,8 +59,7 @@ export function DiaryPreview({
                   {entry.title && (
                     <Text
                       variant="label"
-                      className="text-white"
-                      style={{ fontWeight: '700' }}
+                      style={{ color: colors.white, fontWeight: '700' }}
                     >
                       {entry.title}
                     </Text>
@@ -64,15 +67,15 @@ export function DiaryPreview({
                 </View>
               </View>
             )}
-            <View className="px-4 py-3">
+            <View style={{ paddingHorizontal: 16, paddingVertical: 12 }}>
               <Text
                 variant="caption"
-                className="text-muted-foreground leading-relaxed"
+                style={{ color: colors.muted.foreground, lineHeight: 24 }}
                 numberOfLines={2}
               >
                 {entry.body}
               </Text>
-              <Text variant="caption" className="text-muted-foreground mt-2">
+              <Text variant="caption" style={{ color: colors.muted.foreground, marginTop: 8 }}>
                 {getMemberNickname(entry.author_id)}
               </Text>
             </View>
@@ -80,9 +83,9 @@ export function DiaryPreview({
         </Pressable>
       ) : (
         <Pressable onPress={onPressWrite}>
-          <Card className="py-8 items-center gap-2">
+          <Card style={{ paddingVertical: 32, alignItems: 'center', gap: 8 }}>
             <Ionicons name="create-outline" size={28} color={colors.muted.foreground} />
-            <Text variant="body" className="text-muted-foreground">
+            <Text variant="body" style={{ color: colors.muted.foreground }}>
               오늘 일기를 남겨주세요
             </Text>
           </Card>

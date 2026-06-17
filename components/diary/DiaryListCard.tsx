@@ -20,7 +20,7 @@ function formatDateShort(dateStr: string): string {
 export function DiaryListCard({ entry, careLogs, likeCount, commentCount, onPress }: DiaryListCardProps) {
   return (
     <Pressable onPress={onPress}>
-      <Card className="overflow-hidden" style={{ padding: 0 }}>
+      <Card style={{ padding: 0, overflow: 'hidden' }}>
         {entry.photo_url && (
           <Image
             source={{ uri: entry.photo_url }}
@@ -29,7 +29,6 @@ export function DiaryListCard({ entry, careLogs, likeCount, commentCount, onPres
           />
         )}
         <View style={{ paddingHorizontal: 16, paddingVertical: 12, gap: 8 }}>
-          {/* 제목 + 날짜 */}
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
             <Text
               variant="label"

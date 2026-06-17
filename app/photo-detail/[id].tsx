@@ -3,7 +3,6 @@ import { Ionicons } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-import { Text } from '@/components/ui'
 import { PhotoDetail } from '@/components/album/PhotoDetail'
 import { getDiaryEntries } from '@/lib/mock-data'
 import { colors } from '@/theme/colors'
@@ -22,17 +21,17 @@ export default function AlbumPhotoDetailScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-cream" edges={['top']}>
-      <View className="flex-row items-center justify-between px-5 py-3">
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.cream.DEFAULT }} edges={['top']}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 12 }}>
         <Pressable
           onPress={() => router.back()}
-          className="w-8 h-8 items-center justify-center"
+          style={{ width: 32, height: 32, alignItems: 'center', justifyContent: 'center' }}
         >
           <Ionicons name="chevron-back" size={20} color={colors.ink.DEFAULT} />
         </Pressable>
       </View>
 
-      <View className="flex-1 px-5 justify-center">
+      <View style={{ flex: 1, paddingHorizontal: 20, justifyContent: 'center' }}>
         <PhotoDetail
           photo={photo}
           onGoToDiary={() => router.push(`/diary/${entry.date}` as never)}

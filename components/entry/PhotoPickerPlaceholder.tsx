@@ -24,10 +24,20 @@ export function PhotoPickerPlaceholder({ onPick }: PhotoPickerPlaceholderProps) 
   return (
     <Pressable
       onPress={handlePress}
-      className="w-full h-56 rounded-2xl bg-muted items-center justify-center border-2 border-dashed border-cream-200"
+      style={{
+        width: '100%',
+        height: 224,
+        borderRadius: 16,
+        backgroundColor: colors.muted.DEFAULT,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 2,
+        borderStyle: 'dashed',
+        borderColor: colors.cream[200],
+      }}
     >
       <Ionicons name="camera-outline" size={36} color={colors.muted.foreground} />
-      <Text variant="body" className="text-muted-foreground mt-2">
+      <Text variant="body" style={{ color: colors.muted.foreground, marginTop: 8 }}>
         사진을 선택하세요
       </Text>
     </Pressable>

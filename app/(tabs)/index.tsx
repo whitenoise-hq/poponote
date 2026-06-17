@@ -42,11 +42,11 @@ export default function HomeScreen() {
       locations={[0, 0.3, 1]}
       style={{ flex: 1 }}
     >
-      <SafeAreaView className="flex-1" edges={['top']}>
-        <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+      <SafeAreaView style={{ flex: 1 }} edges={['top']}>
+        <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           {pet && <PetHeader pet={pet} />}
 
-          <View className="px-4 pb-8 gap-6">
+          <View style={{ paddingHorizontal: 16, paddingBottom: 32, gap: 24 }}>
             <CareSection
               logs={careLogs ?? []}
               onAdd={handleAddCare}

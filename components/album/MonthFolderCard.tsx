@@ -1,5 +1,6 @@
 import {Pressable, View, Image, useWindowDimensions} from 'react-native'
 import {Text} from '@/components/ui'
+import {colors} from '@/theme/colors'
 import type {AlbumMonth} from '@/hooks/use-album'
 
 interface MonthFolderCardProps {
@@ -12,8 +13,16 @@ function formatMonth(month: string): string {
     return `${y}년 ${m}월`
 }
 
-const SCREEN_PADDING = 20 // album 화면 px-5 좌우 합
+const SCREEN_PADDING = 40 // paddingHorizontal: 20 = 좌우 합 40
 const COLUMN_GAP = 16
+
+const imageBase = {
+    position: 'absolute' as const,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.cream[200],
+    backgroundColor: colors.white,
+}
 
 export function MonthFolderCard({folder, onPress}: MonthFolderCardProps) {
     const {width} = useWindowDimensions()
@@ -23,18 +32,17 @@ export function MonthFolderCard({folder, onPress}: MonthFolderCardProps) {
     const back = Math.round(cardWidth * 0.7)
     const main = Math.round(cardWidth * 0.78)
     const center = (dim: number) => (cardWidth - dim) / 2
-    const offset = Math.round(cardWidth * 0.07) // 뒤 레이어를 좌우로 펼쳐 빼내는 양
+    const offset = Math.round(cardWidth * 0.07)
 
     return (
-        <Pressable onPress={onPress} className="items-center" style={{width: cardWidth, marginBottom: 12}}>
-            {/* 겹친 사진 더미 */}
+        <Pressable onPress={onPress} style={{width: cardWidth, marginBottom: 12, alignItems: 'center'}}>
             <View style={{width: cardWidth, height: cardWidth, marginBottom: -5}}>
                 {third && (
                     <Image
                         source={{uri: third}}
                         resizeMode="cover"
-                        className="absolute rounded-2xl border border-cream-200 bg-white"
                         style={{
+                            ...imageBase,
                             width: back,
                             height: back,
                             top: center(back),
@@ -47,8 +55,8 @@ export function MonthFolderCard({folder, onPress}: MonthFolderCardProps) {
                     <Image
                         source={{uri: second}}
                         resizeMode="cover"
-                        className="absolute rounded-2xl border border-cream-200 bg-white"
                         style={{
+                            ...imageBase,
                             width: back,
                             height: back,
                             top: center(back),
@@ -60,14 +68,22 @@ export function MonthFolderCard({folder, onPress}: MonthFolderCardProps) {
                 <Image
                     source={{uri: front}}
                     resizeMode="cover"
-                    className="absolute rounded-2xl border border-cream-200 bg-white shadow-card"
-                    style={{width: main, height: main, top: center(main), left: center(main)}}
+                    style={{
+                        ...imageBase,
+                        width: main,
+                        height: main,
+                        top: center(main),
+                        left: center(main),
+                        shadowColor: '#000',
+                        shadowOffset: {width: 0, height: 1},
+                        shadowOpacity: 0.08,
+                        shadowRadius: 8,
+                    }}
                 />
             </View>
 
-            {/* 연·월 + 장수 */}
-            <View className="items-center" style={{marginTop: -4}}>
-                <Text variant="subtitle" className="text-ink">
+            <View style={{alignItems: 'center', marginTop: -4}}>
+                <Text variant="subtitle" style={{color: colors.ink.DEFAULT}}>
                     {formatMonth(folder.month)}
                 </Text>
             </View>

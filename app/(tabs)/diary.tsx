@@ -10,6 +10,7 @@ import { ListView } from '@/components/diary/ListView'
 import { DayPreview } from '@/components/diary/DayPreview'
 import { useDiaryEntries } from '@/hooks/use-diary'
 import { getCareLogs } from '@/lib/mock-data'
+import { colors } from '@/theme/colors'
 
 export default function DiaryScreen() {
   const router = useRouter()
@@ -42,16 +43,16 @@ export default function DiaryScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-cream" edges={['top']}>
-      <View className="px-5 pt-4 pb-2">
-        <Text variant="title" className="text-ink mb-4">
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.cream.DEFAULT }} edges={['top']}>
+      <View style={{ paddingHorizontal: 20, paddingTop: 16, paddingBottom: 8 }}>
+        <Text variant="title" style={{ color: colors.ink.DEFAULT, marginBottom: 16 }}>
           다이어리
         </Text>
         <ViewToggle mode={mode} onChangeMode={setMode} />
       </View>
 
       {mode === 'calendar' ? (
-        <ScrollView className="flex-1 px-5 pt-4" showsVerticalScrollIndicator={false}>
+        <ScrollView style={{ flex: 1, paddingHorizontal: 20, paddingTop: 16 }} showsVerticalScrollIndicator={false}>
           <CalendarView
             entries={entries ?? []}
             careLogs={allCareLogs}
@@ -66,10 +67,10 @@ export default function DiaryScreen() {
               onPress={handleGoToDetail}
             />
           )}
-          <View className="h-8" />
+          <View style={{ height: 32 }} />
         </ScrollView>
       ) : (
-        <View className="flex-1 px-5 pt-4">
+        <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 16 }}>
           <ListView
             entries={entries ?? []}
             careLogs={allCareLogs}

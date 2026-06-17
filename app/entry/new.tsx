@@ -36,24 +36,24 @@ export default function NewEntryScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-cream" edges={['top']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.cream.DEFAULT }} edges={['top']}>
       {/* Header */}
-      <View className="flex-row items-center justify-between px-5 py-3">
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 12 }}>
         <Pressable
           onPress={() => router.back()}
-          className="w-8 h-8 items-center justify-center"
+          style={{ width: 32, height: 32, alignItems: 'center', justifyContent: 'center' }}
         >
           <Ionicons name="chevron-back" size={20} color={colors.ink.DEFAULT} />
         </Pressable>
-        <Text variant="subtitle" className="text-ink">
+        <Text variant="subtitle" style={{ color: colors.ink.DEFAULT }}>
           새 기록
         </Text>
-        <View className="w-8" />
+        <View style={{ width: 32 }} />
       </View>
 
       <ScrollView
-        className="flex-1 px-5"
-        contentContainerClassName="pb-8"
+        style={{ flex: 1, paddingHorizontal: 20 }}
+        contentContainerStyle={{ paddingBottom: 32 }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
@@ -62,10 +62,10 @@ export default function NewEntryScreen() {
           <Pressable onPress={() => setPhotoUrl(null)}>
             <Image
               source={{ uri: photoUrl }}
-              className="w-full h-56 rounded-2xl"
+              style={{ width: '100%', height: 224, borderRadius: 16 }}
               resizeMode="cover"
             />
-            <Text variant="caption" className="text-muted-foreground text-center mt-1">
+            <Text variant="caption" style={{ color: colors.muted.foreground, textAlign: 'center', marginTop: 4 }}>
               탭하여 사진 변경
             </Text>
           </Pressable>
@@ -79,8 +79,16 @@ export default function NewEntryScreen() {
           onChangeText={setTitle}
           placeholder="제목 (선택)"
           placeholderTextColor={colors.muted.foreground}
-          className="mt-4 px-4 py-3 bg-white rounded-xl text-base font-medium text-ink"
-          style={{ fontFamily: 'GothicA1_500Medium' }}
+          style={{
+            marginTop: 16,
+            paddingHorizontal: 16,
+            paddingVertical: 12,
+            backgroundColor: colors.white,
+            borderRadius: 12,
+            fontSize: 16,
+            fontFamily: 'Pretendard-Medium',
+            color: colors.ink.DEFAULT,
+          }}
         />
 
         {/* Body */}
@@ -91,14 +99,23 @@ export default function NewEntryScreen() {
           placeholderTextColor={colors.muted.foreground}
           multiline
           textAlignVertical="top"
-          className="mt-3 px-4 py-3 bg-white rounded-xl text-sm font-sans text-ink min-h-[160px]"
-          style={{ fontFamily: 'GothicA1_400Regular' }}
+          style={{
+            marginTop: 12,
+            paddingHorizontal: 16,
+            paddingVertical: 12,
+            backgroundColor: colors.white,
+            borderRadius: 12,
+            fontSize: 14,
+            fontFamily: 'Pretendard-Regular',
+            color: colors.ink.DEFAULT,
+            minHeight: 160,
+          }}
         />
 
         {/* Save button */}
         <Button
           label="저장"
-          className="mt-6"
+          style={{ marginTop: 24 }}
           onPress={handleSave}
           loading={addEntry.isPending}
         />

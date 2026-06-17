@@ -8,11 +8,10 @@ import { CARE_CONFIG } from '@/lib/care-config'
 import { colors } from '@/theme/colors'
 import type { CareLog, CareKind } from '@/types'
 
-// NativeWind 동적 클래스 불가 → lookup 사용
-const BG_CLASSES: Record<CareKind, string> = {
-  meal: 'bg-meal-bg',
-  treat: 'bg-treat-bg',
-  walk: 'bg-walk-bg',
+const BG_COLORS: Record<CareKind, string> = {
+  meal: colors.meal.bg,
+  treat: colors.treat.bg,
+  walk: colors.walk.bg,
 }
 
 const COLOR_VALUES: Record<CareKind, string> = {
@@ -43,24 +42,22 @@ export function CareCard({ kind, logs, onAdd }: CareCardProps) {
 
   return (
     <View
-      className={`rounded-2xl p-4 ${BG_CLASSES[kind]}`}
-      style={{ borderWidth: 1.5, borderColor: color + '22' }}
+      style={{
+        borderRadius: 16,
+        padding: 16,
+        backgroundColor: BG_COLORS[kind],
+        borderWidth: 1.5,
+        borderColor: color + '22',
+      }}
     >
-      {/* Header: emoji + label + count + add button */}
-      <View className="flex-row items-center justify-between mb-2">
-        <View className="flex-row items-center gap-2">
+      {/* Header */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <Ionicons name={config.icon} size={16} color={color} />
-          <Text
-            variant="label"
-            className="font-bold"
-            style={{ color }}
-          >
+          <Text variant="label" style={{ color, fontWeight: '700' }}>
             {config.label}
           </Text>
-          <View
-            className="rounded-full px-1.5 py-0.5"
-            style={{ backgroundColor: color + '22' }}
-          >
+          <View style={{ backgroundColor: color + '22', borderRadius: 9999, paddingHorizontal: 6, paddingVertical: 2 }}>
             <Text variant="caption" style={{ color }}>
               {logs.length}회
             </Text>
@@ -69,8 +66,7 @@ export function CareCard({ kind, logs, onAdd }: CareCardProps) {
 
         <Pressable
           onPress={handleAdd}
-          className="w-7 h-7 rounded-full items-center justify-center"
-          style={{ backgroundColor: color }}
+          style={{ width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: color }}
         >
           <Ionicons name="add" size={16} color={colors.white} />
         </Pressable>
@@ -78,14 +74,14 @@ export function CareCard({ kind, logs, onAdd }: CareCardProps) {
 
       {/* Entry list */}
       {logs.length > 0 && (
-        <View className="gap-1.5 mb-1">
+        <View style={{ gap: 6, marginBottom: 4 }}>
           {logs.map((log) => (
             <CareEntry key={log.id} log={log} accentColor={color} />
           ))}
         </View>
       )}
 
-      {/* Add sheet (treat/walk) */}
+      {/* Add sheet */}
       {isAdding && (
         <CareAddSheet
           accentColor={color}

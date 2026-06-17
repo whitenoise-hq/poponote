@@ -37,20 +37,20 @@ export default function SettingsScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-cream" edges={['top']}>
-      <View className="px-5 pt-4 pb-2">
-        <Text variant="title" className="text-ink">
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.cream.DEFAULT }} edges={['top']}>
+      <View style={{ paddingHorizontal: 20, paddingTop: 16, paddingBottom: 8 }}>
+        <Text variant="title" style={{ color: colors.ink.DEFAULT }}>
           설정
         </Text>
       </View>
 
       <ScrollView
-        className="flex-1 px-5"
-        contentContainerClassName="pb-10"
+        style={{ flex: 1, paddingHorizontal: 20 }}
+        contentContainerStyle={{ paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
       >
         {/* 반려동물 프로필 */}
-        <Text variant="caption" className="text-muted-foreground" style={{ marginTop: 8, marginBottom: 8 }}>
+        <Text variant="caption" style={{ color: colors.muted.foreground, marginTop: 8, marginBottom: 8 }}>
           반려동물 프로필
         </Text>
         <View style={sectionBorder}>
@@ -58,7 +58,7 @@ export default function SettingsScreen() {
         </View>
 
         {/* 가족 초대 */}
-        <Text variant="caption" className="text-muted-foreground" style={{ marginTop: 18, marginBottom: 8 }}>
+        <Text variant="caption" style={{ color: colors.muted.foreground, marginTop: 18, marginBottom: 8 }}>
           가족 초대
         </Text>
         <View style={sectionBorder}>
@@ -66,7 +66,7 @@ export default function SettingsScreen() {
         </View>
 
         {/* 가족 멤버 */}
-        <Text variant="caption" className="text-muted-foreground" style={{ marginTop: 18, marginBottom: 8 }}>
+        <Text variant="caption" style={{ color: colors.muted.foreground, marginTop: 18, marginBottom: 8 }}>
           가족 멤버
         </Text>
         <View style={sectionBorder}>
@@ -74,7 +74,7 @@ export default function SettingsScreen() {
         </View>
 
         {/* 계정 & 기타 */}
-        <Text variant="caption" className="text-muted-foreground" style={{ marginTop: 18, marginBottom: 8 }}>
+        <Text variant="caption" style={{ color: colors.muted.foreground, marginTop: 18, marginBottom: 8 }}>
           계정 & 기타
         </Text>
         <View style={sectionBorder}>
@@ -129,13 +129,13 @@ export default function SettingsScreen() {
           }}
         >
           <Ionicons name="log-out-outline" size={18} color={colors.primary.DEFAULT} />
-          <Text variant="label" className="text-primary">로그아웃</Text>
+          <Text variant="label" style={{ color: colors.primary.DEFAULT }}>로그아웃</Text>
         </Pressable>
 
         {/* 버전 */}
-        <View className="items-center" style={{ marginTop: 16, marginBottom: 8 }}>
-          <View className="flex-row items-center gap-1">
-            <Text variant="caption" className="text-muted-foreground">
+        <View style={{ alignItems: 'center', marginTop: 16, marginBottom: 8 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <Text variant="caption" style={{ color: colors.muted.foreground }}>
               포포노트 v1.0.0
             </Text>
             <Ionicons name="paw" size={12} color={colors.ink[300]} />

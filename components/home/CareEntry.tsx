@@ -23,11 +23,10 @@ export function CareEntry({ log, accentColor }: CareEntryProps) {
   const initial = nickname[0]
 
   return (
-    <View className="flex-row items-center justify-between">
-      <View className="flex-row items-center gap-2">
+    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
         <View
-          className="w-5 h-5 rounded-full items-center justify-center"
-          style={{ backgroundColor: accentColor + '33' }}
+          style={{ width: 20, height: 20, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: accentColor + '33' }}
         >
           <Text
             variant="caption"
@@ -39,14 +38,13 @@ export function CareEntry({ log, accentColor }: CareEntryProps) {
         <Text variant="caption" style={{ color: colors.ink.DEFAULT }}>
           {nickname}
           {log.memo ? (
-            <Text variant="caption" className="text-muted-foreground">
-              {' '}
-              · {log.memo}
+            <Text variant="caption" style={{ color: colors.muted.foreground }}>
+              {' '}· {log.memo}
             </Text>
           ) : null}
         </Text>
       </View>
-      <Text variant="caption" className="text-muted-foreground">
+      <Text variant="caption" style={{ color: colors.muted.foreground }}>
         {formatTime(log.logged_at)}
       </Text>
     </View>

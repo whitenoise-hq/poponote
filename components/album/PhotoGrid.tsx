@@ -17,14 +17,13 @@ export function PhotoGrid({ photos, onPress }: PhotoGridProps) {
       data={photos}
       numColumns={cols}
       keyExtractor={(item) => item.id}
-      columnWrapperStyle={{gap}}
-      contentContainerStyle={{gap}}
+      columnWrapperStyle={{ gap }}
+      contentContainerStyle={{ gap }}
       renderItem={({ item }) => (
         <Pressable onPress={() => onPress(item)}>
           <Image
             source={{ uri: item.illustrationUrl }}
-            style={{ width: itemSize, height: itemSize }}
-            className="rounded-lg"
+            style={{ width: itemSize, height: itemSize, borderRadius: 8 }}
             resizeMode="cover"
           />
         </Pressable>

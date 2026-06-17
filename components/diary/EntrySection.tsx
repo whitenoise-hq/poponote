@@ -1,5 +1,6 @@
 import { View, Image } from 'react-native'
 import { Text } from '@/components/ui'
+import { colors } from '@/theme/colors'
 import { getMemberNickname } from '@/lib/mock-data'
 import type { DiaryEntry } from '@/types'
 
@@ -22,20 +23,20 @@ export function EntrySection({ entry }: EntrySectionProps) {
       {entry.photo_url && (
         <Image
           source={{ uri: entry.illustration_url ?? entry.photo_url }}
-          className="w-full h-64 rounded-2xl"
+          style={{ width: '100%', height: 256, borderRadius: 16 }}
           resizeMode="cover"
         />
       )}
-      <View className="mt-3">
+      <View style={{ marginTop: 12 }}>
         {entry.title && (
-          <Text variant="subtitle" className="text-ink mb-1">
+          <Text variant="subtitle" style={{ color: colors.ink.DEFAULT, marginBottom: 4 }}>
             {entry.title}
           </Text>
         )}
-        <Text variant="body" className="text-ink leading-relaxed">
+        <Text variant="body" style={{ color: colors.ink.DEFAULT, lineHeight: 24 }}>
           {entry.body}
         </Text>
-        <Text variant="caption" className="text-muted-foreground mt-2">
+        <Text variant="caption" style={{ color: colors.muted.foreground, marginTop: 8 }}>
           {getMemberNickname(entry.author_id)} · {formatTime(entry.created_at)}
         </Text>
       </View>
