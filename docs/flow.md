@@ -244,26 +244,25 @@ supabase gen types typescript --linked > types/database.ts   # TS 타입 생성
 
 ---
 
-## P8 — 이미지 변환 Edge Function `[MVP]` ← 다음 단계
+## P8 — 이미지 변환 Edge Function `[MVP]` ✅ 완료 (모델 교체 예정)
 
 **목표**: 사진 → 일러스트 자동 변환 (tech-stack.md 4). **API 키는 Edge Function secrets에만.**
 
-**선행조건**: P4(Storage), P6(작성 플로우).
+**완료 작업**
+- ✅ Edge Function `transform-image`: Stability AI SD3 img2img → 일러스트 저장. API 키 Supabase secrets.
+- ✅ `lib/transform.ts`: 클라이언트 트리거, illustrationUrl + illustrationPath 반환.
+- ✅ 저장 플로우: 사진 업로드 → 일러스트 변환(대기) → 일기 저장. 실패 시 전체 롤백(사진+일러스트 삭제).
+- ✅ 로딩 오버레이: 단계별 진행 메시지(업로드 중/변환 중/저장 중) + 스피너.
+- ✅ 전 화면 일러스트 우선 표시, FlipImage 컴포넌트(상세 원본↔일러스트 플립).
 
-**작업**
-- Edge Function(`supabase/functions/transform-image/`): 입력 이미지 → 외부 생성 API 호출 → 일러스트 저장.
-- **변환 로직 모듈 추상화**: 모델/제공사 교체 시 한 곳만 수정(tech-stack.md 4.2). 모델은 추후 결정(4.3) — 인터페이스 먼저.
-- 처리 흐름(4.2): 압축본 업로드 → 변환 입력 임시 보관 → Edge Function 변환 → 일러스트 저장 → **변환 완료 즉시 원본/임시 입력 삭제**(압축본+일러스트만 잔존).
-- 비용 제어: 그룹/사용자당 변환 횟수 제한(4.4).
-- 작성 플로우 연결: 변환 진행 중 로딩/플레이스홀더, **실패 시 재시도**.
-
-**산출물**: `supabase/functions/transform-image/index.ts`, `lib/transform.ts`(클라이언트 트리거), 작성 화면 로딩/재시도 UI
-
-**DoD**: 작성 시 일러스트 생성·앨범 노출, 원본 삭제 확인, 키 비노출, 실패 재시도, 횟수 제한 동작.
+**TODO / 미완**
+- 🔲 **모델 교체 필요**: Stability AI SD3 img2img 품질 불만족 — 원본 동물을 다른 동물로 변경하는 문제. 다른 모델(Replicate ControlNet, OpenAI 등) 테스트 예정.
+- 🔲 비용 제어: 그룹/사용자당 변환 횟수 제한 미구현.
+- 🔲 변환 완료 후 원본 사진 삭제 정책 미적용 (현재 압축본+일러스트 모두 보관).
 
 ---
 
-## P9 — 일러스트 앨범 탭 `[MVP]`
+## P9 — 일러스트 앨범 탭 `[MVP]` ← 다음 단계
 
 **목표**: 변환 일러스트를 연·월 폴더로 모아보기 (screens.md 6).
 
