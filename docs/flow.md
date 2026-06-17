@@ -256,7 +256,7 @@ supabase gen types typescript --linked > types/database.ts   # TS 타입 생성
 - ✅ 전 화면 일러스트 우선 표시, FlipImage 컴포넌트(상세 원본↔일러스트 플립).
 
 **TODO / 미완**
-- 🔲 **모델 교체 필요**: Stability AI SD3 img2img 품질 불만족 — 원본 동물을 다른 동물로 변경하는 문제. 다른 모델(Replicate ControlNet, OpenAI 등) 테스트 예정.
+- 🔲 **모델 교체 예정**: Stability AI SD3 img2img → **OpenAI gpt-image-1**. SD3는 원본 동물을 다른 동물로 변경하는 품질 문제.
 - 🔲 비용 제어: 그룹/사용자당 변환 횟수 제한 미구현.
 - 🔲 변환 완료 후 원본 사진 삭제 정책 미적용 (현재 압축본+일러스트 모두 보관).
 

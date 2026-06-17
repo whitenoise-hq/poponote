@@ -118,7 +118,6 @@ export function useAddDiaryEntry() {
       })
 
       if (error) {
-        console.error('[Diary] insert error:', error)
         // 저장 실패 → 사진 + 일러스트 모두 정리
         if (storagePath) await deleteDiaryPhoto(storagePath)
         if (illustrationPath) await deleteIllustration(illustrationPath)

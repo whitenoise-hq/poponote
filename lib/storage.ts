@@ -20,7 +20,6 @@ async function uploadFile(
     .upload(path, arrayBuffer, { contentType, upsert })
 
   if (error) {
-    console.error('[Storage] upload error:', bucket, path, error)
     throw error
   }
 }
