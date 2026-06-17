@@ -7,6 +7,7 @@ import { Text, AlertModal } from '@/components/ui'
 import { colors } from '@/theme/colors'
 import { useAuth } from '@/hooks/use-auth'
 import { SocialButton } from '@/components/auth/SocialButton'
+import { KakaoIcon } from '@/components/auth/KakaoIcon'
 
 export default function LoginScreen() {
   const { signInWithKakao } = useAuth()
@@ -52,7 +53,7 @@ export default function LoginScreen() {
         <View style={{ width: '100%', gap: 12 }}>
           <SocialButton
             label={loading ? '로그인 중...' : '카카오로 시작하기'}
-            icon="chatbubble-ellipses"
+            icon={<KakaoIcon size={18} color="#191919" />}
             backgroundColor="#FEE500"
             textColor="#191919"
             onPress={handleKakao}

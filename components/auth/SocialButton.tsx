@@ -1,14 +1,10 @@
+import { type ReactNode } from 'react'
 import { Pressable } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
 import { Text } from '@/components/ui'
-
-import type { ComponentProps } from 'react'
-
-type IoniconsName = ComponentProps<typeof Ionicons>['name']
 
 interface SocialButtonProps {
   label: string
-  icon: IoniconsName
+  icon: ReactNode
   backgroundColor: string
   textColor: string
   borderColor?: string
@@ -38,7 +34,7 @@ export function SocialButton({
         borderColor,
       }}
     >
-      <Ionicons name={icon} size={20} color={textColor} />
+      {icon}
       <Text variant="label" style={{ color: textColor, fontSize: 15 }}>
         {label}
       </Text>

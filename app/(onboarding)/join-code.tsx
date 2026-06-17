@@ -90,7 +90,7 @@ export default function JoinCodeScreen() {
       <AlertModal
         visible={errorVisible}
         title="코드 오류"
-        message="유효하지 않은 초대 코드입니다. 다시 확인해주세요."
+        message={"유효하지 않은 초대 코드입니다.\n다시 확인해주세요."}
         onConfirm={() => setErrorVisible(false)}
       />
     </SafeAreaView>

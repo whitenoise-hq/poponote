@@ -10,11 +10,13 @@ export async function createFamilyWithPet({
   species,
   birthday,
   nickname,
+  role = '보호자',
 }: {
   petName: string
   species?: string
   birthday?: string
   nickname: string
+  role?: string
 }): Promise<string> {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('로그인이 필요합니다')
@@ -37,7 +39,7 @@ export async function createFamilyWithPet({
       family_id: family.id,
       user_id: user.id,
       nickname,
-      role: '보호자',
+      role,
     })
 
   if (memberError) throw memberError

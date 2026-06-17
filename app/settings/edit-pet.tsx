@@ -4,9 +4,10 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 
-import { Text, AlertModal } from '@/components/ui'
+import { Text, AlertModal, DatePickerModal } from '@/components/ui'
 import { usePet } from '@/hooks/use-pet'
 import { colors } from '@/theme/colors'
+import * as ImagePicker from 'expo-image-picker'
 
 const SEX_OPTIONS = [
   { value: 'male' as const, label: '수컷', icon: 'male' as const, color: '#4A90D9', bgColor: '#EBF3FC' },
@@ -22,6 +23,7 @@ const inputStyle = {
   borderColor: colors.cream[200],
   borderRadius: 12,
   paddingHorizontal: 14,
+  justifyContent: 'center' as const,
   fontSize: 15,
   color: colors.ink.DEFAULT,
 }
@@ -36,9 +38,23 @@ export default function EditPetScreen() {
   const [weight, setWeight] = useState(pet?.weight?.toString() ?? '')
   const [sex, setSex] = useState<'male' | 'female' | null>(pet?.sex ?? null)
   const [neutered, setNeutered] = useState(pet?.neutered ?? false)
+  const [profileImage, setProfileImage] = useState<string | null>(pet?.profile_url ?? null)
   const [savedVisible, setSavedVisible] = useState(false)
+  const [datePickerVisible, setDatePickerVisible] = useState(false)
 
   const canSave = name.trim().length > 0 && species.trim().length > 0 && birthday.trim().length > 0
+
+  async function handlePickImage() {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    })
+    if (!result.canceled && result.assets[0]) {
+      setProfileImage(result.assets[0].uri)
+    }
+  }
 
   function handleSave() {
     if (!canSave) return
@@ -70,17 +86,24 @@ export default function EditPetScreen() {
       >
         {/* Profile image */}
         <View style={{ alignItems: 'center', marginTop: 24 }}>
-          {pet?.profile_url ? (
-            <Image
-              source={{ uri: pet.profile_url }}
-              style={{ width: 96, height: 96, borderRadius: 48 }}
-            />
-          ) : (
-            <View style={{ width: 96, height: 96, borderRadius: 48, backgroundColor: colors.cream[100], alignItems: 'center', justifyContent: 'center' }}>
-              <Ionicons name="paw" size={40} color={colors.primary.DEFAULT} />
-            </View>
-          )}
-          <Pressable style={{ marginTop: 8 }}>
+          <Pressable onPress={handlePickImage}>
+            {profileImage ? (
+              <View>
+                <Image
+                  source={{ uri: profileImage }}
+                  style={{ width: 96, height: 96, borderRadius: 48 }}
+                />
+                <View style={{ position: 'absolute', bottom: 0, right: 0, width: 28, height: 28, borderRadius: 14, backgroundColor: colors.primary.DEFAULT, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: colors.white }}>
+                  <Ionicons name="camera" size={14} color={colors.white} />
+                </View>
+              </View>
+            ) : (
+              <View style={{ width: 96, height: 96, borderRadius: 48, backgroundColor: colors.cream[100], alignItems: 'center', justifyContent: 'center' }}>
+                <Ionicons name="camera-outline" size={32} color={colors.muted.foreground} />
+              </View>
+            )}
+          </Pressable>
+          <Pressable onPress={handlePickImage} style={{ marginTop: 8 }}>
             <Text variant="caption" style={{ color: colors.primary.DEFAULT }}>사진 변경</Text>
           </Pressable>
         </View>
@@ -99,7 +122,11 @@ export default function EditPetScreen() {
 
           <View>
             <Text variant="caption" style={{ color: colors.muted.foreground, marginBottom: 6 }}>생일</Text>
-            <TextInput value={birthday} onChangeText={setBirthday} placeholder="YYYY-MM-DD" placeholderTextColor={colors.ink[300]} style={inputStyle} />
+            <Pressable onPress={() => setDatePickerVisible(true)} style={inputStyle}>
+              <Text variant="body" style={{ color: birthday ? colors.ink.DEFAULT : colors.ink[300] }}>
+                {birthday || '날짜를 선택하세요'}
+              </Text>
+            </Pressable>
           </View>
 
           <View>
@@ -173,6 +200,20 @@ export default function EditPetScreen() {
         title="저장 완료"
         message="반려동물 프로필이 수정되었습니다."
         onConfirm={() => { setSavedVisible(false); router.back() }}
+      />
+
+      <DatePickerModal
+        visible={datePickerVisible}
+        value={birthday ? new Date(birthday) : new Date()}
+        maximumDate={new Date()}
+        onConfirm={(date) => {
+          const y = date.getFullYear()
+          const m = String(date.getMonth() + 1).padStart(2, '0')
+          const d = String(date.getDate()).padStart(2, '0')
+          setBirthday(`${y}-${m}-${d}`)
+          setDatePickerVisible(false)
+        }}
+        onCancel={() => setDatePickerVisible(false)}
       />
     </SafeAreaView>
   )

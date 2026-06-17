@@ -8,7 +8,8 @@
     "scheme": "poponote",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.devwoodie.poponote"
     },
     "android": {
       "adaptiveIcon": {
@@ -35,7 +36,8 @@
           }
         }
       ],
-      "expo-web-browser"
+      "expo-web-browser",
+      "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": true,

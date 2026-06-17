@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { View, ScrollView, Pressable, TextInput } from 'react-native'
+import { View, ScrollView, Pressable, TextInput, Image } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 
-import { Text, Button, AlertModal } from '@/components/ui'
+import { Text, Button, DatePickerModal } from '@/components/ui'
 import { colors } from '@/theme/colors'
-import { createFamilyWithPet } from '@/lib/onboarding'
+import * as ImagePicker from 'expo-image-picker'
 
 const INPUT_HEIGHT = 48
 
@@ -17,6 +17,7 @@ const inputStyle = {
   borderColor: colors.cream[200],
   borderRadius: 12,
   paddingHorizontal: 14,
+  justifyContent: 'center' as const,
   fontSize: 15,
   color: colors.ink.DEFAULT,
 }
@@ -27,27 +28,35 @@ export default function RegisterPetScreen() {
   const [name, setName] = useState('')
   const [species, setSpecies] = useState('')
   const [birthday, setBirthday] = useState('')
-  const [submitting, setSubmitting] = useState(false)
-  const [errorVisible, setErrorVisible] = useState(false)
+  const [datePickerVisible, setDatePickerVisible] = useState(false)
+  const [profileImage, setProfileImage] = useState<string | null>(null)
 
-  const canSubmit = name.trim().length > 0 && !submitting
+  const canSubmit = name.trim().length > 0
 
-  async function handleComplete() {
-    if (!canSubmit) return
-    try {
-      setSubmitting(true)
-      const inviteCode = await createFamilyWithPet({
-        petName: name.trim(),
-        species: species.trim() || undefined,
-        birthday: birthday.trim() || undefined,
-        nickname: '보호자', // 최초 사용자 기본 닉네임
-      })
-      router.replace({ pathname: '/(onboarding)/invite-result', params: { code: inviteCode } } as never)
-    } catch {
-      setErrorVisible(true)
-    } finally {
-      setSubmitting(false)
+  async function handlePickImage() {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    })
+    if (!result.canceled && result.assets[0]) {
+      setProfileImage(result.assets[0].uri)
     }
+  }
+
+  function handleComplete() {
+    if (!canSubmit) return
+    // 펫 정보를 닉네임 화면으로 넘기고, 거기서 가족 생성
+    router.push({
+      pathname: '/(onboarding)/nickname',
+      params: {
+        flow: 'create',
+        petName: name.trim(),
+        species: species.trim(),
+        birthday: birthday.trim(),
+      },
+    } as never)
   }
 
   return (
@@ -72,24 +81,40 @@ export default function RegisterPetScreen() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Profile photo placeholder */}
+        {/* Profile photo */}
         <View style={{ alignItems: 'center', marginTop: 24 }}>
-          <Pressable style={{
-            width: 96,
-            height: 96,
-            borderRadius: 48,
-            backgroundColor: colors.cream[100],
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderWidth: 2,
-            borderStyle: 'dashed',
-            borderColor: colors.cream[200],
-          }}>
-            <Ionicons name="camera-outline" size={32} color={colors.muted.foreground} />
+          <Pressable onPress={handlePickImage}>
+            {profileImage ? (
+              <View>
+                <Image
+                  source={{ uri: profileImage }}
+                  style={{ width: 96, height: 96, borderRadius: 48 }}
+                />
+                <View style={{ position: 'absolute', bottom: 0, right: 0, width: 28, height: 28, borderRadius: 14, backgroundColor: colors.primary.DEFAULT, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: colors.white }}>
+                  <Ionicons name="camera" size={14} color={colors.white} />
+                </View>
+              </View>
+            ) : (
+              <View style={{
+                width: 96,
+                height: 96,
+                borderRadius: 48,
+                backgroundColor: colors.cream[100],
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderWidth: 2,
+                borderStyle: 'dashed',
+                borderColor: colors.cream[200],
+              }}>
+                <Ionicons name="camera-outline" size={32} color={colors.muted.foreground} />
+              </View>
+            )}
           </Pressable>
-          <Text variant="caption" style={{ color: colors.muted.foreground, marginTop: 8 }}>
-            프로필 사진 (선택)
-          </Text>
+          <Pressable onPress={handlePickImage}>
+            <Text variant="caption" style={{ color: colors.primary.DEFAULT, marginTop: 8 }}>
+              {profileImage ? '사진 변경' : '프로필 사진 (선택)'}
+            </Text>
+          </Pressable>
         </View>
 
         {/* Fields */}
@@ -120,30 +145,34 @@ export default function RegisterPetScreen() {
 
           <View>
             <Text variant="caption" style={{ color: colors.muted.foreground, marginBottom: 6 }}>생일</Text>
-            <TextInput
-              value={birthday}
-              onChangeText={setBirthday}
-              placeholder="YYYY-MM-DD"
-              placeholderTextColor={colors.ink[300]}
-              style={inputStyle}
-            />
+            <Pressable onPress={() => setDatePickerVisible(true)} style={inputStyle}>
+              <Text variant="body" style={{ color: birthday ? colors.ink.DEFAULT : colors.ink[300] }}>
+                {birthday || '날짜를 선택하세요'}
+              </Text>
+            </Pressable>
           </View>
         </View>
 
         <Button
-          label={submitting ? '생성 중...' : '완료'}
+          label="다음"
           style={{ marginTop: 32, opacity: canSubmit ? 1 : 0.4 }}
           disabled={!canSubmit}
-          loading={submitting}
           onPress={handleComplete}
         />
       </ScrollView>
 
-      <AlertModal
-        visible={errorVisible}
-        title="오류"
-        message="가족 그룹 생성에 실패했습니다. 다시 시도해주세요."
-        onConfirm={() => setErrorVisible(false)}
+      <DatePickerModal
+        visible={datePickerVisible}
+        value={birthday ? new Date(birthday) : new Date()}
+        maximumDate={new Date()}
+        onConfirm={(date) => {
+          const y = date.getFullYear()
+          const m = String(date.getMonth() + 1).padStart(2, '0')
+          const d = String(date.getDate()).padStart(2, '0')
+          setBirthday(`${y}-${m}-${d}`)
+          setDatePickerVisible(false)
+        }}
+        onCancel={() => setDatePickerVisible(false)}
       />
     </SafeAreaView>
   )

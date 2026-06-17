@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@/lib/query-client';
 import { Jua_400Regular } from '@expo-google-fonts/jua';
@@ -11,12 +11,13 @@ import { getUserFamily } from '@/lib/onboarding';
 
 SplashScreen.preventAutoHideAsync();
 
-function AuthGate({ fontsReady }: { fontsReady: boolean }) {
+function AuthGate({ fontsReady, onReady }: { fontsReady: boolean; onReady: () => void }) {
   const { isLoggedIn, loading } = useAuth()
   const router = useRouter()
   const segments = useSegments()
   const [familyChecked, setFamilyChecked] = useState(false)
   const [hasFamily, setHasFamily] = useState(false)
+  const [routeDecided, setRouteDecided] = useState(false)
 
   // 로그인 후 가족 소속 확인
   useEffect(() => {
@@ -29,7 +30,7 @@ function AuthGate({ fontsReady }: { fontsReady: boolean }) {
       setHasFamily(!!familyId)
       setFamilyChecked(true)
     })
-  }, [isLoggedIn, loading])
+  }, [isLoggedIn, loading, segments])
 
   // 라우팅 가드
   useEffect(() => {
@@ -37,19 +38,26 @@ function AuthGate({ fontsReady }: { fontsReady: boolean }) {
 
     const inAuthGroup = segments[0] === '(auth)'
     const inOnboardingGroup = segments[0] === '(onboarding)'
+    const inInviteResult = inOnboardingGroup && segments[1] === 'invite-result'
 
     if (!isLoggedIn) {
-      // 미인증 → 로그인 (온보딩 중이면 허용)
       if (!inAuthGroup && !inOnboardingGroup) {
         router.replace('/(auth)/login' as never)
       }
+      if (!routeDecided) {
+        setRouteDecided(true)
+        onReady()
+      }
     } else if (familyChecked) {
       if (!hasFamily && !inOnboardingGroup) {
-        // 인증 + 그룹 없음 → 온보딩
         router.replace('/(onboarding)/choice' as never)
-      } else if (hasFamily && (inAuthGroup || inOnboardingGroup)) {
-        // 인증 + 그룹 있음 → 홈
+      } else if (hasFamily && (inAuthGroup || inOnboardingGroup) && !inInviteResult) {
+        // invite-result에서는 코드 공유 후 사용자가 직접 "시작하기"를 누를 때까지 대기
         router.replace('/(tabs)' as never)
+      }
+      if (!routeDecided) {
+        setRouteDecided(true)
+        onReady()
       }
     }
   }, [isLoggedIn, loading, familyChecked, hasFamily, segments, fontsReady])
@@ -68,15 +76,13 @@ export default function RootLayout() {
 
   const fontsReady = fontsLoaded || !!fontError
 
-  useEffect(() => {
-    if (fontsReady) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsReady]);
+  const handleReady = useCallback(() => {
+    SplashScreen.hideAsync()
+  }, [])
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthGate fontsReady={fontsReady} />
+      <AuthGate fontsReady={fontsReady} onReady={handleReady} />
       <StatusBar style="dark" />
       <Stack screenOptions={{ headerShown: false }} />
     </QueryClientProvider>

@@ -4,3 +4,4 @@ export { Button, type ButtonVariant, type ButtonSize } from './button';
 export { Card } from './card';
 export { Modal } from './Modal';
 export { AlertModal } from './AlertModal';
+export { DatePickerModal } from './DatePickerModal';

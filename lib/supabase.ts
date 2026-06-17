@@ -1,5 +1,4 @@
-// @ts-expect-error -- side-effect import, no type declarations
-import 'react-native-url-polyfill/dist/setup'
+import 'react-native-url-polyfill/auto'
 import { createClient } from '@supabase/supabase-js'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 

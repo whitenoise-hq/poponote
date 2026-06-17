@@ -6,7 +6,7 @@ import type { Session } from '@supabase/supabase-js'
 
 WebBrowser.maybeCompleteAuthSession()
 
-const redirectUri = makeRedirectUri()
+const redirectUri = makeRedirectUri({ scheme: 'poponote' })
 
 export function useAuth() {
   const [session, setSession] = useState<Session | null>(null)
