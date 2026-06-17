@@ -19,7 +19,7 @@ export default function RootLayout() {
     Jua_400Regular,
   });
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false) // mock: 임시 false — 온보딩 플로우 확인용
+  const [isLoggedIn, setIsLoggedIn] = useState(true) // mock: 기본 로그인 상태
   const router = useRouter()
   const segments = useSegments()
 

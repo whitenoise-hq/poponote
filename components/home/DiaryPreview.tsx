@@ -83,12 +83,38 @@ export function DiaryPreview({
         </Pressable>
       ) : (
         <Pressable onPress={onPressWrite}>
-          <Card style={{ paddingVertical: 32, alignItems: 'center', gap: 8 }}>
-            <Ionicons name="create-outline" size={28} color={colors.muted.foreground} />
-            <Text variant="body" style={{ color: colors.muted.foreground }}>
-              오늘 일기를 남겨주세요
+          <View
+            style={{
+              borderRadius: 16,
+              borderWidth: 1.5,
+              borderStyle: 'dashed',
+              borderColor: colors.primary.DEFAULT + '40',
+              backgroundColor: colors.primary[50],
+              paddingVertical: 28,
+              paddingHorizontal: 20,
+              alignItems: 'center',
+              gap: 10,
+            }}
+          >
+            <View
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: 24,
+                backgroundColor: colors.white,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Ionicons name="pencil" size={22} color={colors.primary.DEFAULT} />
+            </View>
+            <Text variant="label" style={{ color: colors.ink.DEFAULT }}>
+              오늘 일기를 남겨주세요.
             </Text>
-          </Card>
+            <Text variant="caption" style={{ color: colors.muted.foreground }}>
+              탭해서 오늘 하루를 기록해보세요
+            </Text>
+          </View>
         </Pressable>
       )}
     </View>

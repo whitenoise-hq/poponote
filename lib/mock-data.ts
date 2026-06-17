@@ -79,7 +79,7 @@ export const mockDiaryEntries: DiaryEntry[] = [
     id: 'entry-1',
     family_id: 'fam-1',
     pet_id: 'pet-1',
-    date: TODAY,
+    date: '2026-06-15',
     author_id: 'user-1',
     title: '산책 중에 발견한 민들레',
     body: '오늘 한강 산책 중에 포포가 민들레를 발견하고 한참 킁킁거렸어요. 바람이 살살 불고 너무 좋은 하루였다.',
@@ -87,8 +87,8 @@ export const mockDiaryEntries: DiaryEntry[] = [
       'https://images.unsplash.com/photo-1530700131180-d43d9b8cc41f?w=800&h=600&fit=crop&auto=format',
     illustration_url:
       'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&h=600&fit=crop&auto=format',
-    created_at: `${TODAY}T19:24:00Z`,
-    updated_at: `${TODAY}T19:24:00Z`,
+    created_at: '2026-06-15T19:24:00Z',
+    updated_at: '2026-06-15T19:24:00Z',
   },
   {
     id: 'entry-2',

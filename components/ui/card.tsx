@@ -24,10 +24,7 @@ const cardStyles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: colors.white,
     padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: colors.cream[200],
   },
 });

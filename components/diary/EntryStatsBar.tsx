@@ -15,26 +15,32 @@ interface EntryStatsBarProps {
   likeCount: number
   commentCount: number
   careLogs: CareLog[]
+  /** true이면 좋아요/댓글 아이콘 숨김 (케어만 표시) */
+  hideReactions?: boolean
 }
 
-export function EntryStatsBar({ likeCount, commentCount, careLogs }: EntryStatsBarProps) {
+export function EntryStatsBar({ likeCount, commentCount, careLogs, hideReactions = false }: EntryStatsBarProps) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
       {/* Likes & Comments — 왼쪽 */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-          <Ionicons name="heart" size={13} color={colors.primary.DEFAULT} />
-          <Text variant="caption" style={{ color: colors.muted.foreground }}>
-            {likeCount}
-          </Text>
+      {!hideReactions ? (
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+            <Ionicons name="heart" size={13} color={colors.primary.DEFAULT} />
+            <Text variant="caption" style={{ color: colors.muted.foreground }}>
+              {likeCount}
+            </Text>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+            <Ionicons name="chatbubble-outline" size={12} color={colors.muted.foreground} />
+            <Text variant="caption" style={{ color: colors.muted.foreground }}>
+              {commentCount}
+            </Text>
+          </View>
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-          <Ionicons name="chatbubble-outline" size={12} color={colors.muted.foreground} />
-          <Text variant="caption" style={{ color: colors.muted.foreground }}>
-            {commentCount}
-          </Text>
-        </View>
-      </View>
+      ) : (
+        <View />
+      )}
 
       {/* Care counts — 오른쪽 */}
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>

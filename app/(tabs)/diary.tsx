@@ -67,6 +67,7 @@ export default function DiaryScreen() {
               entry={selectedEntry}
               careLogs={selectedCareLogs}
               onPress={handleGoToDetail}
+              onPressWrite={() => router.push('/entry/new' as never)}
             />
           ) : null}
           <View style={{ height: 32 }} />
