@@ -1,18 +1,19 @@
 import { useState } from 'react'
 import { View, TextInput, Pressable, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useRouter } from 'expo-router'
+import { useRouter, useLocalSearchParams } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 
-import { Text, Button } from '@/components/ui'
+import { Text, Button, AlertModal } from '@/components/ui'
 import { colors } from '@/theme/colors'
-import { useAuth } from '@/lib/auth-store'
+import { joinFamily } from '@/lib/onboarding'
 
 const NICKNAME_PRESETS = ['엄마', '아빠', '누나', '형', '동생', '할머니', '할아버지']
 const ROLE_PRESETS = ['보호자', '가족', '친구', '이웃']
 
 export default function NicknameScreen() {
   const router = useRouter()
+  const { familyId } = useLocalSearchParams<{ familyId: string }>()
   const [nickname, setNickname] = useState('')
   const [role, setRole] = useState('')
   const [customNickname, setCustomNickname] = useState('')
@@ -22,11 +23,20 @@ export default function NicknameScreen() {
   const finalRole = role === '직접입력' ? customRole.trim() : role
   const canSubmit = finalNickname.length > 0 && finalRole.length > 0
 
-  const auth = useAuth()
+  const [submitting, setSubmitting] = useState(false)
+  const [errorVisible, setErrorVisible] = useState(false)
 
-  function handleJoin() {
-    if (!canSubmit) return
-    auth.login() // 온보딩 완료 → 로그인 처리 → 가드가 홈으로 이동
+  async function handleJoin() {
+    if (!canSubmit || !familyId) return
+    try {
+      setSubmitting(true)
+      await joinFamily({ familyId, nickname: finalNickname, role: finalRole })
+      router.replace('/(tabs)' as never)
+    } catch {
+      setErrorVisible(true)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -148,12 +158,20 @@ export default function NicknameScreen() {
         )}
 
         <Button
-          label="참여하기"
-          style={{ marginTop: 36, opacity: canSubmit ? 1 : 0.4 }}
-          disabled={!canSubmit}
+          label={submitting ? '참여 중...' : '참여하기'}
+          style={{ marginTop: 36, opacity: canSubmit && !submitting ? 1 : 0.4 }}
+          disabled={!canSubmit || submitting}
+          loading={submitting}
           onPress={handleJoin}
         />
       </ScrollView>
+
+      <AlertModal
+        visible={errorVisible}
+        title="오류"
+        message="가족 참여에 실패했습니다. 다시 시도해주세요."
+        onConfirm={() => setErrorVisible(false)}
+      />
     </SafeAreaView>
   )
 }

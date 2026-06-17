@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 
 import { Text, AlertModal } from '@/components/ui'
-import { useAuth } from '@/lib/auth-store'
+import { useAuth } from '@/hooks/use-auth'
 import { PetProfileCard } from '@/components/settings/PetProfileCard'
 import { InviteCodeCard } from '@/components/settings/InviteCodeCard'
 import { MemberList } from '@/components/settings/MemberList'
@@ -145,7 +145,7 @@ export default function SettingsScreen() {
         message="정말 로그아웃하시겠어요?"
         confirmLabel="로그아웃"
         destructive
-        onConfirm={() => { setLogoutVisible(false); auth.logout() }}
+        onConfirm={() => { setLogoutVisible(false); auth.signOut() }}
         onCancel={() => setLogoutVisible(false)}
       />
     </SafeAreaView>

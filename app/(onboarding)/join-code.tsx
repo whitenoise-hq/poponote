@@ -6,28 +6,38 @@ import { Ionicons } from '@expo/vector-icons'
 
 import { Text, Button, AlertModal } from '@/components/ui'
 import { colors } from '@/theme/colors'
-
-const VALID_CODE = 'POPO-7K2X'
+import { verifyInviteCode } from '@/lib/onboarding'
 
 export default function JoinCodeScreen() {
   const router = useRouter()
   const [code, setCode] = useState('')
   const [errorVisible, setErrorVisible] = useState(false)
+  const [verifying, setVerifying] = useState(false)
 
-  const canSubmit = code.trim().length > 0
+  const canSubmit = code.trim().length > 0 && !verifying
 
-  function handleVerify() {
+  async function handleVerify() {
     if (!canSubmit) return
-    if (code.trim().toUpperCase() === VALID_CODE) {
-      router.push('/(onboarding)/nickname' as never)
-    } else {
+    try {
+      setVerifying(true)
+      const result = await verifyInviteCode(code)
+      if (result) {
+        router.push({
+          pathname: '/(onboarding)/nickname',
+          params: { familyId: result.familyId, petName: result.petName },
+        } as never)
+      } else {
+        setErrorVisible(true)
+      }
+    } catch {
       setErrorVisible(true)
+    } finally {
+      setVerifying(false)
     }
   }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.cream.DEFAULT }} edges={['top']}>
-      {/* Header */}
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, height: 52 }}>
         <Pressable
           onPress={() => router.back()}
@@ -69,9 +79,10 @@ export default function JoinCodeScreen() {
         />
 
         <Button
-          label="확인"
+          label={verifying ? '확인 중...' : '확인'}
           style={{ marginTop: 20, opacity: canSubmit ? 1 : 0.4 }}
           disabled={!canSubmit}
+          loading={verifying}
           onPress={handleVerify}
         />
       </View>

@@ -1,22 +1,28 @@
-import { View, Image } from 'react-native'
+import { useState } from 'react'
+import { View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 
-import { Text } from '@/components/ui'
+import { Text, AlertModal } from '@/components/ui'
 import { colors } from '@/theme/colors'
-import { useAuth } from '@/lib/auth-store'
+import { useAuth } from '@/hooks/use-auth'
 import { SocialButton } from '@/components/auth/SocialButton'
 
 export default function LoginScreen() {
-  const router = useRouter()
-  const auth = useAuth()
+  const { signInWithKakao } = useAuth()
+  const [errorVisible, setErrorVisible] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  function handleKakao() {
-    // mock: 로그인 성공 → 온보딩 분기로 (login()은 온보딩 완료 시 호출)
-    router.replace('/(onboarding)/choice' as never)
+  async function handleKakao() {
+    try {
+      setLoading(true)
+      await signInWithKakao()
+    } catch {
+      setErrorVisible(true)
+    } finally {
+      setLoading(false)
+    }
   }
-
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.cream.DEFAULT }}>
@@ -45,7 +51,7 @@ export default function LoginScreen() {
         {/* Social login buttons */}
         <View style={{ width: '100%', gap: 12 }}>
           <SocialButton
-            label="카카오로 시작하기"
+            label={loading ? '로그인 중...' : '카카오로 시작하기'}
             icon="chatbubble-ellipses"
             backgroundColor="#FEE500"
             textColor="#191919"
@@ -60,6 +66,13 @@ export default function LoginScreen() {
           로그인 시 이용약관 및 개인정보처리방침에{'\n'}동의하는 것으로 간주합니다.
         </Text>
       </View>
+
+      <AlertModal
+        visible={errorVisible}
+        title="로그인 실패"
+        message="카카오 로그인에 실패했습니다. 다시 시도해주세요."
+        onConfirm={() => setErrorVisible(false)}
+      />
     </SafeAreaView>
   )
 }

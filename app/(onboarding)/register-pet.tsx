@@ -4,8 +4,9 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 
-import { Text, Button } from '@/components/ui'
+import { Text, Button, AlertModal } from '@/components/ui'
 import { colors } from '@/theme/colors'
+import { createFamilyWithPet } from '@/lib/onboarding'
 
 const INPUT_HEIGHT = 48
 
@@ -26,13 +27,27 @@ export default function RegisterPetScreen() {
   const [name, setName] = useState('')
   const [species, setSpecies] = useState('')
   const [birthday, setBirthday] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [errorVisible, setErrorVisible] = useState(false)
 
-  const canSubmit = name.trim().length > 0
+  const canSubmit = name.trim().length > 0 && !submitting
 
-  function handleComplete() {
+  async function handleComplete() {
     if (!canSubmit) return
-    // mock: 그룹 생성 + 초대코드 발급 → 완료 화면
-    router.replace('/(onboarding)/invite-result' as never)
+    try {
+      setSubmitting(true)
+      const inviteCode = await createFamilyWithPet({
+        petName: name.trim(),
+        species: species.trim() || undefined,
+        birthday: birthday.trim() || undefined,
+        nickname: '보호자', // 최초 사용자 기본 닉네임
+      })
+      router.replace({ pathname: '/(onboarding)/invite-result', params: { code: inviteCode } } as never)
+    } catch {
+      setErrorVisible(true)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -116,12 +131,20 @@ export default function RegisterPetScreen() {
         </View>
 
         <Button
-          label="완료"
+          label={submitting ? '생성 중...' : '완료'}
           style={{ marginTop: 32, opacity: canSubmit ? 1 : 0.4 }}
           disabled={!canSubmit}
+          loading={submitting}
           onPress={handleComplete}
         />
       </ScrollView>
+
+      <AlertModal
+        visible={errorVisible}
+        title="오류"
+        message="가족 그룹 생성에 실패했습니다. 다시 시도해주세요."
+        onConfirm={() => setErrorVisible(false)}
+      />
     </SafeAreaView>
   )
 }

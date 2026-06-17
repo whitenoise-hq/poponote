@@ -1,35 +1,33 @@
 import { useState } from 'react'
 import { View, Pressable } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import * as Clipboard from 'expo-clipboard'
 
 import { Text, Button } from '@/components/ui'
 import { colors } from '@/theme/colors'
-import { useAuth } from '@/lib/auth-store'
-
-const MOCK_CODE = 'POPO-7K2X'
 
 export default function InviteResultScreen() {
   const router = useRouter()
-  const auth = useAuth()
+  const { code } = useLocalSearchParams<{ code: string }>()
+  const inviteCode = code ?? 'POPO-XXXX'
   const [copied, setCopied] = useState(false)
 
   async function handleCopy() {
-    await Clipboard.setStringAsync(MOCK_CODE)
+    await Clipboard.setStringAsync(inviteCode)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
   function handleStart() {
-    auth.login() // 온보딩 완료 → 로그인 처리 → 가드가 홈으로 이동
+    // 이미 로그인 + 가족 있음 → 가드가 홈으로 보냄
+    router.replace('/(tabs)' as never)
   }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.cream.DEFAULT }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 32 }}>
-        {/* Success icon */}
         <View style={{
           width: 80,
           height: 80,
@@ -49,7 +47,6 @@ export default function InviteResultScreen() {
           아래 초대 코드를 가족에게 공유해{'\n'}함께 기록을 시작하세요
         </Text>
 
-        {/* Invite code */}
         <View style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -68,7 +65,7 @@ export default function InviteResultScreen() {
             borderStyle: 'dashed',
           }}>
             <Text variant="subtitle" style={{ color: colors.primary.DEFAULT, letterSpacing: 4 }}>
-              {MOCK_CODE}
+              {inviteCode}
             </Text>
           </View>
           <Pressable
@@ -91,7 +88,6 @@ export default function InviteResultScreen() {
         </View>
       </View>
 
-      {/* Bottom button */}
       <View style={{ paddingHorizontal: 24, paddingBottom: 16 }}>
         <Button label="시작하기" onPress={handleStart} />
       </View>
