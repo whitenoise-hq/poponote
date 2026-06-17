@@ -198,7 +198,7 @@ supabase gen types typescript --linked > types/database.ts   # TS 타입 생성
 
 ---
 
-## P4 — Storage & 이미지 압축 파이프라인 `[MVP]` ← 다음 단계
+## P4 — Storage & 이미지 압축 파이프라인 `[MVP]` ✅ 완료
 
 **목표**: 이미지 저장 버킷·정책과 **업로드 전 클라이언트 압축** 유틸 (tech-stack.md 3.3). *변환(일러스트화)은 P8.*
 
@@ -214,11 +214,11 @@ supabase gen types typescript --linked > types/database.ts   # TS 타입 생성
 
 **산출물**: `supabase/`(버킷 정책 SQL/설정), `lib/image.ts`(압축), `lib/storage.ts`(업로드)
 
-**DoD**: 사진 선택 → 압축본+썸네일 업로드 → URL 획득, 비멤버 접근 차단.
+**DoD**: ✅ 버킷 생성·RLS 적용, 압축·썸네일·프로필 유틸 구현, 온보딩 프로필 업로드 연결.
 
 ---
 
-## P5 — 홈 탭: 케어 기록 `[MVP]`
+## P5 — 홈 탭: 케어 기록 `[MVP]` ← 다음 단계
 
 **목표**: screens.md 3 — 오늘 케어 보기·입력 + 오늘 일기 미리보기.
 
