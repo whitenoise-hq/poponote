@@ -170,31 +170,35 @@ supabase gen types typescript --linked > types/database.ts   # TS 타입 생성
 
 ---
 
-## P3 — 인증 & 온보딩 `[MVP]` ← 다음 단계
+## P3 — 인증 & 온보딩 `[MVP]` ✅ 완료
 
-**목표**: 카카오/구글 로그인 → 그룹 소속 여부에 따른 분기 → 온보딩 완료까지(screens.md 2).
+**목표**: 카카오 로그인 → 그룹 소속 여부에 따른 분기 → 온보딩 완료까지(screens.md 2).
 
 **선행조건**: P2(members/families/pets 테이블).
 
 **작업**
-- 카카오/구글 OAuth (Supabase Auth provider + Expo deep link redirect).
-- 세션 관리 hook: `hooks/use-auth.ts` (세션, 로그인/로그아웃).
-- **라우팅 가드** (`app/_layout.tsx` 또는 그룹 레이아웃):
+- ✅ 카카오 OAuth (Supabase Auth provider + Expo WebBrowser + deep link redirect).
+- ✅ 세션 관리 hook: `hooks/use-auth.ts` (세션, 로그인/로그아웃).
+- ✅ **라우팅 가드** (`app/_layout.tsx` AuthGate):
   - 미인증 → 로그인 화면.
   - 인증 + 그룹 없음 → 온보딩 분기.
   - 인증 + 그룹 있음 → `(tabs)` 홈.
-- 온보딩 화면(탭 바깥, 풀스크린):
-  - 분기: [새로 시작] / [코드로 참여] (screens.md 2.2).
-  - 최초 사용자: 반려동물 등록 → family 생성(작성자=방장) + pet 생성 + 초대코드 발급 + 본인 멤버 등록 (2.3).
-  - 초대받은 사용자: 코드 검증 → 닉네임(목록 선택 + 직접 입력) → 멤버 등록 (2.4).
+  - 스플래시 유지: 라우팅 결정까지 네이티브 스플래시 표시, 홈 깜빡임 방지(`app/index.tsx`).
+- ✅ 온보딩 화면(Supabase 실연동):
+  - 분기: [새로 시작] / [코드로 참여].
+  - 최초 사용자: 펫 등록 → 닉네임 설정(관계 default 보호자) → family+pet+member 생성 → 초대코드 공유 → 홈.
+  - 초대받은 사용자: 코드 검증(DB) → 닉네임+관계 설정 → 멤버 등록 → 홈.
+  - 닉네임/관계 특수문자 차단(한글/영어/숫자만), 생일 DatePickerModal, 프로필 사진 ImagePicker.
+- ✅ **회원 탈퇴**: `delete_account()` RPC — owner family cascade 삭제 + 멤버 탈퇴 + signOut.
+- ✅ **DB 수정**: grant_permissions(테이블 접근 권한), fix_families_rls(owner SELECT 허용).
 
-**산출물**: `app/(auth)/login.tsx`, `app/(onboarding)/*`, `hooks/use-auth.ts`, `hooks/use-family.ts`, `lib/invite-code.ts`
+**산출물**: `app/(auth)/login.tsx`, `app/(onboarding)/*`, `hooks/use-auth.ts`, `lib/onboarding.ts`, `lib/invite-code.ts`, `components/ui/DatePickerModal.tsx`, `supabase/migrations/*`
 
-**DoD**: 두 경로(생성/참여) 모두 홈 진입, 닉네임 저장, 잘못된 코드 처리.
+**DoD**: ✅ 두 경로(생성/참여) 모두 홈 진입, 닉네임 저장, 잘못된 코드 처리, 회원 탈퇴 동작 확인.
 
 ---
 
-## P4 — Storage & 이미지 압축 파이프라인 `[MVP]`
+## P4 — Storage & 이미지 압축 파이프라인 `[MVP]` ← 다음 단계
 
 **목표**: 이미지 저장 버킷·정책과 **업로드 전 클라이언트 압축** 유틸 (tech-stack.md 3.3). *변환(일러스트화)은 P8.*
 
