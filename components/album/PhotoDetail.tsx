@@ -1,5 +1,7 @@
-import { View, Image, useWindowDimensions, Alert } from 'react-native'
-import { Text, Button } from '@/components/ui'
+import { View, Image, Pressable, useWindowDimensions, Alert } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
+import { Text } from '@/components/ui'
+import { colors } from '@/theme/colors'
 import type { AlbumPhoto } from '@/hooks/use-album'
 
 interface PhotoDetailProps {
@@ -9,35 +11,63 @@ interface PhotoDetailProps {
 
 export function PhotoDetail({ photo, onGoToDiary }: PhotoDetailProps) {
   const { width } = useWindowDimensions()
+  const imageSize = width - 40
 
   function handleSave() {
     Alert.alert('저장', '갤러리에 저장되었습니다. (mock)')
-  }
-
-  function handleShare() {
-    Alert.alert('공유', '공유 기능은 추후 연동됩니다. (mock)')
   }
 
   return (
     <View className="flex-1 items-center">
       <Image
         source={{ uri: photo.illustrationUrl }}
-        style={{ width: width - 40, height: width - 40 }}
-        className="rounded-2xl"
+        style={{ width: imageSize, height: imageSize, borderRadius: 16 }}
         resizeMode="cover"
       />
 
-      <View className="flex-row gap-3 mt-6">
-        <Button label="저장" variant="secondary" onPress={handleSave} />
-        <Button label="공유" variant="secondary" onPress={handleShare} />
-      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 12,
+          marginTop: 20,
+          width: imageSize,
+        }}
+      >
+        <Pressable
+          onPress={handleSave}
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6,
+            borderRadius: 9999,
+            borderWidth: 1,
+            borderColor: colors.cream[200],
+            backgroundColor: colors.cream[100],
+            paddingVertical: 12,
+          }}
+        >
+          <Ionicons name="download-outline" size={18} color={colors.ink.DEFAULT} />
+          <Text variant="label" className="text-ink">저장하기</Text>
+        </Pressable>
 
-      <View className="mt-4">
-        <Button
-          label="이 일러스트의 다이어리로 →"
-          variant="ghost"
+        <Pressable
           onPress={onGoToDiary}
-        />
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6,
+            borderRadius: 9999,
+            backgroundColor: colors.primary.DEFAULT,
+            paddingVertical: 12,
+          }}
+        >
+          <Ionicons name="book-outline" size={18} color={colors.white} />
+          <Text variant="label" className="text-white">다이어리 보기</Text>
+        </Pressable>
       </View>
     </View>
   )

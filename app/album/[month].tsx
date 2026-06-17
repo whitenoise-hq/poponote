@@ -15,7 +15,7 @@ export default function AlbumMonthScreen() {
 
   function formatMonth(m: string): string {
     const [y, mo] = m.split('-')
-    return `${y}.${mo}`
+    return `${y}년 ${mo}월`
   }
 
   function handlePhotoPress(photo: AlbumPhoto) {
@@ -33,10 +33,10 @@ export default function AlbumMonthScreen() {
         >
           <Ionicons name="chevron-back" size={20} color={colors.ink.DEFAULT} />
         </Pressable>
-        <Text variant="subtitle" className="text-ink">
+        <Text variant="subtitle" className="flex-1 text-ink">
           {formatMonth(month)}
         </Text>
-        <Text variant="caption" className="text-muted-foreground">
+        <Text variant="caption" className="text-muted-foreground mr-1">
           {(photos ?? []).length}장
         </Text>
       </View>

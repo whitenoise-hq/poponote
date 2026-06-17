@@ -26,9 +26,9 @@ export function MonthFolderCard({folder, onPress}: MonthFolderCardProps) {
     const offset = Math.round(cardWidth * 0.07) // 뒤 레이어를 좌우로 펼쳐 빼내는 양
 
     return (
-        <Pressable onPress={onPress} className="mb-5 items-center" style={{width: cardWidth}}>
+        <Pressable onPress={onPress} className="items-center" style={{width: cardWidth, marginBottom: 12}}>
             {/* 겹친 사진 더미 */}
-            <View style={{width: cardWidth, height: cardWidth}}>
+            <View style={{width: cardWidth, height: cardWidth, marginBottom: -5}}>
                 {third && (
                     <Image
                         source={{uri: third}}
@@ -66,7 +66,7 @@ export function MonthFolderCard({folder, onPress}: MonthFolderCardProps) {
             </View>
 
             {/* 연·월 + 장수 */}
-            <View className="items-center">
+            <View className="items-center" style={{marginTop: -4}}>
                 <Text variant="subtitle" className="text-ink">
                     {formatMonth(folder.month)}
                 </Text>

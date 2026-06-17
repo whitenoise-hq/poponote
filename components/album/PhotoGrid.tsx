@@ -17,8 +17,8 @@ export function PhotoGrid({ photos, onPress }: PhotoGridProps) {
       data={photos}
       numColumns={cols}
       keyExtractor={(item) => item.id}
-      columnWrapperClassName="gap-[3px]"
-      contentContainerClassName="gap-[3px]"
+      columnWrapperStyle={{gap}}
+      contentContainerStyle={{gap}}
       renderItem={({ item }) => (
         <Pressable onPress={() => onPress(item)}>
           <Image
