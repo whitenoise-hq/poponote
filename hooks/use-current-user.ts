@@ -1,14 +1,24 @@
 import { useQuery } from '@tanstack/react-query'
-import { CURRENT_USER_ID, mockMembers } from '@/lib/mock-data'
+import { supabase } from '@/lib/supabase'
+import { useAuth } from './use-auth'
 import type { Member } from '@/types'
 
 export function useCurrentUser() {
-  return useQuery<Member>({
-    queryKey: ['currentUser'],
-    queryFn: () => {
-      const member = mockMembers.find((m) => m.user_id === CURRENT_USER_ID)
-      if (!member) throw new Error('Current user not found')
-      return member
+  const { user } = useAuth()
+
+  return useQuery<Member | null>({
+    queryKey: ['currentUser', user?.id],
+    queryFn: async () => {
+      if (!user) return null
+      const { data, error } = await supabase
+        .from('members')
+        .select('*')
+        .eq('user_id', user.id)
+        .limit(1)
+        .single()
+      if (error) return null
+      return data
     },
+    enabled: !!user,
   })
 }

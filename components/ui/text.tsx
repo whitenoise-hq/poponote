@@ -11,12 +11,12 @@ export type TextVariant =
   | 'label';
 
 const variantStyles = StyleSheet.create<Record<TextVariant, TextStyle>>({
-  display: { fontFamily: 'Jua_400Regular', fontSize: 30, color: colors.ink.DEFAULT },
-  title: { fontFamily: 'Pretendard-Bold', fontSize: 22, color: colors.ink.DEFAULT },
-  subtitle: { fontFamily: 'Pretendard-SemiBold', fontSize: 16, color: colors.ink.DEFAULT },
-  body: { fontFamily: 'Pretendard-Regular', fontSize: 14, color: colors.ink[700] },
-  caption: { fontFamily: 'Pretendard-Regular', fontSize: 12, color: colors.ink[500] },
-  label: { fontFamily: 'Pretendard-Medium', fontSize: 13, color: colors.ink.DEFAULT },
+  display: { fontFamily: 'Jua_400Regular', fontSize: 30, lineHeight: 40, color: colors.ink.DEFAULT },
+  title: { fontFamily: 'Pretendard-Bold', fontSize: 22, lineHeight: 30, color: colors.ink.DEFAULT },
+  subtitle: { fontFamily: 'Pretendard-SemiBold', fontSize: 16, lineHeight: 22, color: colors.ink.DEFAULT },
+  body: { fontFamily: 'Pretendard-Regular', fontSize: 14, lineHeight: 20, color: colors.ink[700] },
+  caption: { fontFamily: 'Pretendard-Regular', fontSize: 12, lineHeight: 18, color: colors.ink[500] },
+  label: { fontFamily: 'Pretendard-Medium', fontSize: 13, lineHeight: 18, color: colors.ink.DEFAULT },
 });
 
 interface TextProps extends RNTextProps {

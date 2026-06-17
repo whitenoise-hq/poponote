@@ -9,8 +9,13 @@ import { DiaryPreview } from '@/components/home/DiaryPreview'
 import { usePet } from '@/hooks/use-pet'
 import { useCareLogs, useAddCareLog } from '@/hooks/use-care-logs'
 import { useTodayEntry } from '@/hooks/use-diary'
-import { TODAY } from '@/lib/mock-data'
 import { colors } from '@/theme/colors'
+
+function todayStr(): string {
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+const TODAY = todayStr()
 import type { CareKind } from '@/types'
 
 export default function HomeScreen() {

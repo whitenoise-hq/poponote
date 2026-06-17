@@ -41,11 +41,11 @@ export function PetHeader({ pet }: PetHeaderProps) {
           {pet.profile_url ? (
             <Image
               source={{ uri: pet.profile_url }}
-              style={{ width: 80, height: 80, borderRadius: 40, borderWidth: 3, borderColor: colors.white }}
+              style={{ width: 70, height: 70, borderRadius: 40, borderWidth: 1, borderColor: colors.white }}
             />
           ) : (
-            <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: colors.cream.DEFAULT, alignItems: 'center', justifyContent: 'center' }}>
-              <Ionicons name="paw" size={28} color={colors.primary.DEFAULT} />
+            <View style={{ width: 70, height: 70, borderRadius: 40, backgroundColor: colors.cream[100], borderWidth: 1, borderColor: colors.cream[200], alignItems: 'center', justifyContent: 'center' }}>
+              <Ionicons name="paw" size={32} color={colors.primary.DEFAULT} />
             </View>
           )}
         </View>
