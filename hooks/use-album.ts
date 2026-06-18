@@ -56,11 +56,18 @@ export function useAlbumMonth(month: string) {
     queryKey: ['albumMonth', member?.family_id, month],
     queryFn: async () => {
       if (!member) return []
+      const startDate = `${month}-01`
+      const [y, m] = month.split('-').map(Number)
+      const endDate = m === 12
+        ? `${y + 1}-01-01`
+        : `${y}-${String(m + 1).padStart(2, '0')}-01`
+
       const { data, error } = await supabase
         .from('diary_entries')
         .select('id, date, photo_url')
         .eq('family_id', member.family_id)
-        .like('date', `${month}%`)
+        .gte('date', startDate)
+        .lt('date', endDate)
         .not('photo_url', 'is', null)
         .order('date', { ascending: false })
       if (error) return []
