@@ -39,10 +39,10 @@ export function DiaryPreview({
       {entry ? (
         <Pressable onPress={onPressEntry}>
           <Card style={{ padding: 0, overflow: 'hidden' }}>
-            {(entry.illustration_url || entry.photo_url) && (
+            {entry.photo_url && (
               <View>
                 <Image
-                  source={{ uri: entry.illustration_url ?? entry.photo_url! }}
+                  source={{ uri: entry.photo_url }}
                   style={{ width: '100%', height: 192 }}
                   resizeMode="cover"
                 />

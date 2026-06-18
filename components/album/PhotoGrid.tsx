@@ -22,7 +22,7 @@ export function PhotoGrid({ photos, onPress }: PhotoGridProps) {
       renderItem={({ item }) => (
         <Pressable onPress={() => onPress(item)}>
           <Image
-            source={{ uri: item.illustrationUrl }}
+            source={{ uri: item.photoUrl }}
             style={{ width: itemSize, height: itemSize, borderRadius: 8 }}
             resizeMode="cover"
           />

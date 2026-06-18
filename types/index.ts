@@ -43,7 +43,6 @@ export interface DiaryEntry {
   title: string | null
   body: string
   photo_url: string | null
-  illustration_url: string | null
   created_at: string
   updated_at: string
 }

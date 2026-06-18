@@ -11,7 +11,7 @@ export interface AlbumMonth {
 export interface AlbumPhoto {
   id: string
   date: string
-  illustrationUrl: string
+  photoUrl: string // photo_url 기반 (하위 호환을 위해 필드명 유지)
 }
 
 export function useAlbumMonths() {
@@ -23,9 +23,9 @@ export function useAlbumMonths() {
       if (!member) return []
       const { data, error } = await supabase
         .from('diary_entries')
-        .select('id, date, illustration_url')
+        .select('id, date, photo_url')
         .eq('family_id', member.family_id)
-        .not('illustration_url', 'is', null)
+        .not('photo_url', 'is', null)
         .order('date', { ascending: false })
       if (error) return []
 
@@ -33,7 +33,7 @@ export function useAlbumMonths() {
       for (const entry of data ?? []) {
         const month = entry.date.slice(0, 7)
         const urls = monthMap.get(month) ?? []
-        urls.push(entry.illustration_url!)
+        urls.push(entry.photo_url!)
         monthMap.set(month, urls)
       }
 
@@ -58,16 +58,16 @@ export function useAlbumMonth(month: string) {
       if (!member) return []
       const { data, error } = await supabase
         .from('diary_entries')
-        .select('id, date, illustration_url')
+        .select('id, date, photo_url')
         .eq('family_id', member.family_id)
         .like('date', `${month}%`)
-        .not('illustration_url', 'is', null)
+        .not('photo_url', 'is', null)
         .order('date', { ascending: false })
       if (error) return []
       return (data ?? []).map((e) => ({
         id: e.id,
         date: e.date,
-        illustrationUrl: e.illustration_url!,
+        photoUrl: e.photo_url!,
       }))
     },
     enabled: !!member,

@@ -38,7 +38,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="album"
         options={{
-          title: '일러스트 앨범',
+          title: '앨범',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="images-outline" size={size} color={color} />
           ),

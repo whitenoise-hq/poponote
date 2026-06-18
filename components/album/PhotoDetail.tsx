@@ -22,7 +22,7 @@ export function PhotoDetail({ photo, onGoToDiary }: PhotoDetailProps) {
   return (
     <View style={{ flex: 1, alignItems: 'center' }}>
       <Image
-        source={{ uri: photo.illustrationUrl }}
+        source={{ uri: photo.photoUrl }}
         style={{ width: imageSize, height: imageSize, borderRadius: 16 }}
         resizeMode="cover"
       />

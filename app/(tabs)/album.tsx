@@ -15,7 +15,7 @@ export default function AlbumScreen() {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.cream.DEFAULT }} edges={['top']}>
       <View style={{ paddingHorizontal: 20, paddingTop: 16, paddingBottom: 8 }}>
         <Text variant="title" style={{ color: colors.ink.DEFAULT }}>
-          일러스트 앨범
+          앨범
         </Text>
       </View>
 
@@ -36,7 +36,7 @@ export default function AlbumScreen() {
         {(months ?? []).length === 0 && (
           <View style={{ alignItems: 'center', paddingVertical: 48 }}>
             <Text variant="body" style={{ color: colors.muted.foreground }}>
-              아직 일러스트가 없어요
+              아직 사진이 없어요
             </Text>
           </View>
         )}

@@ -7,7 +7,7 @@ Figma Make(Pet Diary Mobile App)로 만든 화면 캡처. 똑같이 구현하는
 
 - `home.png` — 홈 탭
 - `diary1.png` / `diary2.png` — 다이어리 탭 (캘린더 / 피드)
-- `album.png` — 일러스트 앨범 탭
+- `album.png` — 사진 앨범 탭
 - `settings1.png` / `settings2.png` — 설정 탭
 
 ## 컬러 토큰

@@ -4,38 +4,68 @@ import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
+import * as ImagePicker from 'expo-image-picker'
 import { Text, Button, AlertModal } from '@/components/ui'
 import { PhotoPickerPlaceholder } from '@/components/entry/PhotoPickerPlaceholder'
-import { useAddDiaryEntry } from '@/hooks/use-diary'
+import { useGenerateDiaryText, useAddDiaryEntry } from '@/hooks/use-diary'
 import { colors } from '@/theme/colors'
 
 export default function NewEntryScreen() {
   const router = useRouter()
+  const generateText = useGenerateDiaryText()
   const addEntry = useAddDiaryEntry()
 
-  const [photoUrl, setPhotoUrl] = useState<string | null>(null)
+  const [localPhotoUrl, setLocalPhotoUrl] = useState<string | null>(null)
+  const [generatedPhotoUrl, setGeneratedPhotoUrl] = useState<string | null>(null)
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
-  const [alertVisible, setAlertVisible] = useState(false)
+  const [progressMessage, setProgressMessage] = useState<string | null>(null)
   const [errorVisible, setErrorVisible] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-  const [progressMessage, setProgressMessage] = useState<string | null>(null)
 
-  const canSave = !!photoUrl && title.trim().length > 0 && body.trim().length > 0
+  const isGenerating = generateText.isPending
   const isSaving = addEntry.isPending
+  const isBusy = isGenerating || isSaving
+  const hasGenerated = !!generatedPhotoUrl
+  const canSave = hasGenerated && title.trim().length > 0 && body.trim().length > 0 && !isBusy
+
+  function handlePhotoPick(uri: string) {
+    setLocalPhotoUrl(uri)
+    setGeneratedPhotoUrl(null)
+    setTitle('')
+    setBody('')
+
+    generateText.mutate(
+      {
+        photoUrl: uri,
+        onProgress: (step) => setProgressMessage(step),
+      },
+      {
+        onSuccess: (result) => {
+          setProgressMessage(null)
+          setGeneratedPhotoUrl(result.photoUrl)
+          setTitle(result.title)
+          setBody(result.body)
+        },
+        onError: (err) => {
+          setProgressMessage(null)
+          setLocalPhotoUrl(null)
+          setErrorMessage(err instanceof Error ? err.message : 'AI 일기 생성에 실패했습니다.')
+          setErrorVisible(true)
+        },
+      },
+    )
+  }
 
   function handleSave() {
-    if (!canSave) {
-      setAlertVisible(true)
-      return
-    }
+    if (!canSave || !generatedPhotoUrl) return
 
+    setProgressMessage('일기 저장 중...')
     addEntry.mutate(
       {
-        title: title.trim() || null,
+        title: title.trim(),
         body: body.trim(),
-        photoUrl,
-        onProgress: (step) => setProgressMessage(step),
+        photoUrl: generatedPhotoUrl,
       },
       {
         onSuccess: () => {
@@ -56,8 +86,8 @@ export default function NewEntryScreen() {
       {/* Header */}
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 12 }}>
         <Pressable
-          onPress={() => !isSaving && router.back()}
-          style={{ width: 32, height: 32, alignItems: 'center', justifyContent: 'center', opacity: isSaving ? 0.3 : 1 }}
+          onPress={() => !isBusy && router.back()}
+          style={{ width: 32, height: 32, alignItems: 'center', justifyContent: 'center', opacity: isBusy ? 0.3 : 1 }}
         >
           <Ionicons name="chevron-back" size={20} color={colors.ink.DEFAULT} />
         </Pressable>
@@ -67,12 +97,19 @@ export default function NewEntryScreen() {
         <View style={{ width: 32 }} />
       </View>
 
-      {/* 저장/변환 중 오버레이 */}
-      {isSaving ? (
+      {/* 생성/저장 중 오버레이 */}
+      {isBusy ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 16, paddingHorizontal: 32, paddingBottom: 100 }}>
+          {localPhotoUrl && (
+            <Image
+              source={{ uri: localPhotoUrl }}
+              style={{ width: 120, height: 120, borderRadius: 16, marginBottom: 8 }}
+              resizeMode="cover"
+            />
+          )}
           <ActivityIndicator size="large" color={colors.primary.DEFAULT} />
           <Text variant="subtitle" style={{ color: colors.ink.DEFAULT, textAlign: 'center' }}>
-            {progressMessage ?? '저장 중...'}
+            {progressMessage ?? '처리 중...'}
           </Text>
           <Text variant="caption" style={{ color: colors.muted.foreground, textAlign: 'center' }}>
             잠시만 기다려주세요
@@ -86,10 +123,20 @@ export default function NewEntryScreen() {
           keyboardShouldPersistTaps="handled"
         >
           {/* Photo */}
-          {photoUrl ? (
-            <Pressable onPress={() => setPhotoUrl(null)}>
+          {localPhotoUrl ? (
+            <Pressable onPress={async () => {
+              if (isBusy) return
+              const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ['images'],
+                allowsEditing: true,
+                quality: 0.9,
+              })
+              if (!result.canceled && result.assets[0]) {
+                handlePhotoPick(result.assets[0].uri)
+              }
+            }}>
               <Image
-                source={{ uri: photoUrl }}
+                source={{ uri: localPhotoUrl }}
                 style={{ width: '100%', height: 224, borderRadius: 16 }}
                 resizeMode="cover"
               />
@@ -98,26 +145,28 @@ export default function NewEntryScreen() {
               </Text>
             </Pressable>
           ) : (
-            <PhotoPickerPlaceholder onPick={setPhotoUrl} />
+            <PhotoPickerPlaceholder onPick={handlePhotoPick} />
           )}
 
           {/* Title */}
           <TextInput
             value={title}
             onChangeText={setTitle}
-            placeholder="제목"
+            placeholder={hasGenerated ? '제목' : 'AI가 작성해드려요'}
             placeholderTextColor={colors.muted.foreground}
+            editable={hasGenerated}
             style={{
               marginTop: 16,
               paddingHorizontal: 16,
               paddingVertical: 12,
-              backgroundColor: colors.white,
+              backgroundColor: hasGenerated ? colors.white : colors.cream[200],
               borderRadius: 12,
               borderWidth: 1,
               borderColor: colors.cream[200],
               fontSize: 14,
               fontFamily: 'Pretendard-Medium',
               color: colors.ink.DEFAULT,
+              opacity: hasGenerated ? 1 : 0.5,
             }}
           />
 
@@ -125,15 +174,16 @@ export default function NewEntryScreen() {
           <TextInput
             value={body}
             onChangeText={setBody}
-            placeholder="오늘 하루를 기록해보세요..."
+            placeholder={hasGenerated ? '오늘 하루를 기록해보세요...' : '사진을 올리면 AI가 일기를 써드려요'}
             placeholderTextColor={colors.muted.foreground}
+            editable={hasGenerated}
             multiline
             textAlignVertical="top"
             style={{
               marginTop: 12,
               paddingHorizontal: 16,
               paddingVertical: 12,
-              backgroundColor: colors.white,
+              backgroundColor: hasGenerated ? colors.white : colors.cream[200],
               borderRadius: 12,
               borderWidth: 1,
               borderColor: colors.cream[200],
@@ -141,6 +191,7 @@ export default function NewEntryScreen() {
               fontFamily: 'Pretendard-Regular',
               color: colors.ink.DEFAULT,
               minHeight: 160,
+              opacity: hasGenerated ? 1 : 0.5,
             }}
           />
 
@@ -155,15 +206,8 @@ export default function NewEntryScreen() {
       )}
 
       <AlertModal
-        visible={alertVisible}
-        title="알림"
-        message="사진, 제목, 내용을 모두 입력해주세요."
-        onConfirm={() => setAlertVisible(false)}
-      />
-
-      <AlertModal
         visible={errorVisible}
-        title="저장 실패"
+        title="오류"
         message={errorMessage}
         onConfirm={() => setErrorVisible(false)}
       />

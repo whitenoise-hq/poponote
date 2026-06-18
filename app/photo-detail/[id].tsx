@@ -13,12 +13,13 @@ export default function AlbumPhotoDetailScreen() {
   const { data: entries } = useDiaryEntries()
 
   const entry = (entries ?? []).find((e) => e.id === id)
-  if (!entry || !entry.illustration_url) return null
+  const photoUrl = entry?.photo_url
+  if (!entry || !photoUrl) return null
 
   const photo = {
     id: entry.id,
     date: entry.date,
-    illustrationUrl: entry.illustration_url,
+    photoUrl,
   }
 
   return (

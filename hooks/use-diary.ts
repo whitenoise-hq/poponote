@@ -4,7 +4,7 @@ import { useAuth } from './use-auth'
 import { useCurrentUser } from './use-current-user'
 import { usePet } from './use-pet'
 import { uploadDiaryPhoto, deleteDiaryPhoto } from '@/lib/storage'
-import { transformToIllustration, deleteIllustration } from '@/lib/transform'
+import { generateDiary } from '@/lib/generate-diary'
 import type { DiaryEntry } from '@/types'
 
 function todayStr(): string {
@@ -56,6 +56,58 @@ export function useTodayEntry() {
   return useDiaryEntry(todayStr())
 }
 
+/**
+ * 사진 업로드 + AI 일기 텍스트 생성 (생성 단계)
+ */
+export function useGenerateDiaryText() {
+  const { data: member } = useCurrentUser()
+
+  return useMutation({
+    mutationFn: async ({
+      photoUrl,
+      onProgress,
+    }: {
+      photoUrl: string
+      onProgress?: (step: string) => void
+    }): Promise<{
+      photoUrl: string
+      storagePath: string | null
+      title: string
+      body: string
+    }> => {
+      if (!member) throw new Error('데이터 로딩 중')
+
+      // 1. 사진 업로드
+      onProgress?.('사진 업로드 중...')
+      let finalPhotoUrl = photoUrl
+      let storagePath: string | null = null
+      if (photoUrl.startsWith('file://') || photoUrl.startsWith('ph://')) {
+        const result = await uploadDiaryPhoto(photoUrl, member.family_id)
+        finalPhotoUrl = result.photoUrl
+        storagePath = result.storagePath
+      }
+
+      // 2. AI 일기 생성
+      onProgress?.('AI가 일기 작성 중...')
+      try {
+        const generated = await generateDiary(finalPhotoUrl)
+        return {
+          photoUrl: finalPhotoUrl,
+          storagePath,
+          title: generated.title,
+          body: generated.body,
+        }
+      } catch (err) {
+        if (storagePath) await deleteDiaryPhoto(storagePath)
+        throw new Error('AI 일기 생성에 실패했습니다. 다시 시도해주세요.')
+      }
+    },
+  })
+}
+
+/**
+ * 일기 저장 (저장 단계만)
+ */
 export function useAddDiaryEntry() {
   const qc = useQueryClient()
   const { user } = useAuth()
@@ -67,45 +119,13 @@ export function useAddDiaryEntry() {
       title,
       body,
       photoUrl,
-      onProgress,
     }: {
-      title: string | null
+      title: string
       body: string
-      photoUrl: string | null
-      onProgress?: (step: string) => void
+      photoUrl: string
     }) => {
       if (!user || !member || !pet) throw new Error('데이터 로딩 중')
 
-      // 1. 사진 업로드
-      onProgress?.('사진 업로드 중...')
-      let finalPhotoUrl = photoUrl
-      let storagePath: string | null = null
-      if (photoUrl && (photoUrl.startsWith('file://') || photoUrl.startsWith('ph://'))) {
-        const result = await uploadDiaryPhoto(photoUrl, member.family_id)
-        finalPhotoUrl = result.photoUrl
-        storagePath = result.storagePath
-      }
-
-      // 2. 일러스트 변환 (완료 대기)
-      let illustrationUrl: string | null = null
-      let illustrationPath: string | null = null
-      if (finalPhotoUrl) {
-        onProgress?.('일러스트로 변환 중...')
-        try {
-          const result = await transformToIllustration({
-            photoUrl: finalPhotoUrl,
-            familyId: member.family_id,
-          })
-          illustrationUrl = result.illustrationUrl
-          illustrationPath = result.illustrationPath
-        } catch {
-          if (storagePath) await deleteDiaryPhoto(storagePath)
-          throw new Error('일러스트 변환에 실패했습니다. 다시 시도해주세요.')
-        }
-      }
-
-      // 3. 일기 저장 (사진 + 일러스트 URL 함께)
-      onProgress?.('일기 저장 중...')
       const { error } = await supabase.from('diary_entries').insert({
         family_id: member.family_id,
         pet_id: pet.id,
@@ -113,16 +133,10 @@ export function useAddDiaryEntry() {
         author_id: user.id,
         title,
         body,
-        photo_url: finalPhotoUrl,
-        illustration_url: illustrationUrl,
+        photo_url: photoUrl,
       })
 
-      if (error) {
-        // 저장 실패 → 사진 + 일러스트 모두 정리
-        if (storagePath) await deleteDiaryPhoto(storagePath)
-        if (illustrationPath) await deleteIllustration(illustrationPath)
-        throw error
-      }
+      if (error) throw error
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['diaryEntries'] })
@@ -136,9 +150,30 @@ export function useDeleteDiaryEntry() {
 
   return useMutation({
     mutationFn: async (entryId: string) => {
-      // cascade: comments, reactions는 FK ON DELETE CASCADE로 자동 삭제
+      // 1. 삭제 전 사진 경로 조회
+      const { data: entry } = await supabase
+        .from('diary_entries')
+        .select('photo_url')
+        .eq('id', entryId)
+        .single()
+
+      // 2. DB 삭제 (cascade: comments, reactions 자동 삭제)
       const { error } = await supabase.from('diary_entries').delete().eq('id', entryId)
       if (error) throw error
+
+      // 3. Storage 사진 삭제 (signed URL에서 path 추출)
+      if (entry?.photo_url) {
+        try {
+          const url = new URL(entry.photo_url)
+          const match = url.pathname.match(/\/photos\/(.+)$/)
+          if (match) {
+            const storagePath = decodeURIComponent(match[1].split('?')[0])
+            await deleteDiaryPhoto(storagePath)
+          }
+        } catch {
+          // 사진 삭제 실패해도 DB 삭제는 완료된 상태이므로 무시
+        }
+      }
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['diaryEntries'] })

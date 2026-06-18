@@ -127,7 +127,6 @@ export type Database = {
           date: string
           family_id: string
           id: string
-          illustration_url: string | null
           pet_id: string
           photo_url: string | null
           title: string | null
@@ -140,7 +139,6 @@ export type Database = {
           date: string
           family_id: string
           id?: string
-          illustration_url?: string | null
           pet_id: string
           photo_url?: string | null
           title?: string | null
@@ -153,7 +151,6 @@ export type Database = {
           date?: string
           family_id?: string
           id?: string
-          illustration_url?: string | null
           pet_id?: string
           photo_url?: string | null
           title?: string | null
@@ -316,6 +313,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      delete_account: { Args: never; Returns: undefined }
       is_family_member: { Args: { _family_id: string }; Returns: boolean }
     }
     Enums: {
