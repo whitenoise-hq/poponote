@@ -5,6 +5,28 @@ import { useCurrentUser } from './use-current-user'
 import { usePet } from './use-pet'
 import type { CareLog, CareKind } from '@/types'
 
+/**
+ * 전체 케어 로그 조회 (캘린더 점 표시용)
+ */
+export function useAllCareLogs() {
+  const { data: member } = useCurrentUser()
+
+  return useQuery<CareLog[]>({
+    queryKey: ['allCareLogs', member?.family_id],
+    queryFn: async () => {
+      if (!member) return []
+      const { data, error } = await supabase
+        .from('care_logs')
+        .select('*')
+        .eq('family_id', member.family_id)
+        .order('logged_at', { ascending: false })
+      if (error) return []
+      return data ?? []
+    },
+    enabled: !!member,
+  })
+}
+
 export function useCareLogs(date: string) {
   const { data: member } = useCurrentUser()
 
@@ -46,6 +68,7 @@ export function useAddCareLog(date: string) {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['careLogs'] })
+      qc.invalidateQueries({ queryKey: ['allCareLogs'] })
     },
   })
 }
@@ -60,6 +83,7 @@ export function useDeleteCareLog() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['careLogs'] })
+      qc.invalidateQueries({ queryKey: ['allCareLogs'] })
     },
   })
 }

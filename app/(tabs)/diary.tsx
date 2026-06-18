@@ -9,7 +9,7 @@ import { CalendarView } from '@/components/diary/CalendarView'
 import { ListView } from '@/components/diary/ListView'
 import { DayPreview } from '@/components/diary/DayPreview'
 import { useDiaryEntries } from '@/hooks/use-diary'
-import { useCareLogs } from '@/hooks/use-care-logs'
+import { useCareLogs, useAllCareLogs } from '@/hooks/use-care-logs'
 import { colors } from '@/theme/colors'
 
 export default function DiaryScreen() {
@@ -20,20 +20,16 @@ export default function DiaryScreen() {
   const [selectedDate, setSelectedDate] = useState<string>(todayStr)
   const { data: entries } = useDiaryEntries()
 
-  // 선택된 날짜의 케어 로그 (캘린더에서 사용)
+  const { data: allCareLogs_ } = useAllCareLogs()
   const { data: selectedCareLogs_ } = useCareLogs(selectedDate)
-  // TODO: 전체 케어 로그는 캘린더 점 표시용 — 추후 최적화
-  const allCareLogs = selectedCareLogs_ ?? []
+  const allCareLogs = allCareLogs_ ?? []
 
   const selectedEntry =
     selectedDate
       ? (entries ?? []).find((e) => e.date === selectedDate) ?? null
       : null
 
-  const selectedCareLogs =
-    selectedDate
-      ? allCareLogs.filter((c) => c.date === selectedDate)
-      : []
+  const selectedCareLogs = selectedCareLogs_ ?? []
 
   const hasContent = selectedEntry || selectedCareLogs.length > 0
 
