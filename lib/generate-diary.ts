@@ -8,12 +8,12 @@ interface GenerateDiaryResult {
 /**
  * 사진 URL을 AI에 전달해 일기 제목+내용을 생성한다.
  */
-export async function generateDiary(photoUrl: string): Promise<GenerateDiaryResult> {
+export async function generateDiary(photoUrl: string, petName?: string): Promise<GenerateDiaryResult> {
   const { data: { session } } = await supabase.auth.getSession()
   if (!session) throw new Error('로그인 필요')
 
   const response = await supabase.functions.invoke('generate-diary', {
-    body: { photoUrl },
+    body: { photoUrl, petName },
   })
 
   if (response.error) {

@@ -61,6 +61,7 @@ export function useTodayEntry() {
  */
 export function useGenerateDiaryText() {
   const { data: member } = useCurrentUser()
+  const { data: pet } = usePet()
 
   return useMutation({
     mutationFn: async ({
@@ -90,7 +91,7 @@ export function useGenerateDiaryText() {
       // 2. AI 일기 생성
       onProgress?.('AI가 일기 작성 중...')
       try {
-        const generated = await generateDiary(finalPhotoUrl)
+        const generated = await generateDiary(finalPhotoUrl, pet?.name)
         return {
           photoUrl: finalPhotoUrl,
           storagePath,

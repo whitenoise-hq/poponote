@@ -1,11 +1,13 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
 const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY")!;
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-const SYSTEM_PROMPT = `당신은 반려동물 일기 작성 도우미입니다.
+function buildSystemPrompt(petName?: string): string {
+  const nameClause = petName
+    ? `반려동물의 이름은 "${petName}"입니다. 일기에 이름을 자연스럽게 사용하세요.`
+    : "";
+
+  return `당신은 반려동물 일기 작성 도우미입니다.
 사용자가 올린 반려동물 사진을 분석하고, 반려동물 보호자의 시점에서 따뜻하고 귀여운 한국어 일기를 작성해주세요.
+${nameClause}
 
 규칙:
 - 제목: 20자 이내, 그날의 핵심을 담은 짧은 문장
@@ -15,6 +17,7 @@ const SYSTEM_PROMPT = `당신은 반려동물 일기 작성 도우미입니다.
 
 반드시 아래 JSON 형식으로만 응답하세요:
 {"title": "제목", "body": "내용"}`;
+}
 
 Deno.serve(async (req) => {
   try {
@@ -26,7 +29,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { photoUrl } = await req.json();
+    const { photoUrl, petName } = await req.json();
     if (!photoUrl) {
       return new Response(JSON.stringify({ error: "photoUrl 필요" }), {
         status: 400,
@@ -70,7 +73,7 @@ Deno.serve(async (req) => {
           model: "gpt-4.1-mini",
           response_format: { type: "json_object" },
           messages: [
-            { role: "system", content: SYSTEM_PROMPT },
+            { role: "system", content: buildSystemPrompt(petName) },
             {
               role: "user",
               content: [
