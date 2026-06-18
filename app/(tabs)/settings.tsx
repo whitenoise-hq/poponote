@@ -76,7 +76,7 @@ export default function SettingsScreen() {
               {
                 icon: 'person-outline',
                 label: '내 계정',
-                subtitle: 'mom@example.com',
+                subtitle: auth.user?.email || auth.user?.user_metadata?.email || '',
                 onPress: () => router.push('/settings/account' as never),
               },
               // [2차] 알림 설정 — MVP 이후 구현

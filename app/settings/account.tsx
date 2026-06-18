@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, Pressable } from 'react-native'
+import { View, Pressable, Image } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
@@ -27,7 +27,10 @@ export default function AccountScreen() {
     }
   }
 
-  const email = user?.email ?? user?.user_metadata?.email ?? '-'
+  const name = user?.user_metadata?.name || user?.user_metadata?.full_name || '-'
+  const email = user?.email || user?.user_metadata?.email || '-'
+  const rawAvatarUrl: string | null = user?.user_metadata?.avatar_url || null
+  const avatarUrl = rawAvatarUrl?.replace('http://', 'https://') ?? null
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.cream.DEFAULT }} edges={['top']}>
@@ -46,14 +49,26 @@ export default function AccountScreen() {
       </View>
 
       <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 16 }}>
-        <Card style={{ padding: 16, gap: 12 }}>
+        <Card style={{ padding: 16, gap: 16 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-            <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' }}>
-              <Ionicons name="person" size={22} color={colors.primary.DEFAULT} />
+            {avatarUrl ? (
+              <Image source={{ uri: avatarUrl }} style={{ width: 44, height: 44, borderRadius: 22 }} />
+            ) : (
+              <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' }}>
+                <Ionicons name="person" size={22} color={colors.primary.DEFAULT} />
+              </View>
+            )}
+            <Text variant="subtitle" style={{ color: colors.ink.DEFAULT, flex: 1 }}>{name}</Text>
+          </View>
+
+          <View style={{ gap: 10, paddingTop: 12, borderTopWidth: 1, borderTopColor: colors.cream[200] }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text variant="caption" style={{ color: colors.muted.foreground }}>이메일</Text>
+              <Text variant="body" style={{ color: colors.ink.DEFAULT }}>{email}</Text>
             </View>
-            <View style={{ flex: 1 }}>
-              <Text variant="label" style={{ color: colors.ink.DEFAULT }}>{email}</Text>
-              <Text variant="caption" style={{ color: colors.muted.foreground, marginTop: 2 }}>카카오 로그인</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text variant="caption" style={{ color: colors.muted.foreground }}>로그인 방식</Text>
+              <Text variant="body" style={{ color: colors.ink.DEFAULT }}>카카오</Text>
             </View>
           </View>
         </Card>
