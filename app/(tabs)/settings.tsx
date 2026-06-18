@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ScrollView, View, Pressable } from 'react-native'
+import { ScrollView, View, Pressable, ActivityIndicator } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
@@ -24,10 +24,18 @@ const sectionBorder = {
 export default function SettingsScreen() {
   const router = useRouter()
   const auth = useAuth()
-  const { data: pet } = usePet()
+  const { data: pet, isLoading } = usePet()
   const { data: family } = useFamily()
   const { data: members } = useMembers()
   const [logoutVisible, setLogoutVisible] = useState(false)
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: colors.cream.DEFAULT, alignItems: 'center', justifyContent: 'center' }} edges={['top']}>
+        <ActivityIndicator size="large" color={colors.primary.DEFAULT} />
+      </SafeAreaView>
+    )
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.cream.DEFAULT }} edges={['top']}>

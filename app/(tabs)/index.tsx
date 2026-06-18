@@ -1,4 +1,4 @@
-import { ScrollView, View } from 'react-native'
+import { ScrollView, View, ActivityIndicator } from 'react-native'
 import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -20,10 +20,18 @@ import type { CareKind } from '@/types'
 
 export default function HomeScreen() {
   const router = useRouter()
-  const { data: pet } = usePet()
+  const { data: pet, isLoading: petLoading } = usePet()
   const { data: careLogs } = useCareLogs(TODAY)
   const addCareLog = useAddCareLog(TODAY)
   const { data: todayEntry } = useTodayEntry()
+
+  if (petLoading) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: colors.cream.DEFAULT, alignItems: 'center', justifyContent: 'center' }} edges={['top']}>
+        <ActivityIndicator size="large" color={colors.primary.DEFAULT} />
+      </SafeAreaView>
+    )
+  }
 
   function handleAddCare(kind: CareKind, memo: string | null) {
     addCareLog.mutate({ kind, memo })

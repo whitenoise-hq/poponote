@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, ScrollView } from 'react-native'
+import { View, ScrollView, ActivityIndicator } from 'react-native'
 import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -18,7 +18,7 @@ export default function DiaryScreen() {
   const now = new Date()
   const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
   const [selectedDate, setSelectedDate] = useState<string>(todayStr)
-  const { data: entries } = useDiaryEntries()
+  const { data: entries, isLoading } = useDiaryEntries()
 
   const { data: allCareLogs_ } = useAllCareLogs()
   const { data: selectedCareLogs_ } = useCareLogs(selectedDate)
