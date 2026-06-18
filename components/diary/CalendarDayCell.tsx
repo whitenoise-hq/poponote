@@ -32,7 +32,7 @@ export function CalendarDayCell({
     >
       <View
         style={[
-          { width: 30, height: 30, borderRadius: 15, alignItems: 'center', justifyContent: 'center' },
+          { width: 30, height: 30, borderRadius: 15, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' },
           isSelected
             ? { backgroundColor: colors.primary.DEFAULT }
             : isToday
