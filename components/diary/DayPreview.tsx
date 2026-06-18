@@ -32,7 +32,7 @@ function todayStr(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
-export function DayPreview({ date, entry, careLogs, onPress, onPressWrite }: DayPreviewProps) {
+export function   DayPreview({ date, entry, careLogs, onPress, onPressWrite }: DayPreviewProps) {
   const isToday = date === todayStr()
   const hasCare = careLogs.length > 0
   const { data: reactions } = useReactions(entry?.id ?? null)

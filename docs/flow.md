@@ -244,19 +244,26 @@ supabase gen types typescript --linked > types/database.ts   # TS 타입 생성
 
 ---
 
-## P8 — AI 일기 생성 Edge Function `[MVP]` ← 진행 중
+## P8 — AI 일기 생성 Edge Function `[MVP]` ✅ 완료
 
 **목표**: 사진 업로드 → AI가 일기 제목+내용 자동 생성 (tech-stack.md 4). **API 키는 Edge Function secrets에만.**
 
 > **변경 이력**: 기존 일러스트 변환(Stability AI SD3)은 품질 문제(동물 변경)로 제거. AI 일기 작성 기능으로 대체.
 
-**작업**
-- 🔲 Edge Function `generate-diary`: OpenAI GPT-4.1 Mini (비전+텍스트). 사진 분석 → 제목+내용 JSON 반환.
-- 🔲 `lib/generate-diary.ts`: 클라이언트 래퍼, title + body 반환.
-- 🔲 일기 등록 플로우 변경: 사진 선택 → 업로드 → AI 생성 → 제목/내용 자동 채움 → 사용자 수정 → 저장.
-- 🔲 로딩 오버레이: "사진 업로드 중..." → "AI가 일기 작성 중..." + 스피너.
-- 🔲 제목/내용 비활성화: 사진 선택 전에는 비활성화, AI 완료 후 편집 가능.
-- 🔲 기존 일러스트 관련 코드 정리 (FlipImage, illustration_url 우선 표시 등).
+**완료 작업**
+- ✅ Edge Function `generate-diary`: OpenAI GPT-4.1 Mini (비전+텍스트). 사진 분석 → 제목+내용 JSON 반환.
+- ✅ `lib/generate-diary.ts`: 클라이언트 래퍼, title + body 반환.
+- ✅ 일기 등록 플로우 변경: 사진 선택 → 업로드 → AI 생성 → 제목/내용 자동 채움 → 사용자 수정 → 저장.
+- ✅ 로딩 오버레이: "사진 업로드 중..." → "AI가 일기 작성 중..." + 스피너.
+- ✅ 제목/내용 비활성화: 사진 선택 전에는 비활성화, AI 완료 후 편집 가능.
+- ✅ 기존 일러스트 관련 코드 전면 정리 (FlipImage, illustration_url, transform-image, lib/transform.ts 삭제).
+- ✅ illustration_url 컬럼 삭제 마이그레이션, illustrations 버킷·정책 제거.
+- ✅ 일기 삭제 시 Storage 사진 함께 삭제.
+- ✅ 앨범 탭: photo_url 기반으로 전환.
+
+**산출물**: `supabase/functions/generate-diary/index.ts`, `lib/generate-diary.ts`, `app/entry/new.tsx`(리워크), `hooks/use-diary.ts`(useGenerateDiaryText 추가), `supabase/migrations/20260618000000_remove_illustration.sql`
+
+**DoD**: ✅ 사진 업로드 → AI 제목/내용 생성 → 사용자 수정 → 저장 동작 확인.
 
 ---
 

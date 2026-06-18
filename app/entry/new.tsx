@@ -20,6 +20,7 @@ export default function NewEntryScreen() {
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
   const [progressMessage, setProgressMessage] = useState<string | null>(null)
+  const [successVisible, setSuccessVisible] = useState(false)
   const [errorVisible, setErrorVisible] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -60,7 +61,6 @@ export default function NewEntryScreen() {
   function handleSave() {
     if (!canSave || !generatedPhotoUrl) return
 
-    setProgressMessage('일기 저장 중...')
     addEntry.mutate(
       {
         title: title.trim(),
@@ -68,12 +68,8 @@ export default function NewEntryScreen() {
         photoUrl: generatedPhotoUrl,
       },
       {
-        onSuccess: () => {
-          setProgressMessage(null)
-          router.back()
-        },
+        onSuccess: () => setSuccessVisible(true),
         onError: (err) => {
-          setProgressMessage(null)
           setErrorMessage(err instanceof Error ? err.message : '저장에 실패했습니다.')
           setErrorVisible(true)
         },
@@ -98,7 +94,7 @@ export default function NewEntryScreen() {
       </View>
 
       {/* 생성/저장 중 오버레이 */}
-      {isBusy ? (
+      {isGenerating ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 16, paddingHorizontal: 32, paddingBottom: 100 }}>
           {localPhotoUrl && (
             <Image
@@ -204,6 +200,16 @@ export default function NewEntryScreen() {
           />
         </ScrollView>
       )}
+
+      <AlertModal
+        visible={successVisible}
+        title="저장 완료"
+        message="일기가 저장되었습니다."
+        onConfirm={() => {
+          setSuccessVisible(false)
+          router.back()
+        }}
+      />
 
       <AlertModal
         visible={errorVisible}

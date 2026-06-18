@@ -73,12 +73,20 @@ export default function DiaryDetailScreen() {
                     {formatDateHeader(date)}
                 </Text>
                 {isOwner ? (
-                    <Pressable
-                        onPress={() => setDeleteVisible(true)}
-                        style={{ width: 32, height: 32, alignItems: 'center', justifyContent: 'center' }}
-                    >
-                        <Ionicons name="trash-outline" size={20} color={colors.danger} />
-                    </Pressable>
+                    <View style={{ flexDirection: 'row', gap: 4 }}>
+                        <Pressable
+                            onPress={() => router.push(`/entry/${entry.id}/edit` as never)}
+                            style={{ width: 32, height: 32, alignItems: 'center', justifyContent: 'center' }}
+                        >
+                            <Ionicons name="create-outline" size={20} color={colors.ink.DEFAULT} />
+                        </Pressable>
+                        <Pressable
+                            onPress={() => setDeleteVisible(true)}
+                            style={{ width: 32, height: 32, alignItems: 'center', justifyContent: 'center' }}
+                        >
+                            <Ionicons name="trash-outline" size={20} color={colors.danger} />
+                        </Pressable>
+                    </View>
                 ) : (
                     <View style={{ width: 32 }} />
                 )}

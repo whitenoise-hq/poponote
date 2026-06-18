@@ -145,6 +145,36 @@ export function useAddDiaryEntry() {
   })
 }
 
+/**
+ * 일기 수정 (제목·내용만)
+ */
+export function useUpdateDiaryEntry() {
+  const qc = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      entryId,
+      title,
+      body,
+    }: {
+      entryId: string
+      title: string
+      body: string
+    }) => {
+      const { error } = await supabase
+        .from('diary_entries')
+        .update({ title, body })
+        .eq('id', entryId)
+
+      if (error) throw error
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['diaryEntries'] })
+      qc.invalidateQueries({ queryKey: ['diaryEntry'] })
+    },
+  })
+}
+
 export function useDeleteDiaryEntry() {
   const qc = useQueryClient()
 
