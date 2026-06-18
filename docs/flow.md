@@ -267,21 +267,22 @@ supabase gen types typescript --linked > types/database.ts   # TS 타입 생성
 
 ---
 
-## P9 — 앨범 탭 `[MVP]` ← 다음 단계
+## P9 — 앨범 탭 `[MVP]` ✅ 완료
 
 **목표**: 일기 사진을 연·월 폴더로 모아보기 (screens.md 6).
 
 **선행조건**: P8.
 
-**작업**
-- 폴더 목록(6.2): 연·월 폴더 최신순, 표지=그 달 첫 장+"YYYY.MM"+총 장수, **기록 있는 달만**.
-- 월 그리드(6.3): 가로 3열, 최신순.
-- 사진 상세(6.4): 크게 보기, 저장(다운로드)·공유, "이 사진의 다이어리로 이동".
-- `hooks/use-album.ts`: `photo_url` 기반 쿼리로 전환 (기존 `illustration_url` → `photo_url`).
+**완료 작업**
+- ✅ 폴더 목록(6.2): 연·월 폴더 최신순, 표지=그 달 첫 장+"YYYY.MM"+총 장수, 기록 있는 달만.
+- ✅ 월 그리드(6.3): 가로 3열, 최신순. date 타입 범위 쿼리로 수정.
+- ✅ 사진 상세(6.4): 크게 보기, 저장(갤러리/expo-media-library)·공유(expo-sharing), 다이어리로 이동.
+- ✅ `hooks/use-album.ts`: `photo_url` 기반 쿼리 전환 완료.
+- ✅ `app.json` + `Info.plist`: 사진 갤러리 권한 설정.
 
-**산출물**: `app/(tabs)/album.tsx`, `app/album/[month].tsx`, `app/album/photo/[id].tsx`, `hooks/use-album.ts`
+**산출물**: `app/(tabs)/album.tsx`, `app/album/[month].tsx`, `app/photo-detail/[id].tsx`, `hooks/use-album.ts`, `components/album/PhotoDetail.tsx`
 
-**DoD**: 폴더→그리드→상세 이동, 저장/공유, 날짜 상세로 점프.
+**DoD**: ✅ 폴더→그리드→상세 이동, 저장/공유, 날짜 상세로 점프 동작 확인.
 
 ---
 
