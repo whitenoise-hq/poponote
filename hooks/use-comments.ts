@@ -34,7 +34,29 @@ export function useAddComment(entryId: string) {
       })
       if (error) throw error
     },
-    onSuccess: () => {
+    onMutate: async (body) => {
+      if (!user) return
+
+      const optimistic: Comment = {
+        id: `temp-${Date.now()}`,
+        entry_id: entryId,
+        author_id: user.id,
+        body,
+        created_at: new Date().toISOString(),
+      }
+
+      await qc.cancelQueries({ queryKey: ['comments', entryId] })
+      const prev = qc.getQueryData<Comment[]>(['comments', entryId])
+      qc.setQueryData<Comment[]>(['comments', entryId], (old) => [...(old ?? []), optimistic])
+
+      return { prev }
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.prev) {
+        qc.setQueryData(['comments', entryId], context.prev)
+      }
+    },
+    onSettled: () => {
       qc.invalidateQueries({ queryKey: ['comments', entryId] })
     },
   })
@@ -48,7 +70,21 @@ export function useDeleteComment(entryId: string) {
       const { error } = await supabase.from('comments').delete().eq('id', commentId)
       if (error) throw error
     },
-    onSuccess: () => {
+    onMutate: async (commentId) => {
+      await qc.cancelQueries({ queryKey: ['comments', entryId] })
+      const prev = qc.getQueryData<Comment[]>(['comments', entryId])
+      qc.setQueryData<Comment[]>(['comments', entryId], (old) =>
+        (old ?? []).filter((c) => c.id !== commentId)
+      )
+
+      return { prev }
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.prev) {
+        qc.setQueryData(['comments', entryId], context.prev)
+      }
+    },
+    onSettled: () => {
       qc.invalidateQueries({ queryKey: ['comments', entryId] })
     },
   })

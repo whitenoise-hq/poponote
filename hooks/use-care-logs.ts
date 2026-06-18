@@ -66,7 +66,32 @@ export function useAddCareLog(date: string) {
       })
       if (error) throw error
     },
-    onSuccess: () => {
+    onMutate: async ({ kind, memo }) => {
+      if (!user || !member || !pet) return
+
+      const optimistic: CareLog = {
+        id: `temp-${Date.now()}`,
+        family_id: member.family_id,
+        pet_id: pet.id,
+        date,
+        kind,
+        author_id: user.id,
+        logged_at: new Date().toISOString(),
+        memo,
+      }
+
+      await qc.cancelQueries({ queryKey: ['careLogs', member.family_id, date] })
+      const prev = qc.getQueryData<CareLog[]>(['careLogs', member.family_id, date])
+      qc.setQueryData<CareLog[]>(['careLogs', member.family_id, date], (old) => [...(old ?? []), optimistic])
+
+      return { prev }
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.prev && member) {
+        qc.setQueryData(['careLogs', member.family_id, date], context.prev)
+      }
+    },
+    onSettled: () => {
       qc.invalidateQueries({ queryKey: ['careLogs'] })
       qc.invalidateQueries({ queryKey: ['allCareLogs'] })
     },

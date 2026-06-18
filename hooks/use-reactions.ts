@@ -27,7 +27,6 @@ export function useToggleReaction(entryId: string) {
     mutationFn: async () => {
       if (!user) throw new Error('로그인 필요')
 
-      // 이미 반응했는지 확인
       const { data: existing } = await supabase
         .from('reactions')
         .select('id')
@@ -46,7 +45,28 @@ export function useToggleReaction(entryId: string) {
         })
       }
     },
-    onSuccess: () => {
+    onMutate: async () => {
+      if (!user) return
+
+      await qc.cancelQueries({ queryKey: ['reactions', entryId] })
+      const prev = qc.getQueryData<Reaction[]>(['reactions', entryId])
+      const old = prev ?? []
+      const mine = old.find((r) => r.author_id === user.id && r.kind === 'heart')
+
+      const next = mine
+        ? old.filter((r) => r.id !== mine.id)
+        : [...old, { id: `temp-${Date.now()}`, entry_id: entryId, author_id: user.id, kind: 'heart' as const }]
+
+      qc.setQueryData<Reaction[]>(['reactions', entryId], next)
+
+      return { prev }
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.prev) {
+        qc.setQueryData(['reactions', entryId], context.prev)
+      }
+    },
+    onSettled: () => {
       qc.invalidateQueries({ queryKey: ['reactions', entryId] })
     },
   })
