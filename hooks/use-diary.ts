@@ -142,6 +142,8 @@ export function useAddDiaryEntry() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['diaryEntries'] })
       qc.invalidateQueries({ queryKey: ['diaryEntry'] })
+      qc.invalidateQueries({ queryKey: ['albumMonths'] })
+      qc.invalidateQueries({ queryKey: ['albumMonth'] })
     },
   })
 }
@@ -211,6 +213,8 @@ export function useDeleteDiaryEntry() {
       qc.invalidateQueries({ queryKey: ['diaryEntry'] })
       qc.invalidateQueries({ queryKey: ['comments'] })
       qc.invalidateQueries({ queryKey: ['reactions'] })
+      qc.invalidateQueries({ queryKey: ['albumMonths'] })
+      qc.invalidateQueries({ queryKey: ['albumMonth'] })
     },
   })
 }
