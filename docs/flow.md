@@ -308,17 +308,27 @@ supabase gen types typescript --linked > types/database.ts   # TS 타입 생성
 
 ---
 
-## P11 — 출시 준비 `[MVP]`
+## P11 — 출시 준비 `[MVP]` ✅ 완료
 
 **목표**: 스토어 제출 가능 상태.
 
-**작업**
-- 약관/개인정보처리방침 링크, 회원 탈퇴 흐름 최종 점검.
-- 앱 아이콘·스플래시(`assets/`) 포포노트 자체 에셋으로 교체(현재 Expo 템플릿 잔여물 정리).
-- `pnpm typecheck`·lint 통과, 빈 상태/에러/로딩 처리 점검.
-- Expo 빌드 → App Store / Google Play 제출. Edge Functions는 Supabase CLI 배포.
+**완료 작업**
+- ✅ 약관/개인정보처리방침 — P10에서 구현 완료.
+- ✅ 회원 탈퇴 흐름 — P10에서 구현 완료.
+- ✅ 앱 아이콘(발자국) iOS/Android 교체, 스플래시(크림 배경+발자국) 교체.
+- ✅ Expo 템플릿 잔여 이미지 10개 삭제.
+- ✅ TypeScript 에러 없음, console.log 클린.
+- ✅ 4개 탭 화면 로딩 스피너 추가.
+- ✅ Android 캘린더 borderRadius 수정.
+- ✅ Edge Functions 배포 완료 (generate-diary, send-inquiry).
 
-**DoD**: 타입·lint 클린, 핵심 플로우 E2E 통과, 빌드 산출.
+**남은 외부 설정 (코드 외)**
+- 🔲 카카오 개발자 콘솔: iOS 번들 ID, Android 패키지+키해시, Web 도메인 등록 확인.
+- 🔲 카카오 동의항목: 이메일 필수 동의 설정.
+- 🔲 앱 버전 `0.1.0` → `1.0.0` (출시 직전 변경).
+- 🔲 Expo 빌드 → App Store / Google Play 제출.
+
+**DoD**: ✅ 타입 클린, 로딩 처리, 아이콘/스플래시 교체 완료. 스토어 제출은 외부 설정 후 진행.
 
 ---
 
