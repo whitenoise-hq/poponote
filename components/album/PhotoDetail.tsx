@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { View, Image, Pressable, useWindowDimensions } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import * as MediaLibrary from 'expo-media-library'
+import * as MediaLibrary from 'expo-media-library/legacy'
 import * as FileSystem from 'expo-file-system/legacy'
 import * as Sharing from 'expo-sharing'
 import { Text, AlertModal } from '@/components/ui'

@@ -9,7 +9,11 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "com.devwoodie.poponote"
+      "bundleIdentifier": "com.devwoodie.poponote",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "사진을 갤러리에 저장하기 위해 접근 권한이 필요합니다.",
+        "NSPhotoLibraryAddUsageDescription": "사진을 갤러리에 저장하기 위해 접근 권한이 필요합니다."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -37,7 +41,15 @@
         }
       ],
       "expo-web-browser",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      "expo-sharing",
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "사진을 갤러리에 저장하기 위해 접근 권한이 필요합니다.",
+          "savePhotosPermission": "사진을 갤러리에 저장하기 위해 접근 권한이 필요합니다."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
