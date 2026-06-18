@@ -286,21 +286,25 @@ supabase gen types typescript --linked > types/database.ts   # TS 타입 생성
 
 ---
 
-## P10 — 설정 탭 `[MVP]`
+## P10 — 설정 탭 `[MVP]` ✅ 완료
 
 **목표**: screens.md 7.1.
 
 **선행조건**: P3.
 
-**작업**
-- 가족 그룹: 초대 코드 보기·공유(카톡 등), 멤버 목록, 내 닉네임 변경, 그룹 나가기.
-- 반려동물 프로필: 이름·종·생일·입양일·프로필 사진 수정.
-- 계정: 로그인 정보 표시, 로그아웃, **회원 탈퇴**(스토어 심사 필수).
-- 앱 정보: 버전, 이용약관·개인정보처리방침, 문의하기, 오픈소스 라이선스.
+**완료 작업**
+- ✅ 가족 그룹: 초대 코드 보기·복사, 멤버 목록, 닉네임 변경(모달).
+- ✅ 반려동물 프로필: 이름·종·생일·체중·성별·중성화·사진 수정 (useUpdatePet + Storage 업로드).
+- ✅ 내 계정: 카카오 프로필 사진·이름·이메일·로그인 방식 표시. 회원 탈퇴(delete_account RPC).
+- ✅ 로그아웃: 확인 모달.
+- ✅ 이용약관: 11개 조항 (terms.tsx 신규).
+- ✅ 개인정보처리방침: 9개 조항 보강 (제3자 제공·처리 위탁·안전성 확보·책임자 추가).
+- ✅ 도움말 & 피드백: FAQ 8개 + 앱 내 문의 메일 전송 (Resend API, send-inquiry Edge Function).
+- ✅ 버전 표시.
 
-**산출물**: `app/(tabs)/settings.tsx`, `app/settings/*`
+**산출물**: `app/(tabs)/settings.tsx`, `app/settings/*`, `hooks/use-pet.ts`(useUpdatePet), `hooks/use-current-user.ts`(useUpdateNickname), `supabase/functions/send-inquiry/`, `lib/constants.ts`
 
-**DoD**: 코드 공유, 닉네임 변경, 프로필 수정, 로그아웃·탈퇴 동작.
+**DoD**: ✅ 코드 복사, 닉네임 변경, 프로필 수정, 로그아웃·탈퇴, 이용약관, 개인정보처리방침, 문의하기 동작 확인.
 
 ---
 

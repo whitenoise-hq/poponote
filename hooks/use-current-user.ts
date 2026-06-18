@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from './use-auth'
 import type { Member } from '@/types'
@@ -20,5 +20,24 @@ export function useCurrentUser() {
       return data
     },
     enabled: !!user,
+  })
+}
+
+export function useUpdateNickname() {
+  const qc = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({ memberId, nickname }: { memberId: string; nickname: string }) => {
+      const { error } = await supabase
+        .from('members')
+        .update({ nickname })
+        .eq('id', memberId)
+
+      if (error) throw error
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['currentUser'] })
+      qc.invalidateQueries({ queryKey: ['members'] })
+    },
   })
 }

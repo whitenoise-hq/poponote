@@ -8,6 +8,7 @@ interface ModalProps {
   visible: boolean
   onClose: () => void
   title?: string
+  showClose?: boolean
   children: ReactNode
   style?: ViewStyle
 }
@@ -15,7 +16,7 @@ interface ModalProps {
 /**
  * 공통 바텀시트/센터 모달. title + 닫기 버튼 + children.
  */
-export function Modal({ visible, onClose, title, children, style }: ModalProps) {
+export function Modal({ visible, onClose, title, showClose = true, children, style }: ModalProps) {
   return (
     <RNModal
       visible={visible}
@@ -34,9 +35,11 @@ export function Modal({ visible, onClose, title, children, style }: ModalProps) 
             ) : (
               <View style={{ flex: 1 }} />
             )}
-            <Pressable onPress={onClose} style={styles.closeButton}>
-              <Ionicons name="close" size={20} color={colors.ink[400]} />
-            </Pressable>
+            {showClose && (
+              <Pressable onPress={onClose} style={styles.closeButton}>
+                <Ionicons name="close" size={20} color={colors.ink[400]} />
+              </Pressable>
+            )}
           </View>
 
           {/* Content */}

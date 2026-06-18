@@ -9,7 +9,7 @@ import { colors } from '@/theme/colors'
 import { createFamilyWithPet, joinFamily } from '@/lib/onboarding'
 
 const NICKNAME_PRESETS = ['엄마', '아빠', '누나', '형', '동생', '할머니', '할아버지']
-const ROLE_PRESETS = ['보호자', '가족', '친구', '이웃']
+const ROLE_PRESETS = ['가족', '친구', '이웃']
 
 /** 영어, 숫자, 한글만 허용 */
 function sanitize(text: string): string {

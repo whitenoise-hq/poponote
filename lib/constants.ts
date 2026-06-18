@@ -1,0 +1,1 @@
+export const POLICY_EFFECTIVE_DATE = '2026년 6월 18일'

@@ -94,6 +94,11 @@ export default function SettingsScreen() {
               //   onPress: () => {},
               // },
               {
+                icon: 'document-text-outline',
+                label: '이용약관',
+                onPress: () => router.push('/settings/terms' as never),
+              },
+              {
                 icon: 'lock-closed-outline',
                 label: '개인정보처리방침',
                 onPress: () => router.push('/settings/privacy' as never),
