@@ -323,9 +323,9 @@ supabase gen types typescript --linked > types/database.ts   # TS 타입 생성
 - ✅ Edge Functions 배포 완료 (generate-diary, send-inquiry).
 
 **남은 외부 설정 (코드 외)**
-- 🔲 카카오 개발자 콘솔: iOS 번들 ID, Android 패키지+키해시, Web 도메인 등록 확인.
-- 🔲 카카오 동의항목: 이메일 필수 동의 설정.
-- 🔲 앱 버전 `0.1.0` → `1.0.0` (출시 직전 변경).
+- ✅ 카카오 개발자 콘솔: iOS 번들 ID, Android 패키지+키해시, Web 도메인 등록 완료.
+- ✅ 카카오 동의항목: 이메일 필수 동의 설정 완료.
+- ✅ 앱 버전 `1.0.0` 설정 완료.
 - 🔲 Expo 빌드 → App Store / Google Play 제출.
 
 **DoD**: ✅ 타입 클린, 로딩 처리, 아이콘/스플래시 교체 완료. 스토어 제출은 외부 설정 후 진행.
