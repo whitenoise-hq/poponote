@@ -231,12 +231,12 @@ supabase gen types typescript --linked > types/database.ts   # TS 타입 생성
 - ✅ 미사용 파일 정리 (tailwind.config.js, figma-code 등).
 
 **추후 보완 필요 (TODO)**
-- 🔲 다이어리 캘린더: 전체 날짜의 케어/기록 유무 점 표시 — 현재 선택 날짜만 조회. 전체 월 데이터를 한번에 가져오는 쿼리 최적화 필요.
-- 🔲 리스트뷰 좋아요/댓글 카운트 — 현재 0으로 표시. 리스트 아이템별 hook 호출은 비효율적이므로 서버에서 집계(count) 조인하거나 별도 쿼리 필요.
-- 🔲 케어 기록 본인 줄 길게눌러 삭제 UI (useDeleteCareLog hook은 준비됨, UI 연결 필요).
-- 🔲 일기 수정 화면 (app/entry/[id]/edit.tsx) — 현재 작성만 가능, 수정 미구현.
-- 🔲 낙관적 업데이트(optimistic update) — 케어 추가/댓글/반응에 적용하면 UX 개선.
-- 🔲 로딩/에러/빈 상태 처리 점검 — 실데이터 환경에서 각 화면 검증.
+- ✅ 다이어리 캘린더: 전체 날짜의 케어/기록 유무 점 표시 — useAllCareLogs hook 추가, 전체 월 데이터로 점 표시.
+- ✅ 리스트뷰 좋아요/댓글 카운트 — DiaryListCard에서 useReactions/useComments hook 직접 호출.
+- ✅ 케어 기록 본인 줄 길게눌러 삭제 UI — 홈 CareCard에서 구현 완료 (다이어리 상세에서는 미적용, 홈에서만 삭제).
+- ✅ 일기 수정 화면 (app/entry/[id]/edit.tsx) — 작성자만 수정 가능, 수정 완료 모달.
+- ✅ 낙관적 업데이트(optimistic update) — 케어 추가, 댓글 추가/삭제, 반응 토글에 적용.
+- 🔲 로딩/에러/빈 상태 처리 점검 — 실데이터 환경에서 각 화면 검증. 전체 연동 후 마지막에 진행.
 
 ---
 
