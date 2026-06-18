@@ -21,8 +21,6 @@ export function ListView({ entries, careLogs, onSelectDate }: ListViewProps) {
         <DiaryListCard
           entry={item}
           careLogs={careLogs.filter((c) => c.date === item.date)}
-          likeCount={0}
-          commentCount={0}
           onPress={() => onSelectDate(item.date)}
         />
       )}
