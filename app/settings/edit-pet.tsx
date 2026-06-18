@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import { View, ScrollView, Pressable, Image, TextInput } from 'react-native'
+import { useState, useEffect } from 'react'
+import { View, ScrollView, Pressable, Image, TextInput, ActivityIndicator } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 
 import { Text, AlertModal, DatePickerModal } from '@/components/ui'
-import { usePet } from '@/hooks/use-pet'
+import { usePet, useUpdatePet } from '@/hooks/use-pet'
 import { colors } from '@/theme/colors'
 import * as ImagePicker from 'expo-image-picker'
 
@@ -30,19 +30,45 @@ const inputStyle = {
 
 export default function EditPetScreen() {
   const router = useRouter()
-  const { data: pet } = usePet()
+  const { data: pet, isLoading } = usePet()
+  const updatePet = useUpdatePet()
 
-  const [name, setName] = useState(pet?.name ?? '')
-  const [species, setSpecies] = useState(pet?.species ?? '')
-  const [birthday, setBirthday] = useState(pet?.birthday ?? '')
-  const [weight, setWeight] = useState(pet?.weight?.toString() ?? '')
-  const [sex, setSex] = useState<'male' | 'female' | null>(pet?.sex ?? null)
-  const [neutered, setNeutered] = useState(pet?.neutered ?? false)
-  const [profileImage, setProfileImage] = useState<string | null>(pet?.profile_url ?? null)
+  const [name, setName] = useState('')
+  const [species, setSpecies] = useState('')
+  const [birthday, setBirthday] = useState('')
+  const [weight, setWeight] = useState('')
+  const [sex, setSex] = useState<'male' | 'female' | null>(null)
+  const [neutered, setNeutered] = useState(false)
+  const [profileImage, setProfileImage] = useState<string | null>(null)
+  const [initialized, setInitialized] = useState(false)
   const [savedVisible, setSavedVisible] = useState(false)
+  const [errorVisible, setErrorVisible] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
   const [datePickerVisible, setDatePickerVisible] = useState(false)
 
-  const canSave = name.trim().length > 0 && species.trim().length > 0 && birthday.trim().length > 0
+  useEffect(() => {
+    if (pet && !initialized) {
+      setName(pet.name ?? '')
+      setSpecies(pet.species ?? '')
+      setBirthday(pet.birthday ?? '')
+      setWeight(pet.weight?.toString() ?? '')
+      setSex(pet.sex ?? null)
+      setNeutered(pet.neutered ?? false)
+      setProfileImage(pet.profile_url ?? null)
+      setInitialized(true)
+    }
+  }, [pet, initialized])
+
+  const isSaving = updatePet.isPending
+  const canSave = name.trim().length > 0 && species.trim().length > 0 && birthday.trim().length > 0 && !isSaving
+
+  if (isLoading || !pet) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: colors.cream.DEFAULT, alignItems: 'center', justifyContent: 'center' }} edges={['top']}>
+        <ActivityIndicator size="large" color={colors.primary.DEFAULT} />
+      </SafeAreaView>
+    )
+  }
 
   async function handlePickImage() {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -57,8 +83,27 @@ export default function EditPetScreen() {
   }
 
   function handleSave() {
-    if (!canSave) return
-    setSavedVisible(true)
+    if (!canSave || !pet) return
+
+    updatePet.mutate(
+      {
+        petId: pet.id,
+        name: name.trim(),
+        species: species.trim(),
+        birthday: birthday.trim(),
+        weight: weight.trim() ? parseFloat(weight.trim()) : null,
+        sex,
+        neutered,
+        profileImageUri: profileImage,
+      },
+      {
+        onSuccess: () => setSavedVisible(true),
+        onError: (err) => {
+          setErrorMessage(err instanceof Error ? err.message : '저장에 실패했습니다.')
+          setErrorVisible(true)
+        },
+      },
+    )
   }
 
   return (
@@ -200,6 +245,13 @@ export default function EditPetScreen() {
         title="저장 완료"
         message="반려동물 프로필이 수정되었습니다."
         onConfirm={() => { setSavedVisible(false); router.back() }}
+      />
+
+      <AlertModal
+        visible={errorVisible}
+        title="오류"
+        message={errorMessage}
+        onConfirm={() => setErrorVisible(false)}
       />
 
       <DatePickerModal

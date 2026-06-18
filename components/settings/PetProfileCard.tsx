@@ -87,19 +87,20 @@ export function PetProfileCard({ pet, onEdit }: PetProfileCardProps) {
       </View>
 
       {/* Stats row */}
-      <View style={{ flexDirection: 'row', marginTop: 16, justifyContent: 'space-around', borderTopWidth: 1, borderTopColor: colors.cream[200], paddingTop: 12 }}>
-        <View style={{ alignItems: 'center' }}>
-          <Text variant="caption" style={{ color: colors.muted.foreground }}>나이</Text>
-          <Text variant="label" style={{ color: colors.ink.DEFAULT, marginTop: 2 }}>{getAge(pet.birthday)}</Text>
-        </View>
-        <View style={{ alignItems: 'center' }}>
-          <Text variant="caption" style={{ color: colors.muted.foreground }}>체중</Text>
-          <Text variant="label" style={{ color: colors.ink.DEFAULT, marginTop: 2 }}>{pet.weight ? `${pet.weight}kg` : '-'}</Text>
-        </View>
-        <View style={{ alignItems: 'center' }}>
-          <Text variant="caption" style={{ color: colors.muted.foreground }}>기록</Text>
-          <Text variant="label" style={{ color: colors.ink.DEFAULT, marginTop: 2 }}>{daysRecorded}일</Text>
-        </View>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16, borderTopWidth: 1, borderTopColor: colors.cream[200], paddingTop: 12 }}>
+        {[
+          { label: '나이', value: getAge(pet.birthday) },
+          { label: '체중', value: pet.weight ? `${pet.weight}kg` : '-' },
+          { label: '기록', value: `${daysRecorded}일` },
+        ].map((item, i) => (
+          <View key={item.label} style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+            {i > 0 && <View style={{ width: 1, height: 28, backgroundColor: colors.cream[200] }} />}
+            <View style={{ flex: 1, alignItems: 'center' }}>
+              <Text variant="caption" style={{ color: colors.muted.foreground }}>{item.label}</Text>
+              <Text variant="label" style={{ color: colors.ink.DEFAULT, marginTop: 2 }}>{item.value}</Text>
+            </View>
+          </View>
+        ))}
       </View>
     </Card>
   )
