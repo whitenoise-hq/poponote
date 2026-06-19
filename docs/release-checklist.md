@@ -8,7 +8,7 @@
 - [ ] 앱 이름: 포포노트 / 부제: 가족이 함께 쓰는 반려동물 다이어리
 - [ ] 설명: 앱 기능 소개 (AI 일기, 케어 기록, 가족 공유 등)
 - [ ] 카테고리: 라이프스타일
-- [ ] 개인정보처리방침 URL (웹 URL 필요 — Notion 페이지 등)
+- [x] 개인정보처리방침 URL: https://poponote.devwoodie.com/privacy
 - [ ] EAS Build: `eas build --platform ios` → App Store Connect 업로드
 - [ ] 심사 제출 (데모 계정 정보 제공 — 카카오 테스트 계정)
 
@@ -18,7 +18,7 @@
 - [ ] 그래픽 이미지: 1024x500 배너 이미지 1장
 - [ ] 앱 이름/설명: 짧은 설명 (80자) + 긴 설명
 - [ ] 카테고리: 라이프스타일
-- [ ] 개인정보처리방침 URL (필수)
+- [x] 개인정보처리방침 URL: https://poponote.devwoodie.com/privacy
 - [ ] 콘텐츠 등급 설문 작성 (전체 이용가)
 - [ ] 타겟 연령: 만 13세 이상
 - [ ] 데이터 안전: 수집 데이터 항목 신고 (이메일, 사진, 이름 등)
@@ -27,7 +27,7 @@
 
 ## 공통 준비물
 
-- [ ] 개인정보처리방침 웹 URL (Notion 또는 간단 웹페이지)
+- [x] 개인정보처리방침 웹 URL: https://poponote.devwoodie.com/privacy
 - [ ] 스크린샷 캡처 (시뮬레이터에서 홈, AI 일기 작성, 다이어리, 앨범, 설정)
 - [ ] EAS Build 설정 (`eas build:configure` → `eas.json` 생성)
 - [ ] EAS 계정 연결 (`eas login`)
