@@ -38,6 +38,9 @@ yarn-error.*
 .env.*
 !.env.example
 
+# local-only docs (credentials, account identifiers — never commit)
+*.local.md
+
 # typescript
 *.tsbuildinfo
 
