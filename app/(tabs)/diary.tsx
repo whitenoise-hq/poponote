@@ -10,10 +10,12 @@ import { ListView } from '@/components/diary/ListView'
 import { DayPreview } from '@/components/diary/DayPreview'
 import { useDiaryEntries } from '@/hooks/use-diary'
 import { useCareLogs, useAllCareLogs } from '@/hooks/use-care-logs'
+import { useRefetchOnFocus } from '@/hooks/use-refetch-on-focus'
 import { colors } from '@/theme/colors'
 
 export default function DiaryScreen() {
   const router = useRouter()
+  useRefetchOnFocus([['diaryEntries'], ['allCareLogs'], ['careLogs']])
   const [mode, setMode] = useState<DiaryViewMode>('calendar')
   const now = new Date()
   const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`

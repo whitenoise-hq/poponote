@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, TextInput, Pressable, KeyboardAvoidingView, Platform } from 'react-native'
+import { View, TextInput, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { colors } from '@/theme/colors'
 
@@ -18,22 +18,18 @@ export function CommentInput({ onSend }: CommentInputProps) {
   }
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+        paddingHorizontal: 20,
+        paddingVertical: 12,
+        backgroundColor: colors.cream.DEFAULT,
+        borderTopWidth: 1,
+        borderTopColor: colors.cream[200],
+      }}
     >
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 8,
-          paddingHorizontal: 20,
-          paddingVertical: 12,
-          backgroundColor: colors.cream.DEFAULT,
-          borderTopWidth: 1,
-          borderTopColor: colors.cream[200],
-        }}
-      >
         <TextInput
           value={text}
           onChangeText={setText}
@@ -67,6 +63,5 @@ export function CommentInput({ onSend }: CommentInputProps) {
           <Ionicons name="arrow-up" size={18} color={colors.white} />
         </Pressable>
       </View>
-    </KeyboardAvoidingView>
   )
 }

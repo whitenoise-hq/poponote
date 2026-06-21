@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, ScrollView, Pressable } from 'react-native'
+import { View, ScrollView, Pressable, KeyboardAvoidingView, Platform } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -15,6 +15,7 @@ import { useCareLogs } from '@/hooks/use-care-logs'
 import { useComments, useAddComment, useDeleteComment } from '@/hooks/use-comments'
 import { useReactions, useToggleReaction } from '@/hooks/use-reactions'
 import { useAuth } from '@/hooks/use-auth'
+import { useRefetchOnFocus } from '@/hooks/use-refetch-on-focus'
 import { colors } from '@/theme/colors'
 
 function formatDateHeader(dateStr: string): string {
@@ -40,6 +41,8 @@ export default function DiaryDetailScreen() {
     const toggleReaction = useToggleReaction(entry?.id ?? '')
     const deleteEntry = useDeleteDiaryEntry()
 
+    useRefetchOnFocus([['diaryEntry'], ['careLogs'], ['comments'], ['reactions']])
+
     const [deleteVisible, setDeleteVisible] = useState(false)
     const isOwner = entry && user && entry.author_id === user.id
 
@@ -55,6 +58,10 @@ export default function DiaryDetailScreen() {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.cream.DEFAULT }} edges={['top']}>
+          <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          >
             {/* Header */}
             <View style={{
                 flexDirection: 'row',
@@ -132,6 +139,7 @@ export default function DiaryDetailScreen() {
                     <CommentInput onSend={(body) => addComment.mutate(body)} />
                 </SafeAreaView>
             )}
+          </KeyboardAvoidingView>
 
             {/* 삭제 확인 모달 */}
             <AlertModal

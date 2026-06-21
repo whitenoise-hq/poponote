@@ -10,12 +10,14 @@ import { usePet } from '@/hooks/use-pet'
 import { useCareLogs, useAddCareLog } from '@/hooks/use-care-logs'
 import { useTodayEntry } from '@/hooks/use-diary'
 import { useToday } from '@/hooks/use-today'
+import { useRefetchOnFocus } from '@/hooks/use-refetch-on-focus'
 import { colors } from '@/theme/colors'
 import type { CareKind } from '@/types'
 
 export default function HomeScreen() {
   const router = useRouter()
   const TODAY = useToday()
+  useRefetchOnFocus([['pet'], ['careLogs'], ['diaryEntry']])
   const { data: pet, isLoading: petLoading } = usePet()
   const { data: careLogs } = useCareLogs(TODAY)
   const addCareLog = useAddCareLog(TODAY)

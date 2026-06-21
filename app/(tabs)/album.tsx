@@ -5,10 +5,12 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Text } from '@/components/ui'
 import { MonthFolderCard } from '@/components/album/MonthFolderCard'
 import { useAlbumMonths } from '@/hooks/use-album'
+import { useRefetchOnFocus } from '@/hooks/use-refetch-on-focus'
 import { colors } from '@/theme/colors'
 
 export default function AlbumScreen() {
   const router = useRouter()
+  useRefetchOnFocus([['albumMonths']])
   const { data: months, isLoading } = useAlbumMonths()
 
   if (isLoading) {

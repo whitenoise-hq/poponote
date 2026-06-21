@@ -18,11 +18,15 @@ export function useAuth() {
     supabase.auth.getSession().then(({ data: { session: s } }) => {
       setSession(s)
       setLoading(false)
+      // Realtime 소켓에 사용자 JWT 주입 (RLS 적용된 Postgres Changes 수신에 필수)
+      supabase.realtime.setAuth(s?.access_token ?? null)
     })
 
-    // 세션 변경 구독
+    // 세션 변경 구독 (로그인/로그아웃 + TOKEN_REFRESHED 포함)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
       setSession(s)
+      // 토큰 갱신 시에도 다시 설정해 realtime이 만료 토큰으로 끊기지 않게 함
+      supabase.realtime.setAuth(s?.access_token ?? null)
     })
 
     return () => subscription.unsubscribe()

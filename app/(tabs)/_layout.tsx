@@ -2,8 +2,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 
 import { colors } from '@/theme/colors';
+import { useRealtimeSync } from '@/hooks/use-realtime-sync';
 
 export default function TabsLayout() {
+  // 가족 구성원의 변경을 실시간 반영 (로그인+가족 보유 시 활성)
+  useRealtimeSync();
+
   return (
     <Tabs
       screenOptions={{

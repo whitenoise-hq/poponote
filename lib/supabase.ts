@@ -16,4 +16,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     persistSession: true,
     detectSessionInUrl: false,
   },
+  realtime: {
+    // care_logs 등 연속 입력 시 이벤트 폭주 방지
+    params: { eventsPerSecond: 10 },
+  },
 })
