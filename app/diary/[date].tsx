@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { View, ScrollView, Pressable, KeyboardAvoidingView, Platform } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -43,7 +43,12 @@ export default function DiaryDetailScreen() {
 
     useRefetchOnFocus([['diaryEntry'], ['careLogs'], ['comments'], ['reactions']])
 
+    const scrollRef = useRef<ScrollView>(null)
+    // 내가 댓글을 작성한 경우에만, 새 댓글이 렌더된 뒤(onContentSizeChange) 맨 아래로 스크롤
+    const pendingScrollRef = useRef(false)
+
     const [deleteVisible, setDeleteVisible] = useState(false)
+    const [commentToDelete, setCommentToDelete] = useState<string | null>(null)
     const isOwner = entry && user && entry.author_id === user.id
 
     function handleDelete() {
@@ -101,8 +106,15 @@ export default function DiaryDetailScreen() {
 
             {/* Content */}
             <ScrollView
+                ref={scrollRef}
                 style={{ flex: 1, paddingHorizontal: 20 }}
                 showsVerticalScrollIndicator={false}
+                onContentSizeChange={() => {
+                    if (pendingScrollRef.current) {
+                        pendingScrollRef.current = false
+                        scrollRef.current?.scrollToEnd({ animated: true })
+                    }
+                }}
             >
                 {entry ? (
                     <>
@@ -114,7 +126,7 @@ export default function DiaryDetailScreen() {
                         <CareRecordSection logs={careLogs ?? []} />
                         <CommentSection
                             comments={comments ?? []}
-                            onDelete={(id) => deleteComment.mutate(id)}
+                            onDelete={(id) => setCommentToDelete(id)}
                         />
                     </>
                 ) : (
@@ -133,11 +145,14 @@ export default function DiaryDetailScreen() {
                 <View style={{ height: 24 }} />
             </ScrollView>
 
-            {/* 하단 고정 댓글 입력 */}
+            {/* 하단 고정 댓글 입력 (안전영역 여백은 CommentInput이 키보드 상태에 맞춰 처리) */}
             {entry && (
-                <SafeAreaView edges={['bottom']} style={{ backgroundColor: colors.cream.DEFAULT }}>
-                    <CommentInput onSend={(body) => addComment.mutate(body)} />
-                </SafeAreaView>
+                <CommentInput
+                    onSend={(body) => {
+                        pendingScrollRef.current = true
+                        addComment.mutate(body)
+                    }}
+                />
             )}
           </KeyboardAvoidingView>
 
@@ -150,6 +165,20 @@ export default function DiaryDetailScreen() {
                 destructive
                 onConfirm={handleDelete}
                 onCancel={() => setDeleteVisible(false)}
+            />
+
+            {/* 댓글 삭제 확인 모달 */}
+            <AlertModal
+                visible={!!commentToDelete}
+                title="댓글 삭제"
+                message="이 댓글을 삭제하시겠어요?"
+                confirmLabel="삭제"
+                destructive
+                onConfirm={() => {
+                    if (commentToDelete) deleteComment.mutate(commentToDelete)
+                    setCommentToDelete(null)
+                }}
+                onCancel={() => setCommentToDelete(null)}
             />
         </SafeAreaView>
     )

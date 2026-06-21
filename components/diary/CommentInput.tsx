@@ -1,5 +1,6 @@
-import { useState } from 'react'
-import { View, TextInput, Pressable } from 'react-native'
+import { useState, useEffect } from 'react'
+import { View, TextInput, Pressable, Keyboard, Platform } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { colors } from '@/theme/colors'
 
@@ -9,12 +10,26 @@ interface CommentInputProps {
 
 export function CommentInput({ onSend }: CommentInputProps) {
   const [text, setText] = useState('')
+  const [keyboardShown, setKeyboardShown] = useState(false)
+  const insets = useSafeAreaInsets()
+
+  useEffect(() => {
+    const showEvt = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow'
+    const hideEvt = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide'
+    const showSub = Keyboard.addListener(showEvt, () => setKeyboardShown(true))
+    const hideSub = Keyboard.addListener(hideEvt, () => setKeyboardShown(false))
+    return () => {
+      showSub.remove()
+      hideSub.remove()
+    }
+  }, [])
 
   function handleSend() {
     const trimmed = text.trim()
     if (!trimmed) return
     onSend(trimmed)
     setText('')
+    Keyboard.dismiss()
   }
 
   return (
@@ -24,7 +39,9 @@ export function CommentInput({ onSend }: CommentInputProps) {
         alignItems: 'center',
         gap: 8,
         paddingHorizontal: 20,
-        paddingVertical: 12,
+        paddingTop: 12,
+        // 키보드가 올라오면 하단 안전영역 여백은 키보드에 가려지므로 제거해 상하 균형을 맞춘다.
+        paddingBottom: keyboardShown ? 12 : insets.bottom + 12,
         backgroundColor: colors.cream.DEFAULT,
         borderTopWidth: 1,
         borderTopColor: colors.cream[200],
