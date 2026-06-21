@@ -54,6 +54,10 @@ export function DatePickerModal({
               maximumDate={maximumDate}
               minimumDate={minimumDate}
               locale="ko-KR"
+              // 모달 배경이 항상 흰색이므로, 다크 모드에서 숫자가 흰색으로 렌더링돼
+              // 안 보이는 문제를 막기 위해 라이트 테마로 고정 (iOS 전용 prop)
+              themeVariant="light"
+              textColor={colors.ink.DEFAULT}
               style={{ height: 200 }}
             />
           </View>
