@@ -140,6 +140,12 @@ npx eas build --platform all --profile production
 
 > 새 버전 배포할 때마다 맨 위에 한 줄씩 추가한다. 형식: 버전 (빌드) — 날짜 — 변경 요약.
 
+### 1.0.0 (iOS build 4 / Android vc 5 예정) — 2026-06-21
+> 버그 수정 묶음. `eas build --platform all --profile production`로 빌드(빌드번호는 autoIncrement: iOS 3→4, Android 4→5).
+- **버그 수정 ① 가족 코드 참여 실패** (커밋 `b1b0bd7`): 초대받은 신규 사용자가 코드 입력 시 "유효하지 않음"으로 실패하던 문제. `families` RLS가 멤버/owner만 조회를 허용해 미가입 초대자가 `invite_code`를 읽지 못한 것이 원인. `verify_invite_code` security definer 함수로 RLS를 우회해 올바른 코드에만 최소 정보를 반환하도록 수정. **운영 Supabase에 마이그레이션 적용 완료**(`20260621000000_verify_invite_code.sql`).
+- **버그 수정 ② 이전 데이터 잔존** (커밋 `b1b0bd7`): (a) 탈퇴/재로그인 후 옛 데이터 노출 → `signOut`에서 `queryClient.clear()`로 캐시 제거. (b) 자정 넘겨 앱 재개 시 어제 날짜·데이터 고정 → 홈 화면 모듈 상수 `TODAY` 제거하고 `useToday` 훅으로 포그라운드 복귀 시 날짜 갱신 + `focusManager`를 `AppState`에 연결해 자동 refetch.
+- **버그 수정 ③ Android 폰트 깨짐** (커밋 `2334ef7`): Android에서 굵은 텍스트가 Pretendard 대신 시스템 폰트로 폴백되던 문제. `Text` 컴포넌트에서 `fontWeight`를 Pretendard 굵기 variant로 변환하고 `fontWeight` 제거.
+
 ### 1.0.0 (Android vc 4) — 2026-06-21
 - **Android production 재빌드 완료** (versionCode 4, 커밋 `9412867` — iOS build 3와 동일 앱 코드). EAS `autoIncrement`로 vc 3→4.
 - Play Console 앱 생성 완료(package `com.devwoodie.poponote`). 첫 릴리스는 `.aab`를 **내부 테스트 트랙에 수동 업로드**로 진행(서비스 계정 키 자동 제출은 추후 설정).
