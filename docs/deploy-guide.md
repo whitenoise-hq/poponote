@@ -140,7 +140,18 @@ npx eas build --platform all --profile production
 
 > 새 버전 배포할 때마다 맨 위에 한 줄씩 추가한다. 형식: 버전 (빌드) — 날짜 — 변경 요약.
 
-### 1.0.0 (iOS build 4 / Android vc 5 예정) — 2026-06-21
+### 1.0.0 (iOS build 9 / Android vc 6) — 2026-06-21
+> 실시간 동기화 + UX 버그 수정 묶음.
+- **신규: 가족 구성원 변경 실시간 동기화** — Supabase Realtime 도입. 다른 구성원이 케어·일기·댓글·반응·펫프로필을 변경하면 내 화면에 즉시 반영(둘 다 같은 화면을 보고 있어도 나갔다 들어올 필요 없음). 화면 포커스(탭 전환·재진입) 시 자동 refetch를 백업으로 추가.
+  - `supabase_realtime` publication에 `diary_entries`/`care_logs`/`comments`/`reactions`/`pets` 추가(마이그레이션 `20260621010000`, **운영 적용 완료**). RLS 적용 위해 로그인/토큰갱신 시 `realtime.setAuth` 호출.
+  - 중앙 구독 훅 `useRealtimeSync`(가족 단일 채널, 탭 레이아웃에 마운트) + 포커스 refetch 훅 `useRefetchOnFocus`.
+  - ⚠️ comments/reactions는 family_id 서버 필터가 없어 RLS에만 의존 → **다른 가족에 누수되지 않는지 2가족 cross-test 필요**.
+- **버그 수정: 댓글 입력창 키보드 가림** — 다이어리 상세에서 댓글 입력 시 입력창이 키보드 위로 안 올라오던 문제. 화면 전체를 `KeyboardAvoidingView`로 감쌈.
+- **버그 수정: 다크 모드 생일 DatePicker 글자 안 보임** (커밋 `17ee774`) — `themeVariant="light"`로 고정.
+- **버그 수정: 일기 사진 잘림** (커밋 `bfc923f`) — 피드·상세에서 `aspectRatio: 1` 정사각형 표시.
+- **버그 수정: 회원가입 직후 홈 데이터 누락 / 펫 수정 저장 실패 / 문의 입력창 키보드** (커밋 `0b48eff`, `f18652c`) — 온보딩 후 쿼리 무효화, 펫 수정 시 종·생일 미입력(null) 저장 허용 및 이름만으로 저장 활성화.
+
+### 1.0.0 (iOS build 4 / Android vc 5) — 2026-06-21
 > 버그 수정 묶음. `eas build --platform all --profile production`로 빌드(빌드번호는 autoIncrement: iOS 3→4, Android 4→5).
 - **버그 수정 ① 가족 코드 참여 실패** (커밋 `b1b0bd7`): 초대받은 신규 사용자가 코드 입력 시 "유효하지 않음"으로 실패하던 문제. `families` RLS가 멤버/owner만 조회를 허용해 미가입 초대자가 `invite_code`를 읽지 못한 것이 원인. `verify_invite_code` security definer 함수로 RLS를 우회해 올바른 코드에만 최소 정보를 반환하도록 수정. **운영 Supabase에 마이그레이션 적용 완료**(`20260621000000_verify_invite_code.sql`).
 - **버그 수정 ② 이전 데이터 잔존** (커밋 `b1b0bd7`): (a) 탈퇴/재로그인 후 옛 데이터 노출 → `signOut`에서 `queryClient.clear()`로 캐시 제거. (b) 자정 넘겨 앱 재개 시 어제 날짜·데이터 고정 → 홈 화면 모듈 상수 `TODAY` 제거하고 `useToday` 훅으로 포그라운드 복귀 시 날짜 갱신 + `focusManager`를 `AppState`에 연결해 자동 refetch.

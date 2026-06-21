@@ -25,7 +25,7 @@
 - **프론트엔드**: React Native + Expo, TypeScript
 - **라우팅**: Expo Router (파일 기반), 하단 4탭(홈/다이어리/앨범/설정)
 - **스타일**: React Native `style` prop + `StyleSheet.create`. 색상 토큰은 `theme/colors.js` 단일 출처.
-- **서버 상태**: TanStack Query (React Query)
+- **서버 상태**: TanStack Query (React Query). 데이터 신선도는 3중 — ① mutation 시 `invalidateQueries`, ② **Supabase Realtime**(`useRealtimeSync`, 가족 단일 채널)로 다른 구성원 변경 실시간 반영, ③ 화면 포커스/앱 복귀 시 refetch(`useRefetchOnFocus` + `focusManager`). Realtime 수신엔 `supabase.realtime.setAuth(token)`(use-auth)와 `supabase_realtime` publication 등록이 필요.
 - **백엔드**: Supabase (Auth / Postgres / Storage / Edge Functions)
 - **인증**: 카카오 OAuth (Supabase Auth). 구글은 MVP 범위 밖.
 - **AI 일기 생성**: OpenAI GPT-4.1 Mini (비전+텍스트)를 Edge Function 경유 호출. 사진 분석 → 제목+내용 자동 생성.
