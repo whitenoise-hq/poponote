@@ -15,7 +15,7 @@
         "NSPhotoLibraryUsageDescription": "사진을 갤러리에 저장하기 위해 접근 권한이 필요합니다.",
         "NSPhotoLibraryAddUsageDescription": "사진을 갤러리에 저장하기 위해 접근 권한이 필요합니다."
       },
-      "buildNumber": "3"
+      "buildNumber": "7"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/images/android-icon-foreground.png"
       },
       "predictiveBackGestureEnabled": false,
-      "versionCode": 4,
+      "versionCode": 6,
       "permissions": [
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE",
