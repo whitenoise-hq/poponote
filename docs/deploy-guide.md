@@ -140,6 +140,11 @@ npx eas build --platform all --profile production
 
 > 새 버전 배포할 때마다 맨 위에 한 줄씩 추가한다. 형식: 버전 (빌드) — 날짜 — 변경 요약.
 
+### 1.0.0 (Android vc 4) — 2026-06-21
+- **Android production 재빌드 완료** (versionCode 4, 커밋 `9412867` — iOS build 3와 동일 앱 코드). EAS `autoIncrement`로 vc 3→4.
+- Play Console 앱 생성 완료(package `com.devwoodie.poponote`). 첫 릴리스는 `.aab`를 **내부 테스트 트랙에 수동 업로드**로 진행(서비스 계정 키 자동 제출은 추후 설정).
+- 빌드: https://expo.dev/accounts/devwoodie/projects/poponote/builds/ea3f7c66-30e7-4cbe-8be0-8034850a62ea
+
 ### 1.0.0 (iOS build 3 / Android vc 3) — 2026-06-20
 - **iOS build 3 App Store Connect 제출 완료** (커밋 `b0b3bfc`). Apple 처리 후 TestFlight 표시 — https://appstoreconnect.apple.com/apps/6782025922/testflight/ios
 - **ASC App ID 확보** → 커밋되는 `eas.json`의 `submit.production.ios`에는 비밀이 아닌 `ascAppId`만 기록(Apple ID/Team ID 같은 식별자는 `deploy-credentials.local.md`에만 둠). 이제 EAS 저장 ASC API 키로 `--non-interactive` 제출 가능(Apple 로그인 프롬프트 불필요).
