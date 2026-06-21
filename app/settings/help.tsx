@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { View, ScrollView, Pressable, TextInput } from 'react-native'
+import { useState, useRef } from 'react'
+import { View, ScrollView, Pressable, TextInput, Platform } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
@@ -87,6 +87,13 @@ export default function HelpScreen() {
   const [sending, setSending] = useState(false)
   const [sentVisible, setSentVisible] = useState(false)
   const [errorVisible, setErrorVisible] = useState(false)
+  const scrollRef = useRef<ScrollView>(null)
+
+  function openInquiry() {
+    setInquiryOpen(true)
+    // 입력창이 펼쳐지고 키보드가 올라온 뒤, 입력창이 키보드 위로 보이도록 스크롤
+    setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 350)
+  }
 
   async function handleSendInquiry() {
     if (!inquiryText.trim() || sending) return
@@ -130,10 +137,12 @@ export default function HelpScreen() {
       </View>
 
       <ScrollView
+        ref={scrollRef}
         style={{ flex: 1, paddingHorizontal: 20 }}
         contentContainerStyle={{ paddingBottom: 40, paddingTop: 8 }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
+        automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
       >
         {/* FAQ */}
         <Text variant="caption" style={{ color: colors.muted.foreground, marginBottom: 8 }}>
@@ -191,7 +200,7 @@ export default function HelpScreen() {
           </Card>
         ) : (
           <Pressable
-            onPress={() => setInquiryOpen(true)}
+            onPress={openInquiry}
             style={{
               flexDirection: 'row',
               alignItems: 'center',

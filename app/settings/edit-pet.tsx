@@ -60,7 +60,8 @@ export default function EditPetScreen() {
   }, [pet, initialized])
 
   const isSaving = updatePet.isPending
-  const canSave = name.trim().length > 0 && species.trim().length > 0 && birthday.trim().length > 0 && !isSaving
+  // 이름만 입력돼 있으면 저장 가능 (종류·생일 등은 선택)
+  const canSave = name.trim().length > 0 && !isSaving
 
   if (isLoading || !pet) {
     return (

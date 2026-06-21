@@ -3,6 +3,7 @@ import { View, TextInput, Pressable, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
+import { useQueryClient } from '@tanstack/react-query'
 
 import { Text, Button, AlertModal } from '@/components/ui'
 import { colors } from '@/theme/colors'
@@ -18,6 +19,7 @@ function sanitize(text: string): string {
 
 export default function NicknameScreen() {
   const router = useRouter()
+  const qc = useQueryClient()
   const params = useLocalSearchParams<{
     flow?: string
     familyId?: string
@@ -53,10 +55,14 @@ export default function NicknameScreen() {
           role: '보호자',
           profileImageUri: params.profileImageUri || undefined,
         })
+        // 가입 전 홈이 잠깐 마운트되며 member/pet 쿼리가 빈 값으로 캐시됐을 수 있다.
+        // 가입 직후 무효화해 홈 진입 시 새로 불러오도록 한다.
+        await qc.invalidateQueries()
         router.replace({ pathname: '/(onboarding)/invite-result', params: { code: inviteCode } } as never)
       } else {
         if (!params.familyId) throw new Error('familyId 없음')
         await joinFamily({ familyId: params.familyId, nickname: finalNickname, role: finalRole })
+        await qc.invalidateQueries()
         router.replace('/(tabs)' as never)
       }
     } catch {
