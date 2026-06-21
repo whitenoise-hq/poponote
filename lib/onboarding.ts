@@ -71,25 +71,17 @@ export async function createFamilyWithPet({
 
 /**
  * 초대받은 사용자: 코드 검증 → family_id 반환
+ *
+ * families RLS는 멤버/owner만 조회를 허용하므로, 아직 멤버가 아닌 초대 사용자는
+ * 테이블을 직접 읽지 못한다. security definer 함수(verify_invite_code)로 우회한다.
  */
 export async function verifyInviteCode(code: string): Promise<{ familyId: string; petName: string } | null> {
-  const { data, error } = await supabase
-    .from('families')
-    .select('id')
-    .eq('invite_code', code.trim().toUpperCase())
-    .single()
+  const { data, error } = await supabase.rpc('verify_invite_code', { _code: code })
 
-  if (error || !data) return null
+  if (error || !data || data.length === 0) return null
 
-  // 해당 가족의 펫 이름도 가져오기
-  const { data: pet } = await supabase
-    .from('pets')
-    .select('name')
-    .eq('family_id', data.id)
-    .limit(1)
-    .single()
-
-  return { familyId: data.id, petName: pet?.name ?? '' }
+  const row = data[0] as { family_id: string; pet_name: string | null }
+  return { familyId: row.family_id, petName: row.pet_name ?? '' }
 }
 
 /**

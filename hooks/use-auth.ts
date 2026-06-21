@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { makeRedirectUri } from 'expo-auth-session'
 import * as WebBrowser from 'expo-web-browser'
 import { supabase } from '@/lib/supabase'
+import { queryClient } from '@/lib/query-client'
 import type { Session } from '@supabase/supabase-js'
 
 WebBrowser.maybeCompleteAuthSession()
@@ -56,6 +57,9 @@ export function useAuth() {
   const signOut = useCallback(async () => {
     await supabase.auth.signOut()
     setSession(null)
+    // 이전 사용자의 데이터가 메모리 캐시에 남아 재로그인 시 노출되는 것을 방지
+    // (앱 재시작 없이도 새 세션이 모든 쿼리를 다시 불러오도록)
+    queryClient.clear()
   }, [])
 
   return {

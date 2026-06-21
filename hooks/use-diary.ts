@@ -5,12 +5,8 @@ import { useCurrentUser } from './use-current-user'
 import { usePet } from './use-pet'
 import { uploadDiaryPhoto, deleteDiaryPhoto } from '@/lib/storage'
 import { generateDiary } from '@/lib/generate-diary'
+import { todayStr } from './use-today'
 import type { DiaryEntry } from '@/types'
-
-function todayStr(): string {
-  const d = new Date()
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-}
 
 export function useDiaryEntries() {
   const { data: member } = useCurrentUser()
@@ -52,8 +48,8 @@ export function useDiaryEntry(date: string) {
   })
 }
 
-export function useTodayEntry() {
-  return useDiaryEntry(todayStr())
+export function useTodayEntry(date: string = todayStr()) {
+  return useDiaryEntry(date)
 }
 
 /**
