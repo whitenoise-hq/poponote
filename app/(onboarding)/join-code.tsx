@@ -70,6 +70,7 @@ export default function JoinCodeScreen() {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
+            justifyContent: 'center',
             height: 56,
             backgroundColor: colors.white,
             borderWidth: 1.5,
@@ -81,9 +82,11 @@ export default function JoinCodeScreen() {
           <Text
             style={{
               fontSize: 20,
+              lineHeight: 24,
               fontFamily: 'Pretendard-SemiBold',
               color: colors.ink.DEFAULT,
               letterSpacing: 3,
+              includeFontPadding: false,
             }}
           >
             {INVITE_CODE_PREFIX}
@@ -96,12 +99,15 @@ export default function JoinCodeScreen() {
             autoCapitalize="characters"
             autoCorrect={false}
             style={{
-              flex: 1,
-              paddingVertical: 0,
+              width: 78,
+              padding: 0,
               fontSize: 20,
+              lineHeight: 24,
               fontFamily: 'Pretendard-SemiBold',
               color: colors.ink.DEFAULT,
               letterSpacing: 3,
+              includeFontPadding: false,
+              textAlignVertical: 'center',
             }}
             onSubmitEditing={handleVerify}
             returnKeyType="done"
