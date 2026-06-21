@@ -66,14 +66,31 @@
 
 ## 2. 매번 배포할 때 (수정 후 재배포 절차)
 
-### 공통 — 버전 올리기
-App Store/Play는 이전보다 높은 버전이어야 새 빌드를 받는다. `app.json` 수정:
+### 버전 관리 원칙 (중요 — 헷갈리기 쉬움)
 
-- `expo.version` (예: `1.0.0` → `1.0.1`) — 사용자에게 보이는 버전. **기능/수정 릴리스 시 손으로 올림.** iOS·Android 공통.
-- `expo.ios.buildNumber` — production 프로파일 `autoIncrement: true`라 **EAS가 자동 +1**. 손 안 댐.
-- `expo.android.versionCode` — 정수. **손으로 +1** 하거나 eas.json에 `autoIncrement` 추가 가능. (현재 `2`)
+버전은 **두 종류**다. 역할이 완전히 다르니 구분해서 다룬다.
 
-> 같은 버전 내 재빌드(버그픽스 재시도)면 version 안 올려도 되지만, 스토어 업로드용이면 buildNumber/versionCode는 반드시 증가해야 함.
+| 항목 | 역할 | 다루는 법 |
+| --- | --- | --- |
+| `expo.version` (`1.0.0`) | **사용자에게 보이는** 마케팅 버전 | iOS·Android **공통**으로 맞춘다. 기능/수정 릴리스 시 **손으로** 올림 (`1.0.0`→`1.0.1`). |
+| `expo.ios.buildNumber` | App Store **내부** 빌드 카운터 | production `autoIncrement: true` → **EAS 자동 +1**. 손 안 댐. |
+| `expo.android.versionCode` | Play Store **내부** 빌드 카운터 | production `autoIncrement: true` → **EAS 자동 +1**. 손 안 댐. |
+
+**핵심 규칙**
+- **`version`만 두 플랫폼 동일하게 유지하면 된다.** 이게 사용자가 보는 버전.
+- **`buildNumber`(iOS)와 `versionCode`(Android)는 서로 맞출 필요가 없다.** 각 스토어는 자기 플랫폼 카운터만 보고, 서로 비교하지 않는다. iOS가 3이고 Android가 4여도 정상.
+- 두 카운터는 `autoIncrement` 때문에 **자연스럽게 어긋난다** (한 플랫폼만 재빌드하면 그 플랫폼만 +1). 억지로 맞추려고 불필요한 빌드를 하지 않는다.
+- 각 카운터는 **자기 스토어 안에서 이전 빌드보다 크기만** 하면 된다 (스토어 업로드 시 필수).
+- 같은 버전 내 재빌드(버그픽스 재시도)면 `version`은 안 올려도 되지만, 스토어 업로드용이면 `autoIncrement`가 카운터를 올려준다.
+
+> EAS가 `autoIncrement`로 카운터를 올린 뒤 `app.json`에 그 값을 **다시 써넣는다** (`appVersionSource: "local"`). 빌드 후 `git status`에 `app.json` 변경이 보이면 그 versionCode/buildNumber 증가를 커밋해 리포와 맞춘다.
+
+### 같은 코드를 두 스토어에 동시 출시할 때
+숫자를 맞추려는 목적이 아니라 **동일 커밋을 두 스토어에 함께 내려는** 릴리스 위생 차원이라면 한 번에 빌드:
+```bash
+npx eas build --platform all --profile production
+```
+(그래도 buildNumber/versionCode는 각자 증가한다.)
 
 ### iOS 배포
 ```bash
