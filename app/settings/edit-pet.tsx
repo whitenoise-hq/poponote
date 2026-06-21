@@ -90,8 +90,8 @@ export default function EditPetScreen() {
       {
         petId: pet.id,
         name: name.trim(),
-        species: species.trim(),
-        birthday: birthday.trim(),
+        species: species.trim() || null,
+        birthday: birthday.trim() || null,
         weight: weight.trim() ? parseFloat(weight.trim()) : null,
         sex,
         neutered,

@@ -40,8 +40,8 @@ export function useUpdatePet() {
     }: {
       petId: string
       name: string
-      species: string
-      birthday: string
+      species: string | null
+      birthday: string | null
       weight: number | null
       sex: 'male' | 'female' | null
       neutered: boolean
