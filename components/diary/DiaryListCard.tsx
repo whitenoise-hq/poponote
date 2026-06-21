@@ -29,7 +29,7 @@ export function DiaryListCard({ entry, careLogs, onPress }: DiaryListCardProps) 
         {entry.photo_url && (
           <Image
             source={{ uri: entry.photo_url }}
-            style={{ width: '100%', height: 220 }}
+            style={{ width: '100%', aspectRatio: 1 }}
             resizeMode="cover"
           />
         )}

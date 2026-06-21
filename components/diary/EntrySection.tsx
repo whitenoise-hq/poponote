@@ -27,7 +27,7 @@ export function EntrySection({ entry }: EntrySectionProps) {
       {displayUrl ? (
         <Image
           source={{ uri: displayUrl }}
-          style={{ width: '100%', height: 256, borderRadius: 16 }}
+          style={{ width: '100%', aspectRatio: 1, borderRadius: 16 }}
           resizeMode="cover"
         />
       ) : null}
