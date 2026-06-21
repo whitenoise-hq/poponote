@@ -11,7 +11,7 @@ import { colors } from '@/theme/colors'
 export default function InviteResultScreen() {
   const router = useRouter()
   const { code } = useLocalSearchParams<{ code: string }>()
-  const inviteCode = code ?? 'POPO-XXXX'
+  const inviteCode = code ?? 'PPNT-XXXX'
   const [copied, setCopied] = useState(false)
 
   async function handleCopy() {
