@@ -7,11 +7,15 @@ import { useRouter } from 'expo-router'
 import { Text, Card, AlertModal } from '@/components/ui'
 import { colors } from '@/theme/colors'
 import { useAuth } from '@/hooks/use-auth'
+import { useCurrentUser } from '@/hooks/use-current-user'
 import { supabase } from '@/lib/supabase'
+
+const PROVIDER_LABELS: Record<string, string> = { kakao: '카카오', apple: 'Apple' }
 
 export default function AccountScreen() {
   const router = useRouter()
   const { user, signOut } = useAuth()
+  const { data: member } = useCurrentUser()
   const [deleteVisible, setDeleteVisible] = useState(false)
   const [errorVisible, setErrorVisible] = useState(false)
 
@@ -27,10 +31,18 @@ export default function AccountScreen() {
     }
   }
 
-  const name = user?.user_metadata?.name || user?.user_metadata?.full_name || '-'
+  // 이름: 카카오는 프로필명이 user_metadata에 오지만, Apple은 이름을 안 주거나 최초 1회뿐 →
+  // 둘 다 없으면 온보딩에서 정한 가족 닉네임으로 폴백(항상 존재).
+  const name = user?.user_metadata?.name || user?.user_metadata?.full_name || member?.nickname || '-'
   const email = user?.email || user?.user_metadata?.email || '-'
   const rawAvatarUrl: string | null = user?.user_metadata?.avatar_url || null
   const avatarUrl = rawAvatarUrl?.replace('http://', 'https://') ?? null
+
+  // 로그인 방식: 하드코딩 대신 실제 연결된 provider에서 도출(이메일 일치 시 카카오+Apple 동시 연결 가능).
+  const providerLabel =
+    user?.identities && user.identities.length > 0
+      ? Array.from(new Set(user.identities.map((i) => PROVIDER_LABELS[i.provider] ?? i.provider))).join(', ')
+      : '-'
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.cream.DEFAULT }} edges={['top']}>
@@ -68,7 +80,7 @@ export default function AccountScreen() {
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text variant="caption" style={{ color: colors.muted.foreground }}>로그인 방식</Text>
-              <Text variant="body" style={{ color: colors.ink.DEFAULT }}>카카오</Text>
+              <Text variant="body" style={{ color: colors.ink.DEFAULT }}>{providerLabel}</Text>
             </View>
           </View>
         </Card>

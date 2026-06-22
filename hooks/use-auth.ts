@@ -78,6 +78,14 @@ export function useAuth() {
     })
 
     if (error) throw error
+
+    // Apple은 이름을 identityToken에 담지 않고, 최초 1회 credential.fullName으로만 준다.
+    // 받았을 때 user_metadata에 저장해 둬야 이후 화면에서 표시 가능(다음 로그인부턴 null).
+    const fullName = credential.fullName
+    const displayName = [fullName?.familyName, fullName?.givenName].filter(Boolean).join('')
+    if (displayName) {
+      await supabase.auth.updateUser({ data: { name: displayName, full_name: displayName } })
+    }
   }, [])
 
   const signOut = useCallback(async () => {
