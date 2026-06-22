@@ -10,20 +10,10 @@
 - [ ] 카테고리: 라이프스타일
 - [x] 개인정보처리방침 URL: https://poponote.devwoodie.com/privacy
 - [ ] EAS Build: `eas build --platform ios` → App Store Connect 업로드
-- [ ] 심사 제출 (데모 계정 정보 제공 — 카카오 테스트 계정)
+- [ ] 심사 제출 — **리뷰어 접근은 Sign in with Apple로 안내**. 카카오는 리뷰 환경에서 휴대폰 본인확인을 요구해 막힘(가이드라인 2.1 리젝 원인). Apple 로그인은 폰 인증 없이 전체 기능 접근 가능 → App Store Connect 회신에 "Use Sign in with Apple, then create a family group" 명시.
+- [ ] 로그인 옵션 추가(Apple) 반영해 **스크린샷 갱신**
 
-## Google Play (Android)
-
-- [ ] 스크린샷: 최소 2장, 권장 4~8장 (폰 사이즈)
-- [ ] 그래픽 이미지: 1024x500 배너 이미지 1장
-- [ ] 앱 이름/설명: 짧은 설명 (80자) + 긴 설명
-- [ ] 카테고리: 라이프스타일
-- [x] 개인정보처리방침 URL: https://poponote.devwoodie.com/privacy
-- [ ] 콘텐츠 등급 설문 작성 (전체 이용가)
-- [ ] 타겟 연령: 만 13세 이상
-- [ ] 데이터 안전: 수집 데이터 항목 신고 (이메일, 사진, 이름 등)
-- [ ] EAS Build: `eas build --platform android` → Play Console 업로드
-- [ ] 심사 제출
+> **배포 플랫폼: iOS(App Store) 전용.** Android(Google Play)는 미진행 — `app.json`/`eas.json`에서 Android 설정 제거됨.
 
 ## 공통 준비물
 

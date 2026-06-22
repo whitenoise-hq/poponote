@@ -30,5 +30,5 @@ https://poponote.devwoodie.com
 - **프론트엔드**: React Native + Expo (SDK 56), TypeScript, Expo Router
 - **상태 관리**: TanStack Query (React Query)
 - **백엔드**: Supabase (Auth, PostgreSQL, Storage, Edge Functions)
-- **인증**: 카카오 로그인
+- **인증**: 카카오 로그인 + Sign in with Apple
 - **AI**: OpenAI GPT-4.1 Mini (사진 분석 → 일기 생성)

@@ -178,6 +178,7 @@ supabase gen types typescript --linked > types/database.ts   # TS 타입 생성
 
 **작업**
 - ✅ 카카오 OAuth (Supabase Auth provider + Expo WebBrowser + deep link redirect).
+- ✅ Sign in with Apple (`expo-apple-authentication` 네이티브 → `signInWithIdToken`). iOS 가이드라인 4.8 충족용 필수.
 - ✅ 세션 관리 hook: `hooks/use-auth.ts` (세션, 로그인/로그아웃).
 - ✅ **라우팅 가드** (`app/_layout.tsx` AuthGate):
   - 미인증 → 로그인 화면.

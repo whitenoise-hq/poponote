@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { makeRedirectUri } from 'expo-auth-session'
 import * as WebBrowser from 'expo-web-browser'
+import * as AppleAuthentication from 'expo-apple-authentication'
 import { supabase } from '@/lib/supabase'
 import { queryClient } from '@/lib/query-client'
 import type { Session } from '@supabase/supabase-js'
@@ -58,6 +59,27 @@ export function useAuth() {
     }
   }, [])
 
+  const signInWithApple = useCallback(async () => {
+    // 네이티브 Apple 로그인: identityToken을 받아 Supabase에 넘겨 검증·세션 발급
+    const credential = await AppleAuthentication.signInAsync({
+      requestedScopes: [
+        AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+        AppleAuthentication.AppleAuthenticationScope.EMAIL,
+      ],
+    })
+
+    if (!credential.identityToken) {
+      throw new Error('Apple 로그인에서 identityToken을 받지 못했습니다.')
+    }
+
+    const { error } = await supabase.auth.signInWithIdToken({
+      provider: 'apple',
+      token: credential.identityToken,
+    })
+
+    if (error) throw error
+  }, [])
+
   const signOut = useCallback(async () => {
     await supabase.auth.signOut()
     setSession(null)
@@ -72,6 +94,7 @@ export function useAuth() {
     loading,
     isLoggedIn: !!session,
     signInWithKakao,
+    signInWithApple,
     signOut,
   }
 }

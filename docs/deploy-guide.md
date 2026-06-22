@@ -11,16 +11,17 @@
 
 ## 0. 기본 정보
 
+> **배포 플랫폼: iOS(App Store) 전용.** Android(Google Play)는 미진행이며 `app.json`/`eas.json`에서 Android 설정을 제거했다. 아래 절차는 iOS 기준. (과거 Android 빌드 기록은 §4 릴리즈 노트에 사실 그대로 보존.)
+
 | 항목 | 값 |
 | --- | --- |
 | iOS bundleId | `com.devwoodie.poponote` |
-| Android package | `com.devwoodie.poponote` |
 | 현재 버전 | `1.0.0` |
 | 자격증명/계정 식별자 | `docs/deploy-credentials.local.md` (로컬 전용) · `npx eas credentials`로도 확인 |
 
 빌드 프로파일은 `eas.json`에 정의:
-- `production` — 스토어 제출용. iOS는 `autoIncrement: true`로 buildNumber 자동 증가, Android는 `app-bundle`(.aab).
-- `preview` — 내부 배포용. Android는 `apk`.
+- `production` — 스토어 제출용. iOS `autoIncrement: true`로 buildNumber 자동 증가.
+- `preview` — 내부 배포용.
 - `development` — dev client 포함 개발용.
 
 ---
@@ -48,20 +49,6 @@
 - EAS가 자동 생성·저장 → 다음 제출부터 질문 없이 재사용
 - 관리: https://appstoreconnect.apple.com → 사용자 및 액세스 → 통합 → App Store Connect API
 
-### Android — Google Play 자격증명 (아직 미설정)
-> 첫 Android 제출 전에 1회 설정 필요.
-
-1. Google Play Console에서 앱 생성 (package `com.devwoodie.poponote`)
-2. **서비스 계정 JSON 키** 발급:
-   - Play Console → 설정 → API 액세스 → 서비스 계정 생성 (Google Cloud)
-   - 역할: "릴리스 관리자" 권한 부여
-   - JSON 키 다운로드 → 프로젝트에 두지 말고 안전한 곳에 보관
-3. `eas.json`의 `submit.production`에 경로 연결 또는 `eas submit` 실행 시 경로 입력
-   ```json
-   "submit": { "production": { "android": { "serviceAccountKeyPath": "../path/to/key.json" } } }
-   ```
-- Android 업로드 키(서명)는 `production` 빌드 시 EAS가 관리(`eas credentials`로 확인).
-
 ---
 
 ## 2. 매번 배포할 때 (수정 후 재배포 절차)
@@ -74,23 +61,13 @@
 | --- | --- | --- |
 | `expo.version` (`1.0.0`) | **사용자에게 보이는** 마케팅 버전 | iOS·Android **공통**으로 맞춘다. 기능/수정 릴리스 시 **손으로** 올림 (`1.0.0`→`1.0.1`). |
 | `expo.ios.buildNumber` | App Store **내부** 빌드 카운터 | production `autoIncrement: true` → **EAS 자동 +1**. 손 안 댐. |
-| `expo.android.versionCode` | Play Store **내부** 빌드 카운터 | production `autoIncrement: true` → **EAS 자동 +1**. 손 안 댐. |
 
 **핵심 규칙**
-- **`version`만 두 플랫폼 동일하게 유지하면 된다.** 이게 사용자가 보는 버전.
-- **`buildNumber`(iOS)와 `versionCode`(Android)는 서로 맞출 필요가 없다.** 각 스토어는 자기 플랫폼 카운터만 보고, 서로 비교하지 않는다. iOS가 3이고 Android가 4여도 정상.
-- 두 카운터는 `autoIncrement` 때문에 **자연스럽게 어긋난다** (한 플랫폼만 재빌드하면 그 플랫폼만 +1). 억지로 맞추려고 불필요한 빌드를 하지 않는다.
-- 각 카운터는 **자기 스토어 안에서 이전 빌드보다 크기만** 하면 된다 (스토어 업로드 시 필수).
-- 같은 버전 내 재빌드(버그픽스 재시도)면 `version`은 안 올려도 되지만, 스토어 업로드용이면 `autoIncrement`가 카운터를 올려준다.
+- **`version`은 사용자에게 보이는 마케팅 버전.** 기능/수정 릴리스 시 손으로 올린다(`1.0.0`→`1.0.1`).
+- **`buildNumber`는 App Store 안에서 이전 빌드보다 크기만** 하면 된다. production `autoIncrement: true`가 자동으로 올려준다.
+- 같은 버전 내 재빌드(버그픽스 재시도)면 `version`은 안 올려도 되고, `autoIncrement`가 `buildNumber`를 올려준다.
 
-> EAS가 `autoIncrement`로 카운터를 올린 뒤 `app.json`에 그 값을 **다시 써넣는다** (`appVersionSource: "local"`). 빌드 후 `git status`에 `app.json` 변경이 보이면 그 versionCode/buildNumber 증가를 커밋해 리포와 맞춘다.
-
-### 같은 코드를 두 스토어에 동시 출시할 때
-숫자를 맞추려는 목적이 아니라 **동일 커밋을 두 스토어에 함께 내려는** 릴리스 위생 차원이라면 한 번에 빌드:
-```bash
-npx eas build --platform all --profile production
-```
-(그래도 buildNumber/versionCode는 각자 증가한다.)
+> EAS가 `autoIncrement`로 카운터를 올린 뒤 `app.json`에 그 값을 **다시 써넣는다** (`appVersionSource: "local"`). 빌드 후 `git status`에 `app.json` 변경이 보이면 그 buildNumber 증가를 커밋해 리포와 맞춘다.
 
 ### iOS 배포
 ```bash
@@ -108,22 +85,7 @@ npx eas build --platform ios --profile production --auto-submit
 - 터미널 Ctrl+C로 나가도 EAS 서버에서 계속 진행됨. 진행상황은 대시보드에서 확인.
 - TestFlight **내부 테스트**는 Apple 심사 없이 즉시 가능. **외부 테스터/실제 출시**는 심사 필요.
 
-### Android 배포
-```bash
-# 1. 빌드 (.aab 생성)
-npx eas build --platform android --profile production
-
-# 2. 제출 (Google Play 업로드 — 서비스 계정 키 설정 후)
-npx eas submit --platform android --profile production
-
-# 내부 테스트용 빠른 APK (기기 직접 설치):
-npx eas build --platform android --profile preview
-```
-
-### 두 플랫폼 동시 빌드
-```bash
-npx eas build --platform all --profile production
-```
+> **Apple 로그인 capability 추가 후 첫 빌드 주의**: 프로비저닝 프로파일이 재발급된다. 빌드 중 "reuse the original profile?" 질문엔 **yes**. 단 Apple Developer Portal 점검 중이면 `Service not available because of maintenance activities`로 실패할 수 있는데, 이는 Apple 서버 일시 장애이므로 점검 해제 후 재시도하면 된다(yes/no 무관).
 
 ---
 
@@ -132,13 +94,19 @@ npx eas build --platform all --profile production
 - **EAS 빌드/제출 현황**: https://expo.dev/accounts/devwoodie/projects/poponote (Builds / Submissions 탭)
 - **자격증명 확인/관리**: `npx eas credentials`
 - **iOS TestFlight**: https://appstoreconnect.apple.com → 앱 → TestFlight
-- **Android**: Google Play Console → 테스트/프로덕션 트랙
 
 ---
 
 ## 4. 릴리즈 노트
 
 > 새 버전 배포할 때마다 맨 위에 한 줄씩 추가한다. 형식: 버전 (빌드) — 날짜 — 변경 요약.
+
+### 1.0.0 (iOS) — 2026-06-22 — Apple 리뷰 리젝 대응
+> Apple 심사 리젝(Submission 425f0948…) 대응. iOS 전용 방침 확정.
+- **신규: Sign in with Apple 추가** (가이드라인 **4.8** 대응) — 서드파티(카카오) 로그인만 있고 Apple 동급 옵션이 없어 리젝. `expo-apple-authentication` 네이티브 → `supabase.auth.signInWithIdToken({provider:'apple'})`. 로그인 화면에 "Apple로 시작하기" 버튼(`components/auth/AppleIcon.tsx`) 추가. `app.json`에 `ios.usesAppleSignIn: true` + `expo-apple-authentication` 플러그인.
+  - 콘솔 설정: Apple Developer App ID에 Sign In with Apple capability(primary) 활성화 + Supabase Apple Provider 활성화·Client IDs에 `com.devwoodie.poponote` 등록.
+- **가이드라인 2.1 대응** — 리뷰어가 카카오 로그인 시 카카오 측 휴대폰 본인확인에 막힘. Apple 로그인은 폰 인증 없이 전체 접근 가능 → 회신에 "Use Sign in with Apple, then create a family group"로 안내.
+- **방침: iOS(App Store) 전용 배포, Android 미지원** — `app.json` android 블록 / `eas.json` android 빌드 설정 / 고아 `android-icon-foreground.png` 제거.
 
 ### 1.0.0 (iOS build 9 / Android vc 6) — 2026-06-21
 > 실시간 동기화 + UX 버그 수정 묶음.

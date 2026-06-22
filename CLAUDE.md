@@ -27,7 +27,7 @@
 - **스타일**: React Native `style` prop + `StyleSheet.create`. 색상 토큰은 `theme/colors.js` 단일 출처.
 - **서버 상태**: TanStack Query (React Query). 데이터 신선도는 3중 — ① mutation 시 `invalidateQueries`, ② **Supabase Realtime**(`useRealtimeSync`, 가족 단일 채널)로 다른 구성원 변경 실시간 반영, ③ 화면 포커스/앱 복귀 시 refetch(`useRefetchOnFocus` + `focusManager`). Realtime 수신엔 `supabase.realtime.setAuth(token)`(use-auth)와 `supabase_realtime` publication 등록이 필요.
 - **백엔드**: Supabase (Auth / Postgres / Storage / Edge Functions)
-- **인증**: 카카오 OAuth (Supabase Auth). 구글은 MVP 범위 밖.
+- **인증**: 카카오 OAuth + Sign in with Apple (Supabase Auth). 애플 로그인은 `expo-apple-authentication` 네이티브 → `supabase.auth.signInWithIdToken({provider:'apple'})`. iOS 전용 배포라 App Store 가이드라인 4.8(서드파티 로그인 시 Apple 동급 옵션 필수) 충족용으로 반드시 유지. 구글은 MVP 범위 밖.
 - **AI 일기 생성**: OpenAI GPT-4.1 Mini (비전+텍스트)를 Edge Function 경유 호출. 사진 분석 → 제목+내용 자동 생성.
 
 ## 핵심 규칙 (반드시 준수)
@@ -78,7 +78,7 @@
 1. Expo + TypeScript 초기 세팅, Expo Router로 4탭 골격.
 2. Supabase 연동(`@supabase/supabase-js`), `.env` 구성.
 3. DB 스키마 + RLS 정책 작성 (planning.md 데이터 구조 기준). → 마이그레이션.
-4. 카카오 OAuth 로그인 + 온보딩(그룹 생성 / 코드 참여 + 닉네임).
+4. 카카오 OAuth + Apple 로그인 + 온보딩(그룹 생성 / 코드 참여 + 닉네임).
 5. Storage 버킷 + 접근 정책.
 6. 핵심 기능: 가족 그룹/초대 코드 → 홈(케어) → 메인 기록 → 다이어리(캘린더/리스트/상세) → 댓글·반응.
 7. AI 일기 생성 Edge Function (OpenAI GPT-4.1 Mini, 사진→텍스트).

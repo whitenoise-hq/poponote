@@ -128,8 +128,8 @@
 
 ## 6. 확정 사항 (기술)
 
-- **플랫폼**: iOS + Android (React Native / Expo)
-- **로그인**: 카카오 간편로그인 (Supabase Auth). 구글은 MVP 범위 밖.
+- **플랫폼**: **iOS(App Store) 전용** (React Native / Expo). Android 미지원.
+- **로그인**: 카카오 간편로그인 + Sign in with Apple (Supabase Auth). Apple 로그인은 iOS 배포 가이드라인 4.8 충족용 필수. 구글은 MVP 범위 밖.
 - **사진 저장**: 업로드 시 클라이언트 압축, 압축본 보관
 - 상세는 `tech-stack.md` 참고.
 
